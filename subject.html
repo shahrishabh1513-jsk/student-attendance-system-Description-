@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Subject & Lecture Timing</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Student Attendance System</h1>
+                    <p>Select Subject & Lecture Timing</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Title -->
+        <div class="page-title">
+            <h2><i class="fas fa-calendar-alt"></i> Select Subject & Timing</h2>
+            <p>Choose the subject and lecture timing for taking attendance</p>
+        </div>
+
+        <!-- Alert Message -->
+        <div id="selection-alert" class="alert alert-warning" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>Please select both a subject and a time slot to continue</span>
+        </div>
+
+        <!-- Subject Selection Card -->
+        <div class="selection-card">
+            <div class="card-title">
+                <i class="fas fa-book-open"></i> Select Subject
+            </div>
+            
+            <!-- Semester 3 Subjects -->
+            <div class="semester-container">
+                <h3 class="semester-title">
+                    <i class="fas fa-graduation-cap"></i> Semester 3 Subjects
+                </h3>
+                <div class="subject-grid" id="semester3-subjects">
+                    <!-- Subjects will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Semester 5 Subjects -->
+            <div class="semester-container">
+                <h3 class="semester-title">
+                    <i class="fas fa-graduation-cap"></i> Semester 5 Subjects
+                </h3>
+                <div class="subject-grid" id="semester5-subjects">
+                    <!-- Subjects will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Selection Card -->
+        <div class="selection-card">
+            <div class="card-title">
+                <i class="fas fa-clock"></i> Select Lecture Timing
+            </div>
+            <p class="mb-3" style="color: var(--medium-gray);">
+                <i class="fas fa-info-circle"></i> Classes run from 9:15 AM to 4:15 PM with 5 lectures and a 30-minute break
+            </p>
+            
+            <div class="time-slot-container" id="time-slots">
+                <!-- Time slots will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Selected Information Panel -->
+        <div class="selected-info" id="selected-info" style="display: none;">
+            <div class="selected-title">
+                <i class="fas fa-check-circle"></i> Selected for Attendance
+            </div>
+            <div class="selected-details">
+                <div class="selected-item">
+                    <div class="selected-label">Selected Subject</div>
+                    <div class="selected-value" id="selected-subject-name">No subject selected</div>
+                </div>
+                <div class="selected-item">
+                    <div class="selected-label">Subject Code</div>
+                    <div class="selected-value" id="selected-subject-code">-</div>
+                </div>
+                <div class="selected-item">
+                    <div class="selected-label">Lecture Timing</div>
+                    <div class="selected-value" id="selected-time-slot">No time slot selected</div>
+                </div>
+                <div class="selected-item">
+                    <div class="selected-label">Lecture Number</div>
+                    <div class="selected-value" id="selected-lecture-number">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-back" id="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Login
+            </button>
+            <button class="btn btn-next" id="take-attendance-btn" disabled>
+                <i class="fas fa-clipboard-check"></i> Take Attendance Now
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <p>&copy; 2026 Student Attendance Management System | Designed for Educational Institutions | RAS15</p>
+        </div>
+    </footer>
+    
+    <script src="./js/subject.js"></script>
+</body>
+</html>
