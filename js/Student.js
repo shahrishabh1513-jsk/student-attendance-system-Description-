@@ -1,624 +1,465 @@
- document.addEventListener('DOMContentLoaded', function() {
-        // Check if user is logged in and has selected subject
-        const isLoggedIn = localStorage.getItem('attendanceLoggedIn');
-        const selectedSubject = JSON.parse(localStorage.getItem('attendanceSubject') || 'null');
-        const selectedTimeSlot = JSON.parse(localStorage.getItem('attendanceTimeSlot') || 'null');
-        
-        if (isLoggedIn !== 'true' || !selectedSubject || !selectedTimeSlot) {
-            // Redirect to subject selection if not properly set up
-            window.location.href = "subject.html";
-            return;
+document.addEventListener('DOMContentLoaded', function () {
+    // Check login + selection
+    const isLoggedIn = localStorage.getItem('attendanceLoggedIn');
+    const selectedSubject = JSON.parse(localStorage.getItem('attendanceSubject') || 'null');
+    const selectedTimeSlot = JSON.parse(localStorage.getItem('attendanceTimeSlot') || 'null');
+
+    if (isLoggedIn !== 'true' || !selectedSubject || !selectedTimeSlot) {
+        window.location.href = 'subject.html';
+        return;
+    }
+
+    // ---------------- DOM elements ----------------
+    const attendanceInfo = document.getElementById('attendance-info');
+    const studentTableBody = document.getElementById('student-table-body');
+    const saveAttendanceBtn = document.getElementById('save-attendance-btn');
+    const printAttendanceBtn = document.getElementById('print-attendance-btn');
+    const backBtn = document.getElementById('back-btn');
+    const alertDiv = document.getElementById('attendance-alert');
+    const searchInput = document.getElementById('search-student');
+
+    const totalStudentsElem = document.getElementById('total-students');
+    const presentCountElem = document.getElementById('present-count');
+    const absentCountElem = document.getElementById('absent-count');
+    const pendingCountElem = document.getElementById('pending-count');
+
+    const loggedInUser = document.getElementById('logged-in-user');
+    const currentDateElem = document.getElementById('current-date');
+    const currentTimeElem = document.getElementById('current-time');
+
+    const reportModal = document.getElementById('report-modal');
+    const printableReportBody = document.getElementById('printable-report-body');
+    const closeReportBtn = document.getElementById('close-report-btn');
+    const cancelReportBtn = document.getElementById('cancel-report-btn');
+    const confirmPrintBtn = document.getElementById('confirm-print-btn');
+
+    const isLab = !!selectedTimeSlot.isLab;
+
+    // ---------------- Semester 7 student roster ----------------
+    // Batch 1 - BCA (23SS02CA...) students
+    const batch1Raw = [
+        ["23SS02CA001", "GAUTAM G.A. ANAND MURTHY G.S."],
+        ["23SS02CA002", "AGHERA DHRUVIBEN NAVNEETBHAI"],
+        ["23SS02CA007", "BARAD TRUSHA KIRANKUMAR"],
+        ["23SS02CA017", "CHAUDHARI HARDIK RAVJIBHAI"],
+        ["23SS02CA027", "AMANKUMAR RAMESHCHAND GAUTAM"],
+        ["23SS02CA051", "MANIYA HASTIBEN JITESHBHAI"],
+        ["23SS02CA060", "PARMAR KRISHRAJSINH YOGENDRASINH"],
+        ["23SS02CA064", "VIKASH GIRAJASHANKAR PASWAN"],
+        ["23SS02CA065", "DHRUV KUMAR PATEL"],
+        ["23SS02CA066", "PATEL ANKIT PRADIP"],
+        ["23SS02CA074", "RAJVI PRASAD"],
+        ["23SS02CA077", "RUPAVATIYA HARSH RAJESHBHAI"],
+        ["23SS02CA078", "SAIYED ISMA ZULFIKARALI"],
+        ["23SS02CA084", "SHAILESH SANTOSHBHAI AGRAWAL"],
+        ["23SS02CA085", "SHARBIDRE GAURAV RAJESH SHASHIKANT"],
+        ["23SS02CA089", "SINGH SAURABH AJITSINGH"],
+        ["23SS02CA090", "SINGH GULSHANKUMAR RAMCHARITRA"],
+        ["23SS02CA093", "JAIMISH M SOLANKI"],
+        ["23SS02CA098", "AYUSHMAN TRIPATHI"],
+        ["23SS02CA104", "MITUL SANJAY VASOYA"],
+        ["23SS02CA118", "AHIR NEEL RAJESHBHAI"],
+        ["23SS02CA119", "MALEK NOORFATIMA SALAUDDIN"],
+        ["24IC08CA002", "KHAN IQRAR MO. IBRAR"]
+    ];
+
+    // Batch 2 - B.Sc. IT (23SS02IT...) students
+    const batch2Raw = [
+        ["23SS02IT007", "ANAGHAN KRUNAL BHARATBHAI"],
+        ["23SS02IT014", "BHAIDU SADIYA SHABBIR"],
+        ["23SS02IT018", "KAKADIYA BANSARIBEN BHAVESHBHAI"],
+        ["23SS02IT034", "CHAUHAN VISHWABEN ASHWINSINH"],
+        ["23SS02IT038", "KRISH DESAI"],
+        ["23SS02IT061", "GEHLOT BHUMIN KAMLESHBHAI"],
+        ["23SS02IT067", "GOLAKIYA KEVINS SHAILESH BHAI"],
+        ["23SS02IT068", "GOYANI NANDISH RAMESHBHAI"],
+        ["23SS02IT069", "GUJARATI HARSHIL PARESHKUMAR"],
+        ["23SS02IT075", "RAMANI VINAS HASMUKHBHAI"],
+        ["23SS02IT078", "ITALIYA PRIYANSHI PRAVINBHAI"],
+        ["23SS02IT083", "PATEL RIYAKUMARI JITENDRABHAI"],
+        ["23SS02IT093", "TANMAY KHENI"],
+        ["23SS02IT094", "KHUNT AYUSHKUMAR PRAFULBHAI"],
+        ["23SS02IT107", "LATHIYA KHUSH DEVRAJBHAI"],
+        ["23SS02IT117", "MAVANI KRISH MAHESHBHAI"],
+        ["23SS02IT122", "MORADIYA OM BHARATBHAI"],
+        ["23SS02IT137", "PATEL KHUSHUBU VASANTKUMAR"],
+        ["23SS02IT141", "PATEL SHREYA DHARMESHBHAI"],
+        ["23SS02IT150", "PATEL KRINA SANJAYBHAI"],
+        ["23SS02IT153", "PATEL CHAITANYAKUMAR BHUPENDRABHAI"],
+        ["23SS02IT154", "KHUSHI PATEL"],
+        ["23SS02IT156", "DHOLARIYA ARSHITABEN PRAKASHBHAI"],
+        ["23SS02IT157", "PUROHIT PARTHKUMAR ANILBHAI"],
+        ["23SS02IT159", "RADDADIYA ISHITABEN BHAVESHBHAI"],
+        ["23SS02IT160", "RAJ JAYDEEPSINH MAHENDRASINH"],
+        ["23SS02IT165", "RAKHOLIYA KRISHNA RAJNIKANT"],
+        ["23SS02IT166", "RAKHOLIYA TUSHAR GIRDHARBHAI"],
+        ["23SS02IT181", "SHAH RISHABH ALPESHBHAI"],
+        ["23SS02IT185", "SINGH VISHAL VIRENDER"],
+        ["23SS02IT187", "PATEL DEVAN SUNIL"],
+        ["23SS02IT188", "SUTARIYA JAY NARESHBHAI"],
+        ["23SS02IT197", "VANANI MILAN HARIBHAI"],
+        ["23SS02IT218", "PARMAR DHRUVI BALVANTSINH"],
+        ["23SS02IT219", "NOORMOHMMED"],
+        ["23SS02IT222", "VARUN MANOJBHAI VAGHASIYA"],
+        ["23SS02IT238", "MAVANI ARCHI JITENDRABHAI"],
+        ["23SS02IT240", "SHAKIB AHMED MOHAMMAD FARUK BHOR"],
+        ["23SS02IT242", "JASANI SNEHA KALPESHBHAI"]
+    ];
+
+    function buildStudents() {
+        let id = 1;
+        const batch1 = batch1Raw.map(([enrollmentNo, name]) => ({
+            id: id++, enrollmentNo, name, batch: 'Batch 1 – BCA', attendance: null
+        }));
+        const batch2 = batch2Raw.map(([enrollmentNo, name]) => ({
+            id: id++, enrollmentNo, name, batch: 'Batch 2 – B.Sc. IT', attendance: null
+        }));
+        return { batch1, batch2, all: [...batch1, ...batch2] };
+    }
+
+    const roster = buildStudents();
+    let students = [...roster.all];
+    let filteredStudents = [...students];
+
+    // ---------------- Init ----------------
+    function init() {
+        const username = localStorage.getItem('attendanceUsername') || 'Teacher';
+        loggedInUser.textContent = username;
+
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
+
+        loadAttendanceInfo();
+        setupEventListeners();
+
+        renderStudentTable();
+        updateStatistics();
+        checkAllMarked();
+    }
+
+    function updateDateTime() {
+        const now = new Date();
+        currentDateElem.textContent = now.toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        currentTimeElem.textContent = now.toLocaleTimeString('en-US', {
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+
+    function formatTime(timeStr) {
+        const [hours, minutes] = timeStr.split(':');
+        const hour = parseInt(hours);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+        return `${displayHour}:${minutes} ${ampm}`;
+    }
+
+    function loadAttendanceInfo() {
+        const subject = selectedSubject;
+        const timeSlot = selectedTimeSlot;
+        const date = new Date(localStorage.getItem('attendanceDate') || new Date());
+
+        const formattedDate = date.toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        attendanceInfo.innerHTML = `
+            <h3 class="info-title">
+                <i class="fas fa-info-circle"></i> Attendance Details
+            </h3>
+            <div class="info-details">
+                <div class="detail-item">
+                    <div class="detail-label">Subject</div>
+                    <div class="detail-value">${subject.code} - ${subject.name}${isLab ? ' (Lab)' : ''}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Day</div>
+                    <div class="detail-value">${timeSlot.day || '-'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Time</div>
+                    <div class="detail-value">${formatTime(timeSlot.start)} - ${formatTime(timeSlot.end)}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Date</div>
+                    <div class="detail-value">${formattedDate}</div>
+                </div>
+            </div>
+        `;
+
+        if (isLab) {
+            showAlert(`Lab session — students are grouped batch-wise (${roster.batch1.length} + ${roster.batch2.length} students).`, 'info');
+        } else {
+            showAlert(`Mark attendance for all ${students.length} Semester 7 students.`, 'info');
+        }
+    }
+
+    // ---------------- Table rendering ----------------
+    function studentRowHtml(student, indexLabel) {
+        const status = student.attendance === true ? 'status-present'
+            : student.attendance === false ? 'status-absent' : 'status-pending';
+        const statusText = student.attendance === true ? 'Present'
+            : student.attendance === false ? 'Absent' : 'Pending';
+
+        return `
+            <tr>
+                <td>${indexLabel}</td>
+                <td>${student.name}</td>
+                <td>${student.enrollmentNo}</td>
+                <td>${student.batch}</td>
+                <td><span class="attendance-status ${status}">${statusText}</span></td>
+                <td>
+                    <div class="attendance-actions">
+                        <button class="btn-present ${student.attendance === true ? 'active' : ''}" data-id="${student.id}" data-present="true">
+                            <i class="fas fa-check"></i> Present
+                        </button>
+                        <button class="btn-absent ${student.attendance === false ? 'active' : ''}" data-id="${student.id}" data-present="false">
+                            <i class="fas fa-times"></i> Absent
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    function renderStudentTable() {
+        const searchTerm = searchInput.value.trim();
+        let html = '';
+
+        if (!isLab || searchTerm !== '') {
+            // Flat list (non-lab, or while searching regardless of lab)
+            if (filteredStudents.length === 0) {
+                html = `<tr><td colspan="6" class="text-center py-4"><div class="text-muted">No students match your search.</div></td></tr>`;
+            } else {
+                filteredStudents.forEach((student, i) => {
+                    html += studentRowHtml(student, i + 1);
+                });
+            }
+        } else {
+            // Batch-wise grouped view for lab sessions
+            let counter = 1;
+            [
+                { label: `Batch 1 – BCA Students (${roster.batch1.length} Students)`, list: roster.batch1 },
+                { label: `Batch 2 – B.Sc. IT Students (${roster.batch2.length} Students)`, list: roster.batch2 }
+            ].forEach(group => {
+                html += `<tr class="batch-row"><td colspan="6"><i class="fas fa-layer-group"></i> ${group.label}</td></tr>`;
+                group.list.forEach(s => {
+                    // Use the live reference from `students` so attendance state stays in sync
+                    const live = students.find(st => st.id === s.id);
+                    html += studentRowHtml(live, counter++);
+                });
+            });
         }
 
-        // DOM Elements
-        const classButtons = document.querySelectorAll('.btn-class');
-        const attendanceInfo = document.getElementById('attendance-info');
-        const studentTableBody = document.getElementById('student-table-body');
-        const saveAttendanceBtn = document.getElementById('save-attendance-btn');
-        const backBtn = document.getElementById('back-btn');
-        const alertDiv = document.getElementById('attendance-alert');
-        const searchInput = document.getElementById('search-student');
-        
-        // Statistics elements
-        const totalStudentsElem = document.getElementById('total-students');
-        const presentCountElem = document.getElementById('present-count');
-        const absentCountElem = document.getElementById('absent-count');
-        const pendingCountElem = document.getElementById('pending-count');
-        
-        // Current user and date/time
-        const loggedInUser = document.getElementById('logged-in-user');
-        const currentDateElem = document.getElementById('current-date');
-        const currentTimeElem = document.getElementById('current-time');
-        
-        // Student data
-        let students = [];
-        let filteredStudents = [];
-        let selectedClass = null;
-        
-        // Student data for different classes
-        const classData = {
-            "5A": generateClass5AStudents(),
-            "5B": generateClass5BStudents(),
-            "5C": generateClass5CStudents()
-        };
-        
-        // Initialize
-        function init() {
-            // Set logged in user
-            const username = localStorage.getItem('attendanceUsername') || 'Teacher';
-            loggedInUser.textContent = username;
-            
-            // Update date and time
-            updateDateTime();
-            setInterval(updateDateTime, 60000);
-            
-            // Load attendance info
-            loadAttendanceInfo();
-            
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Try to load previously selected class
-            const savedClass = localStorage.getItem('selectedClass');
-            if (savedClass) {
-                selectClass(savedClass);
-            } else {
-                showAlert('Please select a class to view students');
-            }
-        }
-        
-        // Update date and time
-        function updateDateTime() {
-            const now = new Date();
-            currentDateElem.textContent = now.toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+        studentTableBody.innerHTML = html;
+
+        // Attach listeners
+        studentTableBody.querySelectorAll('.btn-present, .btn-absent').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = parseInt(this.getAttribute('data-id'));
+                const present = this.getAttribute('data-present') === 'true';
+                markAttendance(id, present);
             });
-            currentTimeElem.textContent = now.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-        
-        // Load attendance information
-        function loadAttendanceInfo() {
-            const subject = JSON.parse(localStorage.getItem('attendanceSubject'));
-            const timeSlot = JSON.parse(localStorage.getItem('attendanceTimeSlot'));
-            const date = new Date(localStorage.getItem('attendanceDate') || new Date());
-            
-            if (!subject || !timeSlot) {
-                showAlert('No subject selected. Redirecting...', 'warning');
-                setTimeout(() => {
-                    window.location.href = "subject.html";
-                }, 2000);
-                return;
-            }
-            
-            const formattedDate = date.toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            
-            // Format time
-            function formatTime(timeStr) {
-                const [hours, minutes] = timeStr.split(':');
-                const hour = parseInt(hours);
-                const ampm = hour >= 12 ? 'PM' : 'AM';
-                const displayHour = hour > 12 ? hour - 12 : hour;
-                return `${displayHour}:${minutes} ${ampm}`;
-            }
-            
-            attendanceInfo.innerHTML = `
-                <h3 class="info-title">
-                    <i class="fas fa-info-circle"></i> Attendance Details
-                </h3>
-                <div class="info-details">
-                    <div class="detail-item">
-                        <div class="detail-label">Subject</div>
-                        <div class="detail-value">${subject.code} - ${subject.name}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Lecture</div>
-                        <div class="detail-value">${timeSlot.lecture}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Time</div>
-                        <div class="detail-value">${formatTime(timeSlot.start)} - ${formatTime(timeSlot.end)}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Date</div>
-                        <div class="detail-value">${formattedDate}</div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Generate students for Class 5A
-        function generateClass5AStudents() {
-            const class5AStudents = [
-                { name: "PATEL NEEL ALPESHBHAI", enrollmentNo: "SOS001" },
-                { name: "AJUDIYA RAJAN V", enrollmentNo: "SOS002" },
-                { name: "ALAGIYA GARCI", enrollmentNo: "SOS003" },
-                { name: "AMBALIYA JENCY RAJESHBHAI", enrollmentNo: "SOS004" },
-                { name: "ANAGHAN KRUNAL BHARATBHAI", enrollmentNo: "SOS005" },
-                { name: "ANYALA RIYA PARESHBHAI", enrollmentNo: "SOS006" },
-                { name: "DOBARIYA KAVY ASHOKBHAI", enrollmentNo: "SOS007" },
-                { name: "BABARIYA DISHITA BHAYESHBHAI", enrollmentNo: "SOS008" },
-                { name: "BHAIDU SADIYA", enrollmentNo: "SOS009" },
-                { name: "BHALANI DHRUVKUMAR RAKESHBHAI", enrollmentNo: "SOS010" },
-                { name: "GOPANI UMANG BHARATBHAI", enrollmentNo: "SOS011" },
-                { name: "KAKADIYA BANSARIBEN BHAYESHBHAI", enrollmentNo: "SOS012" },
-                { name: "VADACHIAK PARTHIY BHAYESHBHAI", enrollmentNo: "SOS013" },
-                { name: "BIJINGARADIYA SENIL RAJESHBHAI", enrollmentNo: "SOS014" },
-                { name: "BHUT PAL RAJESHBHAI", enrollmentNo: "SOS015" },
-                { name: "SHIBOYA DAIZY BIPINBHAI", enrollmentNo: "SOS016" },
-                { name: "BORDA KSHTIJI MAHESHKUMAR", enrollmentNo: "SOS017" },
-                { name: "BUTANI KRISH MAHESHBHAI", enrollmentNo: "SOS018" },
-                { name: "CHABHADIAYA AYUSHI MANOJBHAI", enrollmentNo: "SOS019" },
-                { name: "CHALALIYA SOHAMKUMAR VIJAYBHAI", enrollmentNo: "SOS020" },
-                { name: "CHALODIYA SNEVI BHARATBHAI", enrollmentNo: "SOS021" },
-                { name: "CHALODIYA AKSHIT BHARATBHAI", enrollmentNo: "SOS022" },
-                { name: "CHANCHAD VRAJ MANOJBHAI", enrollmentNo: "SOS023" },
-                { name: "CHANDPARA VRAJ MAHENDRABHAI", enrollmentNo: "SOS024" },
-                { name: "CHAUHAN VISHWA ASHWINSINH", enrollmentNo: "SOS025" },
-                { name: "CHODVADIYA DEVANSHEE SANJAYBHAI", enrollmentNo: "SOS026" },
-                { name: "DALIYA SAHIL SHANTHBHAI", enrollmentNo: "SOS027" },
-                { name: "DESAI KRISH PRAKASHBHAI", enrollmentNo: "SOS028" },
-                { name: "DHAMELIYA MEERA MUKESHBHAI", enrollmentNo: "SOS029" },
-                { name: "LAKHANI KHUSHALI DHARMENDRABHAI", enrollmentNo: "SOS030" },
-                { name: "DHOLALAKIYA KRISH ARVINDBHAI", enrollmentNo: "SOS031" },
-                { name: "DHOLA NIDHI DILJPBHAI", enrollmentNo: "SOS032" },
-                { name: "DHOLARIYA PRIYANSI MUKESHBHAI", enrollmentNo: "SOS033" },
-                { name: "TEJANI FENI DIVYESHBHAI", enrollmentNo: "SOS034" },
-                { name: "DOBARIYA MANASVI PARESHBHAI", enrollmentNo: "SOS035" },
-                { name: "DOBARIYA DHRUV MARESHBHAI", enrollmentNo: "SOS036" },
-                { name: "DOBARIYA MANASVI MAHENDRABHAI", enrollmentNo: "SOS037" }
-            ];
-            
-            return class5AStudents;
-        }
-        
-        // Generate students for Class 5B
-        function generateClass5BStudents() {
-            const class5BStudents = [
-                { name: "COYANI OM KANTIBHAI", enrollmentNo: "SOS038" },
-                { name: "KATHROTTYA RAJ SHIVLAUBHAI", enrollmentNo: "SOS039" },
-                { name: "KHAMPARA ISHANKUMAR HITESHBHAI", enrollmentNo: "SOS040" },
-                { name: "KHENI YASH VIPULBHAI", enrollmentNo: "SOS041" },
-                { name: "KHENI TANMAY", enrollmentNo: "SOS042" },
-                { name: "KHUNT AYUSHKUMAR PRAFULBHAI", enrollmentNo: "SOS043" },
-                { name: "KHUNT JENISH", enrollmentNo: "SOS044" },
-                { name: "KIKANI MITUL RAMESHBHAI", enrollmentNo: "SOS045" },
-                { name: "KUVADIYA ON SANJAYBHAI", enrollmentNo: "SOS046" },
-                { name: "LAKHANI RADHEN", enrollmentNo: "SOS047" },
-                { name: "LAKHANI AKSH MUKESHBHAI", enrollmentNo: "SOS048" },
-                { name: "LAKHANI AKSHIT", enrollmentNo: "SOS049" },
-                { name: "LAKHANI ABHAY ASHOKBHAI", enrollmentNo: "SOS050" },
-                { name: "LAKKAD HIR BIPINBHAI", enrollmentNo: "SOS051" },
-                { name: "LATHTYA KHUSH DEVRAJBHAI", enrollmentNo: "SOS052" },
-                { name: "LUKHI SNEHAL", enrollmentNo: "SOS053" },
-                { name: "MORADIYA DEEP MAHENDRABHAI", enrollmentNo: "SOS054" },
-                { name: "VAGHANI NEEL MAHESHBHAI", enrollmentNo: "SOS055" },
-                { name: "MANGUKITYA PURV BAKULBHAI", enrollmentNo: "SOS056" },
-                { name: "MAYANI KRISH MAHESHBHAI", enrollmentNo: "SOS057" },
-                { name: "MESHIYA MEET HITENDRABHAI", enrollmentNo: "SOS058" },
-                { name: "MIYANI KHUSHI GHANSHYAMBHAI", enrollmentNo: "SOS059" },
-                { name: "MONPARA NENCY MUKESHBHAI", enrollmentNo: "SOS060" },
-                { name: "MONPARA KHUSHI DINESHBHAI", enrollmentNo: "SOS061" },
-                { name: "MORADIYA ON BHARATBHAI", enrollmentNo: "SOS062" },
-                { name: "MOSLA SNEHA PARKAJBHAI", enrollmentNo: "SOS063" },
-                { name: "MOTISARIYA YASU YÖCESHBHAI", enrollmentNo: "SOS064" },
-                { name: "MAYADIYA JANKI RASKBHAI", enrollmentNo: "SOS065" },
-                { name: "PANCHAL RUCHIT BHARATBHAI", enrollmentNo: "SOS066" },
-                { name: "PANDAY DARSHAK KANUBHAI", enrollmentNo: "SOS067" },
-                { name: "SAVANI HETVI PARESHBHAI", enrollmentNo: "SOS068" },
-                { name: "PARMAR PARTH RITESHBHAI", enrollmentNo: "SOS069" },
-                { name: "PAKSANA PRIYANK SURESHBHAI", enrollmentNo: "SOS070" },
-                { name: "PATEL DIRIUY SUNILBHAI", enrollmentNo: "SOS071" },
-                { name: "PATEL KHUSHUBU VASANTBHAI", enrollmentNo: "SOS072" },
-                { name: "PATEL SUCHIT KALPESHBHAI", enrollmentNo: "SOS073" },
-                { name: "PATEL YASH SUBESHKUMAR", enrollmentNo: "SOS074" }
-            ];
-            
-            return class5BStudents;
-        }
-        
-        // Generate students for Class 5C
-        function generateClass5CStudents() {
-            const class5CStudents = [
-                { name: "RUPAPARA TULSI AJAY KUMAR", enrollmentNo: "SOS075" },
-                { name: "RUPAPARA TULSI NILESHBHAI", enrollmentNo: "SOS076" },
-                { name: "SANGANI DHRUVIN BAKULBHAI", enrollmentNo: "SOS077" },
-                { name: "KOTHIYA MEET SANJAYBHAI", enrollmentNo: "SOS078" },
-                { name: "SAVALIYA GARVI JITESHBHAI", enrollmentNo: "SOS079" },
-                { name: "SAVALIYA AVUSHI PARESHBHAI", enrollmentNo: "SOS080" },
-                { name: "SAVANI MADHAYIBEN DIPARBHAI", enrollmentNo: "SOS081" },
-                { name: "SHAH RISHABI ALPESHBHAI", enrollmentNo: "SOS082" },
-                { name: "SHAIKH AAZINBANU VASIPHUSHEN", enrollmentNo: "SOS083" },
-                { name: "SHELADIYA MATRI VIPULBHAI", enrollmentNo: "SOS084" },
-                { name: "SINGH VISHAL VIKENDER", enrollmentNo: "SOS085" },
-                { name: "PATEL DEVAN SUNIL", enrollmentNo: "SOS086" },
-                { name: "SUTARIYA JAY NARESHBHAI", enrollmentNo: "SOS087" },
-                { name: "TALAIYIA DHRUVI RATBHAI", enrollmentNo: "SOS088" },
-                { name: "TALAIYIA PRINCE SURESHBHAI", enrollmentNo: "SOS089" },
-                { name: "TEJAWI DHRUVI ISHIVARBHAI", enrollmentNo: "SOS090" },
-                { name: "THAKOR NILKANTI PRABHATSINH", enrollmentNo: "SOS091" },
-                { name: "THUMMAR EAV JICNESHBHAI", enrollmentNo: "SOS092" },
-                { name: "VANANI MILAN HARIBHAI", enrollmentNo: "SOS093" },
-                { name: "VARSADIYA VISHY RAMESHBAHI", enrollmentNo: "SOS094" },
-                { name: "VEKARIYA VRAJ KALPESHBHAI", enrollmentNo: "SOS095" },
-                { name: "BALAR VISHWA VINUBHAI", enrollmentNo: "SOS096" },
-                { name: "DONDA DHARMIK VIPULBHAI", enrollmentNo: "SOS097" },
-                { name: "VIRANI DHRUVINA ALPESHBHAI", enrollmentNo: "SOS098" },
-                { name: "VIRANI RUCHI RAJESH", enrollmentNo: "SOS099" },
-                { name: "PATEL JIYA HARSHADBHAI", enrollmentNo: "SOS100" },
-                { name: "KAMANI RIDHAM KANTILAL", enrollmentNo: "SOS101" },
-                { name: "KHENI TISHA HARESHBHAI", enrollmentNo: "SOS102" },
-                { name: "KEVADIYA ARYANKUMAR SANJAYBHAI", enrollmentNo: "SOS103" },
-                { name: "DORDAWALA ALEFIYA MOIZBHAI", enrollmentNo: "SOS104" },
-                { name: "MANDAYIYA SUHANI DILJPBHAI", enrollmentNo: "SOS105" },
-                { name: "PATEL MAHEK HIMMATBHAI", enrollmentNo: "SOS106" },
-                { name: "KAKADIYA VANSHIKA NARENDRABHAI", enrollmentNo: "SOS107" },
-                { name: "PARMAR DHRUVI RALVANTSINH", enrollmentNo: "SOS108" },
-                { name: "BASIR NOORMOHMMED", enrollmentNo: "SOS109" },
-                { name: "MIYANI DHARM HITESIIKUMAR", enrollmentNo: "SOS110" },
-                { name: "SANGANI AARCHI CHANDRESH", enrollmentNo: "SOS111" },
-                { name: "VAGHASIYA VARUN MANOJBHAI", enrollmentNo: "SOS112" },
-                { name: "PADSALA JAY VIPULBHAI", enrollmentNo: "SOS113" },
-                { name: "JAIN SAMRIDDHI AMIT", enrollmentNo: "SOS114" },
-                { name: "DESAI OM MUKESHBHAI", enrollmentNo: "SOS115" },
-                { name: "IDRIS YAZID HARUNA HARUNA GARBA", enrollmentNo: "SOS116" },
-                { name: "BOL SIMON GATWECH BOL", enrollmentNo: "SOS117" },
-                { name: "JUMA ANDREA PASQUALE MARKO", enrollmentNo: "SOS118" },
-                { name: "HIRANI MIRAL RAJANIBHAI", enrollmentNo: "SOS119" },
-                { name: "KANANI UTSAV VIPULBHAI", enrollmentNo: "SOS120" },
-                { name: "BELADIYA JAY ASHOKBHAI", enrollmentNo: "SOS121" },
-                { name: "DONGA TIKTIKUMAR KALPESHBHAI", enrollmentNo: "SOS122" },
-                { name: "MAYANI ARCHI JITENDRA", enrollmentNo: "SOS123" },
-                { name: "MISTRY SANSKRUTI SHYAMLAI.", enrollmentNo: "SOS124" },
-                { name: "SHORAMA SHAKIB AHMED NOHAMMAD FARUK", enrollmentNo: "SOS125" },
-                { name: "NOWANKI PETER SUBEK DANIEL DANIEL SWAKA", enrollmentNo: "SOS126" },
-                { name: "JASANI SNEHA KALPESHBHAI", enrollmentNo: "SOS127" },
-                { name: "KAKADIYA HILKUMAR SHAILESHBHAI", enrollmentNo: "SOS128" },
-                { name: "WOA MODONG HARRIET JOHN WOJA", enrollmentNo: "SOS129" },
-                { name: "KATHIRIYA SARTHAK KIRTBHAI", enrollmentNo: "SOS130" },
-                { name: "DAULIOJO AMEER ABDALKAREEM OSMAN DAWOUD ABD", enrollmentNo: "SOS131" },
-                { name: "DOOH DOOH GODDYSON TEMBE TEMBE NGARIWA THOM", enrollmentNo: "SOS132" },
-                { name: "SAVANI UTSAV RAMESHBHAI", enrollmentNo: "SOS133" },
-                { name: "CHAUHAN UMANO DINESHBHAI", enrollmentNo: "SOS134" },
-                { name: "KOTADIYA YASHKUMAR BHARATBHAI", enrollmentNo: "SOS135" },
-                { name: "GARYEAZOHN STANLEY S GARYEAZOHN SILIME L GARYEA", enrollmentNo: "SOS136" },
-                { name: "PARMAR TISA RAJIV", enrollmentNo: "SOS137" },
-                { name: "BALA MOHAMMAD HASNAIN ABRARAHMED", enrollmentNo: "SOS138" },
-                { name: "CHAUDHARI HARDIK RAVIBHAI", enrollmentNo: "SOS139" },
-                { name: "KHUNT VIDHI HILESHBHAI", enrollmentNo: "SOS140" },
-                { name: "ALHASSAN ALAMIN MUHAMMAD", enrollmentNo: "SOS141" },
-                { name: "ANTALIYA PREET PRAVINBHAI", enrollmentNo: "SOS142" },
-                { name: "PAYNE EMMANUEL O.", enrollmentNo: "SOS143" },
-                { name: "GEORGE SAVIOR TAHMEN", enrollmentNo: "SOS144" }
-            ];
-            
-            return class5CStudents;
-        }
-        
-        // Select class
-        function selectClass(className) {
-            // Update selected class
-            selectedClass = className;
-            localStorage.setItem('selectedClass', className);
-            
-            // Update UI
-            classButtons.forEach(btn => {
-                if (btn.getAttribute('data-class') === className) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-            
-            // Enable search
-            searchInput.disabled = false;
-            searchInput.placeholder = `Search ${className} students by name or enrollment number...`;
-            
-            // Load students for selected class
-            loadClassStudents(className);
-            
-            // Hide alert
-            hideAlert();
-        }
-        
-        // Load students for a class
-        function loadClassStudents(className) {
-            // Get base student data for the class
-            const baseStudents = classData[className];
-            
-            // Try to load saved attendance for this class
-            const savedAttendanceKey = `attendance_${selectedClass}_${JSON.parse(localStorage.getItem('attendanceSubject')).code}`;
-            const savedAttendance = JSON.parse(localStorage.getItem(savedAttendanceKey) || '{}');
-            
-            // Transform to our student format
-            students = baseStudents.map((student, index) => {
-                const nameParts = student.name.split(' ');
-                const initials = (nameParts[0][0] + (nameParts.length > 1 ? nameParts[1][0] : nameParts[0][1])).toUpperCase();
-                
-                return {
-                    id: index + 1,
-                    srNo: index + 1,
-                    enrollmentNo: student.enrollmentNo,
-                    name: student.name,
-                    classDivision: `BSc IT ${className}`,
-                    attendance: savedAttendance[student.enrollmentNo] || null,
-                    initials: initials
-                };
-            });
-            
-            filteredStudents = [...students];
+        });
+    }
+
+    function markAttendance(studentId, isPresent) {
+        const idx = students.findIndex(s => s.id === studentId);
+        if (idx !== -1) {
+            students[idx].attendance = isPresent;
+            const fIdx = filteredStudents.findIndex(s => s.id === studentId);
+            if (fIdx !== -1) filteredStudents[fIdx].attendance = isPresent;
+
             renderStudentTable();
             updateStatistics();
             checkAllMarked();
         }
-        
-        // Save attendance for current class
-        function saveClassAttendance() {
-            const attendanceKey = `attendance_${selectedClass}_${JSON.parse(localStorage.getItem('attendanceSubject')).code}`;
-            const attendanceData = {};
-            
-            students.forEach(student => {
-                attendanceData[student.enrollmentNo] = student.attendance;
-            });
-            
-            localStorage.setItem(attendanceKey, JSON.stringify(attendanceData));
-        }
-        
-        // Render student table
-        function renderStudentTable() {
-            studentTableBody.innerHTML = '';
-            
-            if (filteredStudents.length === 0) {
-                studentTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="text-center py-4">
-                            <div class="text-muted">No students found</div>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            filteredStudents.forEach((student, index) => {
-                const row = document.createElement('tr');
-                
-                // Determine attendance status display
-                let statusDisplay = '';
-                if (student.attendance === true) {
-                    statusDisplay = '<span class="attendance-status status-present">Present</span>';
-                } else if (student.attendance === false) {
-                    statusDisplay = '<span class="attendance-status status-absent">Absent</span>';
-                } else {
-                    statusDisplay = '<span class="attendance-status status-pending">Pending</span>';
-                }
-                
-                // Determine button states
-                const presentBtnClass = student.attendance === true ? 'btn-present active' : 'btn-present';
-                const absentBtnClass = student.attendance === false ? 'btn-absent active' : 'btn-absent';
-                
-                row.innerHTML = `
-                    <td>${student.srNo}</td>
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div class="student-avatar">${student.initials}</div>
-                            <div>
-                                <div style="font-weight: 600;">${student.name}</div>
-                                <div style="font-size: 0.85rem; color: var(--medium-gray);">Class: ${student.classDivision}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>${student.enrollmentNo}</td>
-                    <td>${student.classDivision}</td>
-                    <td>${statusDisplay}</td>
-                    <td>
-                        <div class="attendance-actions">
-                            <button class="${presentBtnClass}" data-id="${student.id}" data-status="present">
-                                <i class="fas fa-check"></i> Present
-                            </button>
-                            <button class="${absentBtnClass}" data-id="${student.id}" data-status="absent">
-                                <i class="fas fa-times"></i> Absent
-                            </button>
-                        </div>
-                    </td>
-                `;
-                
-                studentTableBody.appendChild(row);
-            });
-            
-            // Add event listeners to attendance buttons
-            document.querySelectorAll('.btn-present, .btn-absent').forEach(button => {
-                button.addEventListener('click', function() {
-                    const studentId = parseInt(this.getAttribute('data-id'));
-                    const status = this.getAttribute('data-status') === 'present';
-                    markAttendance(studentId, status);
-                });
-            });
-        }
-        
-        // Mark attendance for a student
-        function markAttendance(studentId, isPresent) {
-            // Update student data
-            const studentIndex = students.findIndex(s => s.id === studentId);
-            if (studentIndex !== -1) {
-                students[studentIndex].attendance = isPresent;
-                
-                // Update filtered students
-                const filteredIndex = filteredStudents.findIndex(s => s.id === studentId);
-                if (filteredIndex !== -1) {
-                    filteredStudents[filteredIndex].attendance = isPresent;
-                }
-                
-                // Save to localStorage
-                saveClassAttendance();
-                
-                // Re-render table
-                renderStudentTable();
-                
-                // Update statistics
-                updateStatistics();
-                
-                // Check if all attendance is marked
-                checkAllMarked();
-            }
-        }
-        
-        // Update statistics
-        function updateStatistics() {
-            const total = students.length;
-            const present = students.filter(s => s.attendance === true).length;
-            const absent = students.filter(s => s.attendance === false).length;
-            const pending = students.filter(s => s.attendance === null).length;
-            
-            totalStudentsElem.textContent = total;
-            presentCountElem.textContent = present;
-            absentCountElem.textContent = absent;
-            pendingCountElem.textContent = pending;
-        }
-        
-        // Check if all attendance is marked
-        function checkAllMarked() {
-            const pending = students.filter(s => s.attendance === null).length;
-            if (pending === 0) {
-                saveAttendanceBtn.disabled = false;
-                hideAlert();
-            } else {
-                saveAttendanceBtn.disabled = true;
-                showAlert(`${pending} student(s) still pending. Please mark attendance for all students.`, 'warning');
-            }
-        }
-        
-        // Setup event listeners
-        function setupEventListeners() {
-            // Class selection buttons
-            classButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const className = this.getAttribute('data-class');
-                    selectClass(className);
-                });
-            });
-            
-            // Search functionality
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                
-                if (searchTerm.trim() === '') {
-                    filteredStudents = [...students];
-                } else {
-                    filteredStudents = students.filter(student => 
-                        student.name.toLowerCase().includes(searchTerm) ||
-                        student.enrollmentNo.toLowerCase().includes(searchTerm)
-                    );
-                }
-                
-                renderStudentTable();
-            });
-            
-            // Save attendance button
-            saveAttendanceBtn.addEventListener('click', function() {
-                saveAttendance();
-            });
-            
-            // Back button - Modified to go back to index.html
-            backBtn.addEventListener('click', function() {
-                // Clear all session data and go back to login page
-                localStorage.removeItem('attendanceLoggedIn');
-                localStorage.removeItem('attendanceUsername');
-                localStorage.removeItem('attendanceSubject');
-                localStorage.removeItem('attendanceTimeSlot');
-                localStorage.removeItem('attendanceDate');
-                localStorage.removeItem('selectedClass');
-                
-                // Go back to login page (index.html)
-                window.location.href = "index.html";
-            });
-        }
-        
-        // Save attendance - Modified to redirect to index.html
-        function saveAttendance() {
-            // Show loading state
-            const originalText = saveAttendanceBtn.innerHTML;
-            saveAttendanceBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    }
+
+    function updateStatistics() {
+        const total = students.length;
+        const present = students.filter(s => s.attendance === true).length;
+        const absent = students.filter(s => s.attendance === false).length;
+        const pending = students.filter(s => s.attendance === null).length;
+
+        totalStudentsElem.textContent = total;
+        presentCountElem.textContent = present;
+        absentCountElem.textContent = absent;
+        pendingCountElem.textContent = pending;
+    }
+
+    function checkAllMarked() {
+        const pending = students.filter(s => s.attendance === null).length;
+        if (pending === 0) {
+            saveAttendanceBtn.disabled = false;
+        } else {
             saveAttendanceBtn.disabled = true;
-            
-            // Simulate save process
-            setTimeout(() => {
-                // Create attendance record
-                const attendanceRecord = {
-                    id: Date.now(),
-                    subject: JSON.parse(localStorage.getItem('attendanceSubject')),
-                    timeSlot: JSON.parse(localStorage.getItem('attendanceTimeSlot')),
-                    date: new Date().toISOString(),
-                    class: selectedClass,
-                    students: students,
-                    summary: {
-                        total: students.length,
-                        present: students.filter(s => s.attendance === true).length,
-                        absent: students.filter(s => s.attendance === false).length,
-                        percentage: 0
-                    }
-                };
-                
-                // Calculate percentage
-                if (attendanceRecord.summary.total > 0) {
-                    attendanceRecord.summary.percentage = Math.round(
-                        (attendanceRecord.summary.present / attendanceRecord.summary.total) * 100
-                    );
+        }
+    }
+
+    // ---------------- Events ----------------
+    function setupEventListeners() {
+        searchInput.addEventListener('input', function () {
+            const term = this.value.toLowerCase().trim();
+            filteredStudents = term === ''
+                ? [...students]
+                : students.filter(s =>
+                    s.name.toLowerCase().includes(term) ||
+                    s.enrollmentNo.toLowerCase().includes(term)
+                );
+            renderStudentTable();
+        });
+
+        saveAttendanceBtn.addEventListener('click', saveAttendance);
+        printAttendanceBtn.addEventListener('click', openReport);
+
+        closeReportBtn.addEventListener('click', closeReport);
+        cancelReportBtn.addEventListener('click', closeReport);
+        confirmPrintBtn.addEventListener('click', () => window.print());
+
+        backBtn.addEventListener('click', function () {
+            localStorage.removeItem('attendanceLoggedIn');
+            localStorage.removeItem('attendanceUsername');
+            localStorage.removeItem('attendanceSubject');
+            localStorage.removeItem('attendanceTimeSlot');
+            localStorage.removeItem('attendanceDate');
+            window.location.href = 'index.html';
+        });
+    }
+
+    function saveAttendance() {
+        const originalText = saveAttendanceBtn.innerHTML;
+        saveAttendanceBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        saveAttendanceBtn.disabled = true;
+
+        setTimeout(() => {
+            const attendanceRecord = {
+                id: Date.now(),
+                subject: selectedSubject,
+                timeSlot: selectedTimeSlot,
+                date: new Date().toISOString(),
+                students,
+                summary: {
+                    total: students.length,
+                    present: students.filter(s => s.attendance === true).length,
+                    absent: students.filter(s => s.attendance === false).length,
+                    percentage: 0
                 }
-                
-                // Get existing records
-                let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords') || '[]');
-                
-                // Add new record
-                attendanceRecords.push(attendanceRecord);
-                
-                // Save to localStorage
-                localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
-                
-                // Show success message
-                showAlert('Attendance saved successfully! Redirecting to login...', 'success');
-                
-                // Reset button
-                saveAttendanceBtn.innerHTML = originalText;
-                saveAttendanceBtn.disabled = true;
-                
-                // Clear all session data
-                localStorage.removeItem('attendanceLoggedIn');
-                localStorage.removeItem('attendanceUsername');
-                localStorage.removeItem('attendanceSubject');
-                localStorage.removeItem('attendanceTimeSlot');
-                localStorage.removeItem('attendanceDate');
-                localStorage.removeItem('selectedClass');
-                
-                // Redirect to index.html after 2 seconds
-                setTimeout(() => {
-                    window.location.href = "index.html";
-                }, 2000);
-                
-            }, 1500);
+            };
+            if (attendanceRecord.summary.total > 0) {
+                attendanceRecord.summary.percentage = Math.round(
+                    (attendanceRecord.summary.present / attendanceRecord.summary.total) * 100
+                );
+            }
+
+            let records = JSON.parse(localStorage.getItem('attendanceRecords') || '[]');
+            records.push(attendanceRecord);
+            localStorage.setItem('attendanceRecords', JSON.stringify(records));
+
+            showAlert('Attendance saved successfully! Redirecting to login...', 'success');
+            saveAttendanceBtn.innerHTML = originalText;
+
+            localStorage.removeItem('attendanceLoggedIn');
+            localStorage.removeItem('attendanceUsername');
+            localStorage.removeItem('attendanceSubject');
+            localStorage.removeItem('attendanceTimeSlot');
+            localStorage.removeItem('attendanceDate');
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        }, 1200);
+    }
+
+    // ---------------- Print report ----------------
+    function openReport() {
+        const total = students.length;
+        const present = students.filter(s => s.attendance === true).length;
+        const absent = students.filter(s => s.attendance === false).length;
+        const pending = students.filter(s => s.attendance === null).length;
+        const percentage = total > 0 ? Math.round((present / total) * 100) : 0;
+
+        const date = new Date(localStorage.getItem('attendanceDate') || new Date());
+        const formattedDate = date.toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        const teacher = localStorage.getItem('attendanceUsername') || 'Teacher';
+
+        function studentListHtml(list) {
+            return list.map(s => {
+                const status = s.attendance === true ? 'Present' : s.attendance === false ? 'Absent' : 'Pending';
+                const cls = s.attendance === true ? 'status-present' : s.attendance === false ? 'status-absent' : 'status-pending';
+                return `
+                    <div class="report-student-item">
+                        <span>${s.enrollmentNo} — ${s.name}</span>
+                        <span class="report-student-status ${cls}">${status}</span>
+                    </div>
+                `;
+            }).join('');
         }
-        
-        // Show alert
-        function showAlert(message, type = 'info') {
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.querySelector('#alert-message').textContent = message;
-            alertDiv.style.display = 'flex';
+
+        let bodyHtml = `
+            <div class="report-meta">
+                <div><strong>Subject:</strong> ${selectedSubject.code} - ${selectedSubject.name}${isLab ? ' (Lab)' : ''}</div>
+                <div><strong>Day / Time:</strong> ${selectedTimeSlot.day || ''} &nbsp;|&nbsp; ${formatTime(selectedTimeSlot.start)} - ${formatTime(selectedTimeSlot.end)}</div>
+                <div><strong>Date:</strong> ${formattedDate}</div>
+                <div><strong>Faculty:</strong> ${teacher}</div>
+            </div>
+
+            <div class="report-summary">
+                <div class="report-stat present">
+                    <div class="report-stat-value">${present}</div>
+                    <div class="report-stat-label">Present</div>
+                </div>
+                <div class="report-stat absent">
+                    <div class="report-stat-value">${absent}</div>
+                    <div class="report-stat-label">Absent</div>
+                </div>
+                <div class="report-stat percentage">
+                    <div class="report-stat-value">${percentage}%</div>
+                    <div class="report-stat-label">Attendance</div>
+                </div>
+            </div>
+        `;
+
+        if (pending > 0) {
+            bodyHtml += `<div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i> ${pending} student(s) not yet marked — they will show as Pending in this report.</div>`;
         }
-        
-        // Hide alert
-        function hideAlert() {
-            alertDiv.style.display = 'none';
+
+        if (isLab) {
+            bodyHtml += `
+                <div class="report-students">
+                    <h3><i class="fas fa-layer-group"></i> Batch 1 – BCA Students (${roster.batch1.length})</h3>
+                    <div class="report-students-list">${studentListHtml(students.filter(s => roster.batch1.some(b => b.id === s.id)))}</div>
+                </div>
+                <div class="report-students">
+                    <h3><i class="fas fa-layer-group"></i> Batch 2 – B.Sc. IT Students (${roster.batch2.length})</h3>
+                    <div class="report-students-list">${studentListHtml(students.filter(s => roster.batch2.some(b => b.id === s.id)))}</div>
+                </div>
+            `;
+        } else {
+            bodyHtml += `
+                <div class="report-students">
+                    <h3><i class="fas fa-users"></i> Student Attendance (${total})</h3>
+                    <div class="report-students-list">${studentListHtml(students)}</div>
+                </div>
+            `;
         }
-        
-        // Initialize the page
-        init();
-    });
+
+        printableReportBody.innerHTML = bodyHtml;
+        reportModal.style.display = 'block';
+    }
+
+    function closeReport() {
+        reportModal.style.display = 'none';
+    }
+
+    function showAlert(message, type = 'info') {
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.querySelector('#alert-message').textContent = message;
+        alertDiv.style.display = 'flex';
+    }
+
+    init();
+});
