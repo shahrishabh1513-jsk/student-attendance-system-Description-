@@ -1,18 +1,6 @@
-/**
- * data.js
- * Central data store for the Attendance Management System.
- * Semester 7 — BCA (Batch 1) + B.Sc. IT (Batch 2)
- */
-
 const COLLEGE_NAME = "School of Sciences";
 const SYSTEM_NAME = "Student Attendance Management System";
 
-/* ------------------------------------------------------------------ */
-/*  STUDENTS                                                          */
-/* ------------------------------------------------------------------ */
-/* Course + Batch are derived automatically from the enrollment code:
-   ...CA... -> BCA -> Batch 1
-   ...IT... -> B.Sc. IT -> Batch 2                                    */
 
 function detectCourse(enrollmentNo) {
     if (/CA\d+$/i.test(enrollmentNo)) return "BCA";
@@ -108,11 +96,6 @@ const BATCH_LABELS = {
     2: "Batch 2 — B.Sc. IT",
 };
 
-/* ------------------------------------------------------------------ */
-/*  WEEKLY TIMETABLE                                                   */
-/* ------------------------------------------------------------------ */
-/* type: "Lab" slots require a batch to be picked before attendance.
-   type: "Theory" slots include every student, both batches together. */
 
 const TIMETABLE = {
     Tuesday: [

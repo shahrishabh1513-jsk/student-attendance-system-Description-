@@ -1,14 +1,8 @@
-/**
- * main.js — Login page logic
- */
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
     const loginAlert = document.getElementById('login-alert');
     const themeToggle = document.getElementById('theme-toggle');
 
-    // Wire up the Sign In handler FIRST, before anything that touches
-    // localStorage or does cosmetic setup — that way login still works
-    // even if a non-essential step below fails for some reason.
     loginForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
@@ -16,8 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const password = document.getElementById('password').value;
 
         if (username === 'SOSIT5' && password === 'ICAIT1') {
-            // Persisting the session is best-effort: even if storage is
-            // blocked in this browser/context, the redirect must still happen.
             try {
                 Store.set(STORAGE_KEYS.LOGGED_IN, true);
                 localStorage.setItem(STORAGE_KEYS.USERNAME, username);
@@ -43,8 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Cosmetic/non-essential setup — wrapped so a failure here can never
-    // block the Sign In handler registered above.
+
     try {
         initTheme();
         attachRipple();

@@ -1,6 +1,3 @@
-/**
- * reports.js — Filter, view, print and export saved attendance records
- */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();
@@ -25,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const filterSubject = el('filter-subject');
     const filterBatch = el('filter-batch');
 
-    // Populate subject filter dynamically from saved records
     const subjectNames = [...new Set(records.map((r) => r.subject))];
     subjectNames.forEach((name) => {
         const opt = document.createElement('option');

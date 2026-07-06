@@ -1,7 +1,3 @@
-/**
- * subject.js — Timetable + batch selection logic
- * Flow: pick a day -> pick a lecture slot -> (if Lab) pick a batch -> continue
- */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();

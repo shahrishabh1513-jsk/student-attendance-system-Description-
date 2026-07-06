@@ -1,6 +1,3 @@
-/**
- * student.js — Attendance-taking page logic
- */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();
@@ -18,16 +15,12 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    /* ------------------------- roster setup ------------------------- */
-
-    const roster = (batch === 1 || batch === 2)
+      const roster = (batch === 1 || batch === 2)
         ? STUDENTS.filter((s) => s.batch === batch)
         : STUDENTS.slice();
 
-    // Attendance state per student: true = present, false = absent, null = pending
     let students = roster.map((s) => ({ ...s, attendance: null }));
 
-    // Try to resume a draft for this exact session (same subject/day/batch/date)
     const draft = Store.get(STORAGE_KEYS.DRAFT);
     const draftKey = `${subject.name}|${day}|${batch}|${sessionDate.slice(0, 10)}`;
     if (draft && draft.key === draftKey && Array.isArray(draft.students)) {
@@ -38,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let history = []; // undo stack of {id, previous}
     let unsavedChanges = false;
 
-    /* ------------------------------ DOM ------------------------------ */
 
     const el = (id) => document.getElementById(id);
     const themeToggle = el('theme-toggle');
@@ -55,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchInput = el('search-student');
     const filterStatus = el('filter-status');
 
-    /* ------------------------------ header ---------------------------- */
 
     el('logged-in-user').textContent = localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher';
     el('header-sub').textContent = `${subject.name} · ${day}`;
@@ -75,8 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const next = toggleTheme();
         themeToggle.querySelector('i').className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     });
-
-    /* ------------------------------ render ---------------------------- */
 
     function renderTable() {
         if (filteredStudents.length === 0) {
@@ -163,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function () {
         renderTable();
     }
 
-    /* --------------------------- mutations ---------------------------- */
 
     function markAttendance(studentId, isPresent, { recordHistory = true } = {}) {
         const student = students.find((s) => s.id === studentId);
@@ -223,7 +211,6 @@ document.addEventListener('DOMContentLoaded', function () {
         showToast('Attendance reset. Start marking again.', 'warning');
     }
 
-    /* ----------------------------- alerts ------------------------------ */
 
     function showAlert(message, type = 'info') {
         alertDiv.className = `alert alert-${type}`;
@@ -232,7 +219,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function hideAlert() { alertDiv.style.display = 'none'; }
 
-    /* ----------------------------- print ------------------------------- */
 
     function preparePrintReport() {
         const present = students.filter((s) => s.attendance === true).length;
@@ -265,7 +251,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.print();
     });
 
-    /* ----------------------------- save flow ---------------------------- */
 
     const confirmOverlay = el('confirm-overlay');
     const successOverlay = el('success-overlay');
@@ -320,7 +305,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1100);
     }
 
-    /* --------------------------- event wiring ---------------------------- */
 
     searchInput.addEventListener('input', debounce(applyFilters, 150));
     filterStatus.addEventListener('change', applyFilters);
@@ -341,7 +325,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Keyboard shortcuts: "p" print, "s" save (when enabled), "/" focus search
     document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT') return;
         if (e.key === 'p') printBtn.click();
@@ -349,8 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === '/') { e.preventDefault(); searchInput.focus(); }
     });
 
-    /* ------------------------------ init ------------------------------- */
-
+  
     applyFilters();
     updateStatistics();
     checkAllMarked();
