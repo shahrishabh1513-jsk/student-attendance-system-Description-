@@ -13,10 +13,9 @@ A simple and responsive web application to manage **Students**, **Subjects**, **
 
 ## 📸 Preview
 
-> Save your project screenshot as **preview.png** in the project root.
-
 <p align="center">
-<img src="preview.png" width="90%" alt="Project Preview">
+![Uploading Screenshot 2026-07-06 113540.png…]()
+
 </p>
 
 ---
