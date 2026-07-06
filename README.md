@@ -4,7 +4,7 @@
 
 A simple and responsive web application to manage **Students**, **Subjects**, **Attendance**, and **Reports**.
 
-[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Open-success?style=for-the-badge)](https://shahrishabh1513-jsk.github.io/student-attendance-system-Description-/)
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Open-success?style=for-the-badge)](https://bscit-attendance.netlify.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/shahrishabh1513-jsk/student-attendance-system-Description-)
 
 </div>
