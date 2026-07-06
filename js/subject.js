@@ -1,215 +1,145 @@
+/**
+ * subject.js — Timetable + batch selection logic
+ * Flow: pick a day -> pick a lecture slot -> (if Lab) pick a batch -> continue
+ */
 document.addEventListener('DOMContentLoaded', function () {
-    // CHECK LOGIN
-    const isLoggedIn = localStorage.getItem('attendanceLoggedIn');
-    const username = localStorage.getItem('attendanceUsername');
+    initTheme();
+    attachRipple();
+    setupScrollToTop(document.getElementById('scroll-top'));
 
-    if (isLoggedIn !== 'true' || !username) {
-        window.location.href = 'index.html';
-        return;
-    }
+    if (!requireLogin('index.html')) return;
 
-    document.getElementById('logged-in-user').textContent = username;
-    updateDateTime();
-    setInterval(updateDateTime, 60000);
+    document.getElementById('logged-in-user').textContent = localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher';
+    document.getElementById('current-date').textContent = formatDateLong(new Date());
 
-    function updateDateTime() {
-        const now = new Date();
-        document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
-        document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', {
-            hour: '2-digit', minute: '2-digit'
-        });
-    }
-
-    // ---------------- Subject master list ----------------
-    const SUBJECTS = {
-        AR:      { code: 'SSCA4010', name: 'Augmented Reality & Virtual Reality' },
-        DEVOPS:  { code: 'SSCS4010', name: 'DevOps & Agile Foundation' },
-        FSD:     { code: 'SSCA4020', name: 'Full Stack Development' },
-        IMGP:    { code: 'SSCA4030', name: 'Image Processing' },
-        CRYPTO:  { code: 'SSCS4020', name: 'Cryptography & Network Security' }
-    };
-
-    // 8 fixed time columns
-    const TIME_COLS = [
-        { start: '09:50', end: '10:45' },
-        { start: '10:45', end: '11:40' },
-        { start: '11:40', end: '12:35' },
-        { start: '12:35', end: '13:30' },
-        { start: '13:30', end: '14:25' },
-        { start: '14:25', end: '15:20' },
-        { start: '15:20', end: '16:15' },
-        { start: '16:15', end: '17:10' }
-    ];
-
-    // Each day: array of 8 entries. null = empty (—).
-    // { subject: SUBJECTS key, lab: bool, continues: bool (this slot is a continuation of a lab that started earlier) }
-    const TIMETABLE = {
-        Tuesday: [
-            { subject: 'AR' },
-            { subject: 'DEVOPS' },
-            { subject: 'FSD' },
-            { subject: 'AR' },
-            { subject: 'IMGP', lab: true },
-            { subject: 'IMGP', lab: true, continues: true },
-            { subject: 'AR' },
-            null
-        ],
-        Wednesday: [
-            { subject: 'AR' },
-            { subject: 'CRYPTO', lab: true },
-            { subject: 'CRYPTO', lab: true, continues: true },
-            { subject: 'AR' },
-            { subject: 'AR' },
-            { subject: 'AR' },
-            { subject: 'AR' },
-            null
-        ],
-        Thursday: [
-            null,
-            null,
-            { subject: 'DEVOPS' },
-            null,
-            null,
-            { subject: 'CRYPTO' },
-            { subject: 'DEVOPS', lab: true },
-            { subject: 'DEVOPS', lab: true, continues: true }
-        ],
-        Friday: [
-            null,
-            { subject: 'IMGP' },
-            { subject: 'IMGP' },
-            null,
-            null,
-            null,
-            { subject: 'FSD', lab: true },
-            { subject: 'FSD', lab: true, continues: true }
-        ],
-        Saturday: [
-            null,
-            { subject: 'IMGP' },
-            { subject: 'DEVOPS' },
-            null,
-            { subject: 'FSD' },
-            { subject: 'FSD' },
-            { subject: 'CRYPTO' },
-            { subject: 'CRYPTO' }
-        ]
-    };
-
-    const DAYS = Object.keys(TIMETABLE);
-
-    // Default to today if it's a scheduled day, else the first day
-    const todayName = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-    let selectedDay = DAYS.includes(todayName) ? todayName : DAYS[0];
-    let selectedSlot = null; // { day, colIndex, subject, lab, start, end }
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.querySelector('i').className = document.documentElement.getAttribute('data-theme') === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    themeToggle.addEventListener('click', () => {
+        const next = toggleTheme();
+        themeToggle.querySelector('i').className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    });
 
     const dayTabsEl = document.getElementById('day-tabs');
-    const timeSlotsEl = document.getElementById('time-slots');
-    const daySlotTitle = document.getElementById('day-slot-title');
-    const selectedInfoPanel = document.getElementById('selected-info');
+    const slotGridEl = document.getElementById('slot-grid');
+    const batchSection = document.getElementById('batch-section');
+    const batchGridEl = document.getElementById('batch-grid');
+    const summaryEl = document.getElementById('selected-summary');
     const takeAttendanceBtn = document.getElementById('take-attendance-btn');
     const backBtn = document.getElementById('back-btn');
     const alertDiv = document.getElementById('selection-alert');
 
-    function formatTime(t) {
-        const [h, m] = t.split(':');
-        const hour = parseInt(h);
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-        return `${displayHour}:${m} ${ampm}`;
-    }
+    let selectedDay = WEEK_DAYS.includes(todayName()) ? todayName() : WEEK_DAYS[0];
+    let selectedSlot = null;
+    let selectedBatch = null;
+
+    renderDayTabs();
+    renderSlots();
 
     function renderDayTabs() {
         dayTabsEl.innerHTML = '';
-        DAYS.forEach(day => {
+        WEEK_DAYS.forEach((day) => {
             const tab = document.createElement('button');
-            tab.className = 'day-tab' + (day === selectedDay ? ' active' : '');
+            tab.className = `day-tab ${day === selectedDay ? 'active' : ''}`;
             tab.textContent = day;
             tab.addEventListener('click', () => {
                 selectedDay = day;
+                selectedSlot = null;
+                selectedBatch = null;
                 renderDayTabs();
-                renderTimeSlots();
+                renderSlots();
+                updateBatchSection();
+                updateSummary();
+                updateButton();
             });
             dayTabsEl.appendChild(tab);
         });
     }
 
-    function renderTimeSlots() {
-        daySlotTitle.textContent = `${selectedDay} — Lecture Slots`;
-        timeSlotsEl.innerHTML = '';
-
-        TIMETABLE[selectedDay].forEach((entry, index) => {
-            const col = TIME_COLS[index];
-            const el = document.createElement('div');
-
-            if (!entry) {
-                el.className = 'time-slot slot-empty';
-                el.innerHTML = `
-                    <div class="time-range">${formatTime(col.start)} - ${formatTime(col.end)}</div>
-                    <div class="lecture-number">—</div>
-                    <div class="duration">No lecture</div>
-                `;
-                timeSlotsEl.appendChild(el);
-                return;
-            }
-
-            if (entry.continues) {
-                el.className = 'time-slot slot-continue slot-lab';
-                el.innerHTML = `
-                    <div class="time-range">${formatTime(col.start)} - ${formatTime(col.end)}</div>
-                    <div class="lecture-number">(Lab Continues)</div>
-                    <div class="duration">${SUBJECTS[entry.subject].name}</div>
-                `;
-                timeSlotsEl.appendChild(el);
-                return;
-            }
-
-            const subj = SUBJECTS[entry.subject];
-            const isSelected = selectedSlot && selectedSlot.day === selectedDay && selectedSlot.colIndex === index;
-
-            el.className = 'time-slot' + (entry.lab ? ' slot-lab' : '') + (isSelected ? ' selected' : '');
-            el.innerHTML = `
-                <div class="time-range">${formatTime(col.start)} - ${formatTime(col.end)}</div>
-                <div class="lecture-number">${subj.name}</div>
-                <div class="duration">${subj.code}</div>
-                ${entry.lab ? '<div class="lab-badge"><i class="fas fa-flask"></i> Lab Session</div>' : ''}
+    function renderSlots() {
+        slotGridEl.innerHTML = '';
+        const slots = TIMETABLE[selectedDay] || [];
+        if (slots.length === 0) {
+            slotGridEl.innerHTML = `
+                <div class="empty-state" style="grid-column: 1/-1;">
+                    <i class="fas fa-mug-hot"></i>
+                    <h4>No lectures scheduled</h4>
+                    <p>There are no lectures on ${selectedDay}. Pick another day above.</p>
+                </div>`;
+            return;
+        }
+        slots.forEach((slot, index) => {
+            const card = document.createElement('div');
+            card.className = 'slot-card';
+            card.style.animationDelay = `${index * 40}ms`;
+            card.innerHTML = `
+                <div class="slot-check"><i class="fas fa-check"></i></div>
+                <div class="slot-time">${formatTime12(slot.start)} – ${formatTime12(slot.end)}</div>
+                <div class="slot-subject">${slot.subject}</div>
+                <span class="slot-badge ${slot.type === 'Lab' ? 'badge-lab' : 'badge-theory'}">
+                    <i class="fas ${slot.type === 'Lab' ? 'fa-flask' : 'fa-book-open'}"></i> ${slot.type}
+                </span>
             `;
-
-            el.addEventListener('click', () => {
-                selectedSlot = {
-                    day: selectedDay,
-                    colIndex: index,
-                    subject: subj,
-                    lab: !!entry.lab,
-                    start: col.start,
-                    end: col.end
-                };
-                renderTimeSlots();
-                updateSelectedInfo();
-                updateTakeAttendanceButton();
+            card.addEventListener('click', () => {
+                selectedSlot = slot;
+                selectedBatch = null;
+                document.querySelectorAll('.slot-card').forEach((c) => c.classList.remove('selected'));
+                card.classList.add('selected');
+                updateBatchSection();
+                updateSummary();
+                updateButton();
+                hideAlert();
             });
-
-            timeSlotsEl.appendChild(el);
+            slotGridEl.appendChild(card);
         });
     }
 
-    function updateSelectedInfo() {
-        if (!selectedSlot) {
-            selectedInfoPanel.style.display = 'none';
-            return;
+    function updateBatchSection() {
+        if (selectedSlot && selectedSlot.type === 'Lab') {
+            batchSection.style.display = 'block';
+            batchGridEl.innerHTML = '';
+            [1, 2].forEach((batchNo) => {
+                const count = STUDENTS.filter((s) => s.batch === batchNo).length;
+                const card = document.createElement('div');
+                card.className = 'batch-card';
+                card.innerHTML = `
+                    <div class="batch-icon"><i class="fas ${batchNo === 1 ? 'fa-code' : 'fa-microchip'}"></i></div>
+                    <div>
+                        <div class="batch-name">${BATCH_LABELS[batchNo]}</div>
+                        <div class="batch-meta">${count} students</div>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    selectedBatch = batchNo;
+                    document.querySelectorAll('.batch-card').forEach((c) => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    updateSummary();
+                    updateButton();
+                    hideAlert();
+                });
+                batchGridEl.appendChild(card);
+            });
+        } else {
+            batchSection.style.display = 'none';
         }
-        selectedInfoPanel.style.display = 'block';
-        document.getElementById('selected-subject-name').textContent = selectedSlot.subject.name + (selectedSlot.lab ? ' (Lab)' : '');
-        document.getElementById('selected-subject-code').textContent = selectedSlot.subject.code;
-        document.getElementById('selected-day').textContent = selectedSlot.day;
-        document.getElementById('selected-time-slot').textContent = `${formatTime(selectedSlot.start)} - ${formatTime(selectedSlot.end)}`;
     }
 
-    function updateTakeAttendanceButton() {
-        takeAttendanceBtn.disabled = !selectedSlot;
-        if (selectedSlot) hideAlert();
+    function updateSummary() {
+        if (!selectedSlot) {
+            summaryEl.classList.remove('show');
+            return;
+        }
+        summaryEl.classList.add('show');
+        document.getElementById('sum-subject').textContent = selectedSlot.subject;
+        document.getElementById('sum-time').textContent = `${formatTime12(selectedSlot.start)} – ${formatTime12(selectedSlot.end)}`;
+        document.getElementById('sum-type').textContent = selectedSlot.type;
+        document.getElementById('sum-batch').textContent = selectedSlot.type === 'Lab'
+            ? (selectedBatch ? BATCH_LABELS[selectedBatch] : 'Choose a batch below')
+            : 'All Students (Both Batches)';
+    }
+
+    function updateButton() {
+        const ready = selectedSlot && (selectedSlot.type === 'Theory' || selectedBatch !== null);
+        takeAttendanceBtn.disabled = !ready;
     }
 
     function showAlert(message) {
@@ -222,37 +152,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
     takeAttendanceBtn.addEventListener('click', function () {
         if (!selectedSlot) {
-            showAlert('Please select a lecture slot to continue');
+            showAlert('Please select a lecture slot to continue.');
+            return;
+        }
+        if (selectedSlot.type === 'Lab' && !selectedBatch) {
+            showAlert('This is a lab session — please choose a batch before continuing.');
             return;
         }
 
-        localStorage.setItem('attendanceSubject', JSON.stringify(selectedSlot.subject));
-        localStorage.setItem('attendanceTimeSlot', JSON.stringify({
-            start: selectedSlot.start,
-            end: selectedSlot.end,
-            lecture: selectedSlot.subject.name,
-            day: selectedSlot.day,
-            isLab: selectedSlot.lab
-        }));
-        localStorage.setItem('attendanceDate', new Date().toISOString());
+        Store.set(STORAGE_KEYS.SUBJECT, { name: selectedSlot.subject, type: selectedSlot.type, start: selectedSlot.start, end: selectedSlot.end });
+        Store.set(STORAGE_KEYS.DAY, selectedDay);
+        Store.set(STORAGE_KEYS.BATCH, selectedSlot.type === 'Lab' ? selectedBatch : 0);
+        localStorage.setItem(STORAGE_KEYS.DATE, new Date().toISOString());
 
         const originalText = takeAttendanceBtn.innerHTML;
-        takeAttendanceBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting...';
+        takeAttendanceBtn.innerHTML = '<span class="spinner"></span> Redirecting…';
         takeAttendanceBtn.disabled = true;
 
         setTimeout(() => {
             window.location.href = 'student.html';
-        }, 1000);
+        }, 700);
     });
 
     backBtn.addEventListener('click', function () {
-        localStorage.removeItem('attendanceLoggedIn');
-        localStorage.removeItem('attendanceUsername');
-        localStorage.removeItem('attendanceSubject');
-        localStorage.removeItem('attendanceTimeSlot');
+        Store.clearSession();
         window.location.href = 'index.html';
     });
 
-    renderDayTabs();
-    renderTimeSlots();
+    updateSummary();
+    updateButton();
 });

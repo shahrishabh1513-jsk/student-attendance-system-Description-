@@ -4,157 +4,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Take Student Attendance</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <title>Take Attendance | Attendance System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light');</script>
 </head>
 
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
-    <div class="blob blob-4"></div>
 
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo-section">
-                <div class="logo-icon">
-                    <i class="fas fa-user-graduate"></i>
-                </div>
-                <div class="logo-text">
-                    <h1>Take Student Attendance</h1>
-                    <p>Semester 7 — Mark attendance for the selected subject and lecture</p>
-                </div>
+    <header class="topbar no-print">
+        <div class="brand">
+            <div class="brand-mark"><i class="fas fa-clipboard-check"></i></div>
+            <div class="brand-text">
+                <h1>Take Attendance</h1>
+                <p id="header-sub">Loading session…</p>
             </div>
+        </div>
+        <div class="topbar-actions">
+            <div class="chip"><span>Signed in as</span><span id="logged-in-user">Teacher</span></div>
+            <div class="chip"><span>Time</span><span id="current-time">—</span></div>
+            <a class="icon-btn no-print" href="reports.html" title="Attendance reports"><i
+                    class="fas fa-chart-column"></i></a>
+            <button class="icon-btn" id="theme-toggle" title="Toggle theme"><i class="fas fa-moon"></i></button>
+        </div>
+    </header>
 
-            <div class="header-info">
-                <div class="info-item">
-                    <div class="info-label">Logged in as</div>
-                    <div class="info-value" id="logged-in-user">Teacher</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Date</div>
-                    <div class="info-value" id="current-date">Loading...</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Time</div>
-                    <div class="info-value" id="current-time">Loading...</div>
+    <main class="page">
+        <div id="attendance-alert" class="alert alert-info" style="display:none;">
+            <i class="fas fa-circle-info"></i>
+            <span id="alert-message"></span>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dash-grid no-print">
+            <div class="glass-card dash-card dash-total">
+                <div class="dash-icon"><i class="fas fa-users"></i></div>
+                <div class="dash-value" id="total-students">0</div>
+                <div class="dash-label">Total Students</div>
+            </div>
+            <div class="glass-card dash-card dash-present">
+                <div class="dash-icon"><i class="fas fa-user-check"></i></div>
+                <div class="dash-value" id="present-count">0</div>
+                <div class="dash-label">Present</div>
+            </div>
+            <div class="glass-card dash-card dash-absent">
+                <div class="dash-icon"><i class="fas fa-user-xmark"></i></div>
+                <div class="dash-value" id="absent-count">0</div>
+                <div class="dash-label">Absent</div>
+            </div>
+            <div class="glass-card dash-card dash-progress">
+                <div class="dash-icon"><i class="fas fa-chart-simple"></i></div>
+                <div class="dash-value" id="completion-pct">0%</div>
+                <div class="dash-label">Completion</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Alert Message -->
-        <div id="attendance-alert" class="alert alert-info" style="display: none;">
-            <i class="fas fa-info-circle"></i>
-            <span id="alert-message">Loading students...</span>
-        </div>
-
-        <!-- Attendance Information -->
-        <div class="attendance-info-card" id="attendance-info">
-            <!-- Info will be loaded from localStorage -->
-        </div>
-
-        <!-- Summary Statistics -->
-        <div class="summary-card">
-            <h3 class="info-title">
-                <i class="fas fa-chart-bar"></i> Attendance Summary
-            </h3>
-            <div class="summary-stats">
-                <div class="stat-item stat-total">
-                    <div class="stat-value" id="total-students">0</div>
-                    <div class="stat-label">Total Students</div>
+        <!-- Session info -->
+        <section class="glass-card section-card no-print">
+            <div class="section-title"><i class="fas fa-info-circle"></i> Session Details</div>
+            <div class="selected-summary show" style="margin:0; background:transparent; border:none; padding:0;">
+                <div>
+                    <div class="label">Subject</div>
+                    <div class="value" id="info-subject">—</div>
                 </div>
-                <div class="stat-item stat-present">
-                    <div class="stat-value" id="present-count">0</div>
-                    <div class="stat-label">Present</div>
+                <div>
+                    <div class="label">Timing</div>
+                    <div class="value" id="info-time">—</div>
                 </div>
-                <div class="stat-item stat-absent">
-                    <div class="stat-value" id="absent-count">0</div>
-                    <div class="stat-label">Absent</div>
+                <div>
+                    <div class="label">Group</div>
+                    <div class="value" id="info-batch">—</div>
                 </div>
-                <div class="stat-item stat-pending">
-                    <div class="stat-value" id="pending-count">0</div>
-                    <div class="stat-label">Pending</div>
+                <div>
+                    <div class="label">Date</div>
+                    <div class="value" id="info-date">—</div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Student List -->
-        <div class="student-list-card">
-            <div class="card-title">
-                <i class="fas fa-users"></i> Student List
+        <!-- Student list -->
+        <section class="glass-card section-card no-print">
+            <div class="section-title"><i class="fas fa-list-check"></i> Student List</div>
+
+            <div class="toolbar">
+                <div class="search-input-wrap">
+                    <i class="fas fa-magnifying-glass"></i>
+                    <input type="text" id="search-student" class="search-input"
+                        placeholder="Search by name, enrollment no., course or status…">
+                </div>
+                <select id="filter-status" class="filter-select">
+                    <option value="all">All statuses</option>
+                    <option value="present">Present</option>
+                    <option value="absent">Absent</option>
+                    <option value="pending">Pending</option>
+                </select>
             </div>
 
-            <div class="student-search">
-                <input type="text" id="search-student" class="search-input"
-                    placeholder="Search students by name or enrollment number...">
+            <div class="toolbar bulk-actions">
+                <button class="btn btn-outline btn-sm ripple" id="mark-all-present"><i class="fas fa-user-check"></i>
+                    Select All Present</button>
+                <button class="btn btn-outline btn-sm ripple" id="mark-all-absent"><i class="fas fa-user-xmark"></i>
+                    Select All Absent</button>
+                <button class="btn btn-outline btn-sm ripple" id="undo-action"><i class="fas fa-rotate-left"></i> Undo
+                    Last Action</button>
+                <button class="btn btn-danger-ghost btn-sm ripple" id="reset-attendance"><i
+                        class="fas fa-arrows-rotate"></i> Reset Attendance</button>
             </div>
 
-            <div class="table-container">
+            <div class="table-wrap">
                 <table class="student-table">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Student</th>
                             <th>Enrollment No.</th>
-                            <th>Batch</th>
-                            <th>Attendance Status</th>
-                            <th>Mark Attendance</th>
+                            <th>Course</th>
+                            <th>Status</th>
+                            <th>Mark</th>
                         </tr>
                     </thead>
-                    <tbody id="student-table-body">
-                        <tr>
-                            <td colspan="6" class="text-center py-4">
-                                <div class="text-muted">Loading students...</div>
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tbody id="student-table-body"></tbody>
                 </table>
             </div>
-        </div>
+        </section>
 
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button class="btn btn-back" id="back-btn">
-                <i class="fas fa-arrow-left"></i> Back to Subject Selection
-            </button>
-            <div class="action-buttons-right">
-                <button class="btn btn-print" id="print-attendance-btn">
-                    <i class="fas fa-print"></i> Print Attendance
-                </button>
-                <button class="btn btn-save" id="save-attendance-btn" disabled>
-                    <i class="fas fa-save"></i> Save Attendance
-                </button>
+        <div class="action-bar no-print">
+            <div class="action-bar-group">
+                <button class="btn btn-outline ripple" id="back-btn"><i class="fas fa-arrow-left"></i> Back to Subject
+                    Selection</button>
+                <button class="btn btn-outline ripple" id="print-btn"><i class="fas fa-print"></i> Print
+                    Attendance</button>
+            </div>
+            <div class="action-bar-group">
+                <button class="btn btn-success ripple" id="save-attendance-btn" disabled><i class="fas fa-save"></i>
+                    Save Attendance</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Printable report (only visible when printing) -->
+    <div id="print-report">
+        <div class="print-header">
+            <div class="print-logo-placeholder">LOGO</div>
+            <h2 id="print-college">School of Sciences</h2>
+            <p>Student Attendance Report</p>
+        </div>
+        <div class="print-meta-grid">
+            <div><span>Subject</span><strong id="print-subject">—</strong></div>
+            <div><span>Faculty</span><strong id="print-faculty">—</strong></div>
+            <div><span>Date</span><strong id="print-date">—</strong></div>
+            <div><span>Lecture Timing</span><strong id="print-time">—</strong></div>
+            <div><span>Batch / Group</span><strong id="print-batch">—</strong></div>
+            <div><span>Total Students</span><strong id="print-total">—</strong></div>
+        </div>
+        <div class="print-summary">
+            <div>Present: <strong id="print-present">0</strong></div>
+            <div>Absent: <strong id="print-absent">0</strong></div>
+            <div>Attendance %: <strong id="print-percentage">0%</strong></div>
+        </div>
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Enrollment No.</th>
+                    <th>Student Name</th>
+                    <th>Present / Absent</th>
+                </tr>
+            </thead>
+            <tbody id="print-table-body"></tbody>
+        </table>
+        <div class="print-footer">Generated by Student Attendance Management System — RAS15</div>
+    </div>
+
+    <!-- Confirmation modal -->
+    <div class="overlay no-print" id="confirm-overlay">
+        <div class="glass-card modal-card">
+            <h3 id="confirm-title">Save this attendance?</h3>
+            <p id="confirm-text">Please double-check the marks below before saving. This cannot be edited afterwards.
+            </p>
+            <div class="modal-actions">
+                <button class="btn btn-outline ripple" id="confirm-cancel">Cancel</button>
+                <button class="btn btn-success ripple" id="confirm-ok">Yes, Save</button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="footer-container">
-            <p>&copy; 2026 Student Attendance Management System | Designed for Educational Institutions | RAS15</p>
+    <!-- Success overlay -->
+    <div class="overlay no-print" id="success-overlay">
+        <div class="glass-card overlay-card">
+            <div class="success-check"><i class="fas fa-check"></i></div>
+            <h3>Attendance Saved!</h3>
+            <p style="color:var(--text-muted); font-size:13px;">Redirecting to subject selection…</p>
         </div>
+    </div>
+
+    <footer class="main-footer no-print">
+        <p>&copy; 2026 Student Attendance Management System | Designed for Educational Institutions | RAS15</p>
     </footer>
 
-    <!-- Print / Report Modal -->
-    <div class="report-modal" id="report-modal">
-        <div class="report-content">
-            <div class="report-header">
-                <h2><i class="fas fa-file-alt"></i> Attendance Report</h2>
-                <button class="close-report" id="close-report-btn"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="report-body" id="printable-report-body">
-                <!-- populated by JS -->
-            </div>
-            <div class="report-actions">
-                <button class="btn btn-back" id="cancel-report-btn"><i class="fas fa-times"></i> Close</button>
-                <button class="btn btn-print" id="confirm-print-btn"><i class="fas fa-print"></i> Print / Save as
-                    PDF</button>
-            </div>
-        </div>
-    </div>
+    <button class="scroll-top-btn no-print" id="scroll-top"><i class="fas fa-arrow-up"></i></button>
 
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/student.js"></script>
 </body>
 
