@@ -14,7 +14,7 @@ A simple and responsive web application to manage **Students**, **Subjects**, **
 ## 📸 Preview
 
 <p align="center">
-![Uploading Screenshot 2026-07-06 113540.png…]()
+<img width="1860" height="835" alt="Screenshot 2026-07-06 113540" src="https://github.com/user-attachments/assets/deeb8a24-db07-4786-96ab-d61428551284" />
 
 </p>
 
