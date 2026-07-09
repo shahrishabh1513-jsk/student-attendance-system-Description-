@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
 
-        if (username === 'SOSIT5' && password === 'ICAIT1') {
+        if (username === 'Rishabh' && password === '1504') {
             try {
                 Store.set(STORAGE_KEYS.LOGGED_IN, true);
                 localStorage.setItem(STORAGE_KEYS.USERNAME, username);
