@@ -1,3 +1,7 @@
+/**
+ * subject.js — Weekly timetable grid + batch selection logic
+ * Flow: tap a cell in the timetable -> (if Lab) pick a batch -> continue
+ */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();
@@ -15,8 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         themeToggle.querySelector('i').className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     });
 
-    const dayTabsEl = document.getElementById('day-tabs');
-    const slotGridEl = document.getElementById('slot-grid');
+    const timetableEl = document.getElementById('timetable');
     const batchSection = document.getElementById('batch-section');
     const batchGridEl = document.getElementById('batch-grid');
     const summaryEl = document.getElementById('selected-summary');
@@ -24,68 +27,70 @@ document.addEventListener('DOMContentLoaded', function () {
     const backBtn = document.getElementById('back-btn');
     const alertDiv = document.getElementById('selection-alert');
 
-    let selectedDay = WEEK_DAYS.includes(todayName()) ? todayName() : WEEK_DAYS[0];
+    const today = todayName();
+    let selectedDay = null;
     let selectedSlot = null;
     let selectedBatch = null;
 
-    renderDayTabs();
-    renderSlots();
+    const maxPeriods = Math.max(...WEEK_DAYS.map((day) => TIMETABLE[day].length));
 
-    function renderDayTabs() {
-        dayTabsEl.innerHTML = '';
+    renderTimetable();
+
+    function renderTimetable() {
+        let head = '<thead><tr><th class="period-col"></th>';
         WEEK_DAYS.forEach((day) => {
-            const tab = document.createElement('button');
-            tab.className = `day-tab ${day === selectedDay ? 'active' : ''}`;
-            tab.textContent = day;
-            tab.addEventListener('click', () => {
-                selectedDay = day;
-                selectedSlot = null;
-                selectedBatch = null;
-                renderDayTabs();
-                renderSlots();
-                updateBatchSection();
-                updateSummary();
-                updateButton();
-            });
-            dayTabsEl.appendChild(tab);
+            const isToday = day === today;
+            head += `
+                <th class="day-head ${isToday ? 'is-today' : ''}">
+                    <span class="day-name">${day}</span>
+                    <span class="day-tag">${isToday ? 'Today' : `${TIMETABLE[day].length} lectures`}</span>
+                </th>`;
         });
-    }
+        head += '</tr></thead>';
 
-    function renderSlots() {
-        slotGridEl.innerHTML = '';
-        const slots = TIMETABLE[selectedDay] || [];
-        if (slots.length === 0) {
-            slotGridEl.innerHTML = `
-                <div class="empty-state" style="grid-column: 1/-1;">
-                    <i class="fas fa-mug-hot"></i>
-                    <h4>No lectures scheduled</h4>
-                    <p>There are no lectures on ${selectedDay}. Pick another day above.</p>
-                </div>`;
-            return;
+        let body = '<tbody>';
+        for (let period = 0; period < maxPeriods; period++) {
+            body += `<tr><td class="period-col">Period ${period + 1}</td>`;
+            WEEK_DAYS.forEach((day) => {
+                const slot = TIMETABLE[day][period];
+                if (!slot) {
+                    body += '<td><div class="timetable-cell is-empty"><span class="cell-time">—</span></div></td>';
+                    return;
+                }
+                const isSelected = selectedDay === day && selectedSlot === slot;
+                body += `
+                    <td>
+                        <div class="timetable-cell type-${slot.type.toLowerCase()} ${isSelected ? 'selected' : ''}"
+                             data-day="${day}" data-period="${period}">
+                            <span class="cell-badge type-${slot.type.toLowerCase()}">${slot.type}</span>
+                            <span class="cell-time">${formatTime12(slot.start)} – ${formatTime12(slot.end)}</span>
+                            <span class="cell-subject">${slot.subject}</span>
+                            <span class="cell-check"><i class="fas fa-check"></i></span>
+                        </div>
+                    </td>`;
+            });
+            body += '</tr>';
         }
-        slots.forEach((slot, index) => {
-            const card = document.createElement('div');
-            card.className = 'slot-card';
-            card.style.animationDelay = `${index * 40}ms`;
-            card.innerHTML = `
-                <div class="slot-check"><i class="fas fa-check"></i></div>
-                <div class="slot-time">${formatTime12(slot.start)} – ${formatTime12(slot.end)}</div>
-                <div class="slot-subject">${slot.subject}</div>
-                <span class="slot-badge ${slot.type === 'Lab' ? 'badge-lab' : 'badge-theory'}">
-                    <i class="fas ${slot.type === 'Lab' ? 'fa-flask' : 'fa-book-open'}"></i> ${slot.type}
-                </span>
-            `;
-            card.addEventListener('click', () => {
-                selectedSlot = slot;
+        body += '</tbody>';
+
+        timetableEl.innerHTML = head + body;
+
+        timetableEl.querySelectorAll('.timetable-cell:not(.is-empty)').forEach((cell) => {
+            cell.addEventListener('click', () => {
+                const day = cell.dataset.day;
+                const period = Number(cell.dataset.period);
+                selectedDay = day;
+                selectedSlot = TIMETABLE[day][period];
                 selectedBatch = null;
-                document.querySelectorAll('.slot-card').forEach((c) => c.classList.remove('selected'));
-                card.classList.add('selected');
+
+                timetableEl.querySelectorAll('.timetable-cell').forEach((c) => c.classList.remove('selected'));
+                cell.classList.add('selected');
+
                 updateBatchSection();
                 updateSummary();
                 updateButton();
                 hideAlert();
             });
-            slotGridEl.appendChild(card);
         });
     }
 
@@ -126,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         summaryEl.classList.add('show');
         document.getElementById('sum-subject').textContent = selectedSlot.subject;
-        document.getElementById('sum-time').textContent = `${formatTime12(selectedSlot.start)} – ${formatTime12(selectedSlot.end)}`;
+        document.getElementById('sum-time').textContent = `${selectedDay} · ${formatTime12(selectedSlot.start)} – ${formatTime12(selectedSlot.end)}`;
         document.getElementById('sum-type').textContent = selectedSlot.type;
         document.getElementById('sum-batch').textContent = selectedSlot.type === 'Lab'
             ? (selectedBatch ? BATCH_LABELS[selectedBatch] : 'Choose a batch below')
@@ -148,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     takeAttendanceBtn.addEventListener('click', function () {
         if (!selectedSlot) {
-            showAlert('Please select a lecture slot to continue.');
+            showAlert('Please select a lecture from the timetable to continue.');
             return;
         }
         if (selectedSlot.type === 'Lab' && !selectedBatch) {

@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Subject & Lecture | Attendance System</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light');</script>
+    <script>try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }</script>
 </head>
 
 <body>
@@ -17,7 +18,7 @@
 
     <header class="topbar no-print">
         <div class="brand">
-            <div class="brand-mark"><i class="fas fa-user-graduate"></i></div>
+            <div class="brand-mark"><img src="assets/logo-mark.svg" alt="Logo"></div>
             <div class="brand-text">
                 <h1>Student Attendance System</h1>
                 <p>Pick today's timetable slot to begin</p>
@@ -37,16 +38,22 @@
             <span>Please select a lecture slot (and batch, if it's a lab) to continue.</span>
         </div>
 
-
+        <!-- Timetable -->
         <section class="glass-card section-card">
             <div class="section-title"><i class="fas fa-calendar-days"></i> Weekly Timetable</div>
-            <p class="section-sub">Select a day, then tap the lecture you're about to teach. Lab sessions will ask for a
-                batch automatically.</p>
-            <div class="day-tabs" id="day-tabs"></div>
-            <div class="slot-grid" id="slot-grid"></div>
+            <p class="section-sub">Tap the lecture you're about to teach. Lab sessions will ask for a batch
+                automatically.</p>
+            <div class="timetable-legend">
+                <span><i class="legend-dot dot-theory"></i> Theory</span>
+                <span><i class="legend-dot dot-lab"></i> Lab</span>
+                <span><i class="legend-dot dot-today"></i> Today</span>
+            </div>
+            <div class="timetable-wrap">
+                <table class="timetable" id="timetable"></table>
+            </div>
         </section>
 
-
+        <!-- Batch selection (shown only for Lab slots) -->
         <section class="glass-card section-card" id="batch-section" style="display:none;">
             <div class="section-title"><i class="fas fa-flask"></i> Select Batch for this Lab</div>
             <p class="section-sub">This is a lab session — attendance is taken batch-wise.</p>
