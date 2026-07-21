@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Take Attendance | Attendance System</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" type="image/svg+xml" href="assets/logo-mark.png">
+    <link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }</script>
 </head>
@@ -18,7 +18,7 @@
 
     <header class="topbar no-print">
         <div class="brand">
-            <div class="brand-mark"><img src="assets/logo-mark.png" alt="Logo"></div>
+            <div class="brand-mark"><img src="assets/logo-mark.svg" alt="Logo"></div>
             <div class="brand-text">
                 <h1>Take Attendance</h1>
                 <p id="header-sub">Loading session…</p>
@@ -34,6 +34,11 @@
     </header>
 
     <main class="page">
+        <div id="edit-mode-banner" class="edit-mode-banner no-print" style="display:none;">
+            <i class="fas fa-pen-to-square"></i>
+            <span>You're editing a previously saved attendance session. Saving will update that record.</span>
+        </div>
+
         <div id="attendance-alert" class="alert alert-info" style="display:none;">
             <i class="fas fa-circle-info"></i>
             <span id="alert-message"></span>
@@ -79,7 +84,7 @@
                     <div class="value" id="info-time">—</div>
                 </div>
                 <div>
-                    <div class="label">Group</div>
+                    <div class="label">Batch</div>
                     <div class="value" id="info-batch">—</div>
                 </div>
                 <div>
@@ -105,6 +110,11 @@
                     <option value="absent">Absent</option>
                     <option value="pending">Pending</option>
                 </select>
+                <select id="sort-name" class="filter-select">
+                    <option value="none">Sort by name</option>
+                    <option value="asc">Name: A → Z</option>
+                    <option value="desc">Name: Z → A</option>
+                </select>
             </div>
 
             <div class="toolbar bulk-actions">
@@ -122,12 +132,10 @@
                 <table class="student-table">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>Student</th>
                             <th>Enrollment No.</th>
-                            <th>Course</th>
-                            <th>Status</th>
                             <th>Mark</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody id="student-table-body"></tbody>
@@ -152,7 +160,7 @@
     <!-- Printable report (only visible when printing) -->
     <div id="print-report">
         <div class="print-header">
-            <img class="print-logo-placeholder" src="assets/logo-mark.png" alt="Logo">
+            <img class="print-logo-placeholder" src="assets/logo-mark.svg" alt="Logo">
             <h2 id="print-college">School of Sciences</h2>
             <p>Student Attendance Report</p>
         </div>
@@ -207,6 +215,7 @@
 
     <footer class="main-footer no-print">
         <p>&copy; 2026 Student Attendance Management System | Designed for Educational Institutions | RAS15</p>
+        <p class="footer-signature">&#10022; Designed with purpose &amp; passion &#10022; &copy; 2026 Rishabh Shah</p>
     </footer>
 
     <button class="scroll-top-btn no-print" id="scroll-top"><i class="fas fa-arrow-up"></i></button>
