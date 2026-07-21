@@ -1,5 +1,7 @@
 /**
  * student.js — Attendance-taking page logic
+ * Supports both a fresh attendance session and "editing" a previously
+ * saved record (entered via the Reports/Account page).
  */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
@@ -12,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const day = Store.get(STORAGE_KEYS.DAY);
     const batch = Store.get(STORAGE_KEYS.BATCH, 0);
     const sessionDate = localStorage.getItem(STORAGE_KEYS.DATE) || new Date().toISOString();
+    const editRecordId = Store.get(STORAGE_KEYS.EDIT_RECORD, null);
 
     if (!subject || !day) {
         window.location.href = 'subject.html';
@@ -27,7 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Attendance state per student: true = present, false = absent, null = pending
     let students = roster.map((s) => ({ ...s, attendance: null }));
 
-    // Try to resume a draft for this exact session (same subject/day/batch/date)
+    // Try to resume a draft for this exact session (same subject/day/batch/date).
+    // This is also how "Edit Attendance" from the Reports page hands off its data.
     const draft = Store.get(STORAGE_KEYS.DRAFT);
     const draftKey = `${subject.name}|${day}|${batch}|${sessionDate.slice(0, 10)}`;
     if (draft && draft.key === draftKey && Array.isArray(draft.students)) {
@@ -35,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let filteredStudents = [...students];
+    let sortMode = 'none'; // 'none' | 'asc' | 'desc'
     let history = []; // undo stack of {id, previous}
     let unsavedChanges = false;
 
@@ -54,6 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const alertDiv = el('attendance-alert');
     const searchInput = el('search-student');
     const filterStatus = el('filter-status');
+    const sortNameSelect = el('sort-name');
+    const editBanner = el('edit-mode-banner');
 
     /* ------------------------------ header ---------------------------- */
 
@@ -63,6 +70,11 @@ document.addEventListener('DOMContentLoaded', function () {
     el('info-time').textContent = `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`;
     el('info-batch').textContent = batch ? BATCH_LABELS[batch] : 'All Students (Both Batches)';
     el('info-date').textContent = formatDateLong(sessionDate);
+
+    if (editRecordId && editBanner) {
+        editBanner.style.display = 'flex';
+        el('save-attendance-btn').innerHTML = '<i class="fas fa-save"></i> Update Attendance';
+    }
 
     function updateClock() {
         el('current-time').textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -81,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderTable() {
         if (filteredStudents.length === 0) {
             studentTableBody.innerHTML = `
-                <tr><td colspan="6">
+                <tr><td colspan="4">
                     <div class="empty-state">
                         <i class="fas fa-magnifying-glass"></i>
                         <h4>No students found</h4>
@@ -95,20 +107,18 @@ document.addEventListener('DOMContentLoaded', function () {
             const statusText = student.attendance === true ? 'Present' : student.attendance === false ? 'Absent' : 'Pending';
             return `
                 <tr data-row-id="${student.id}" style="animation-delay:${i * 25}ms">
-                    <td>${i + 1}</td>
                     <td>
                         <div class="student-name">${student.name}</div>
                         <div class="student-meta">${BATCH_LABELS[student.batch]}</div>
                     </td>
                     <td class="enroll-code">${student.enrollmentNo}</td>
-                    <td><span class="course-pill">${student.course}</span></td>
-                    <td><span class="status-pill ${statusClass}"><i class="fas fa-circle" style="font-size:6px;"></i> ${statusText}</span></td>
                     <td>
                         <div class="mark-toggle">
                             <button class="mark-btn present-btn ${student.attendance === true ? 'active' : ''}" data-id="${student.id}" data-value="true" title="Mark present"><i class="fas fa-check"></i></button>
                             <button class="mark-btn absent-btn ${student.attendance === false ? 'active' : ''}" data-id="${student.id}" data-value="false" title="Mark absent"><i class="fas fa-xmark"></i></button>
                         </div>
                     </td>
+                    <td><span class="status-pill ${statusClass}"><i class="fas fa-circle" style="font-size:6px;"></i> ${statusText}</span></td>
                 </tr>`;
         }).join('');
 
@@ -199,6 +209,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const matchesStatus = statusFilter === 'all' || statusFilter === statusWord;
             return matchesTerm && matchesStatus;
         });
+
+        if (sortMode === 'asc') {
+            filteredStudents.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortMode === 'desc') {
+            filteredStudents.sort((a, b) => b.name.localeCompare(a.name));
+        }
+
         renderTable();
     }
 
@@ -290,13 +307,22 @@ document.addEventListener('DOMContentLoaded', function () {
         el('print-absent').textContent = absent;
         el('print-percentage').textContent = `${pct}%`;
 
-        el('print-table-body').innerHTML = students.map((s, i) => `
-            <tr>
-                <td>${i + 1}</td>
-                <td>${s.enrollmentNo}</td>
-                <td>${s.name}</td>
-                <td>${s.attendance === true ? 'Present' : s.attendance === false ? 'Absent' : 'Pending'}</td>
-            </tr>`).join('');
+        // Absent students get a red boxed name to stand out; everyone else stays plain.
+        el('print-table-body').innerHTML = students.map((s, i) => {
+            const isAbsent = s.attendance === false;
+            const statusLabel = s.attendance === true ? 'Present' : s.attendance === false ? 'Absent' : 'Pending';
+            const statusClass = s.attendance === true ? 'print-status-present' : s.attendance === false ? 'print-status-absent' : 'print-status-pending';
+            const nameHtml = isAbsent
+                ? `<span class="print-name-absent">${s.name}</span>`
+                : `<span class="print-name-plain">${s.name}</span>`;
+            return `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${s.enrollmentNo}</td>
+                    <td class="print-name-cell">${nameHtml}</td>
+                    <td class="${statusClass}">${statusLabel}</td>
+                </tr>`;
+        }).join('');
     }
 
     printBtn.addEventListener('click', () => {
@@ -319,7 +345,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function saveAttendance() {
-        const originalText = saveAttendanceBtn.innerHTML;
         saveAttendanceBtn.innerHTML = '<span class="spinner"></span> Saving…';
         saveAttendanceBtn.disabled = true;
 
@@ -328,41 +353,77 @@ document.addEventListener('DOMContentLoaded', function () {
             const absent = students.filter((s) => s.attendance === false).length;
             const total = students.length;
 
-            const record = {
-                id: Date.now(),
-                subject: subject.name,
-                type: subject.type,
-                timing: `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`,
-                day,
-                batch,
-                batchLabel: batch ? BATCH_LABELS[batch] : 'All Students',
-                faculty: localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher',
-                date: sessionDate,
-                students,
-                summary: { total, present, absent, percentage: total > 0 ? Math.round((present / total) * 100) : 0 },
-                savedAt: new Date().toISOString(),
-            };
-
             const records = Store.get(STORAGE_KEYS.RECORDS, []);
-            records.push(record);
-            Store.set(STORAGE_KEYS.RECORDS, records);
+            let finalId;
 
+            if (editRecordId) {
+                // Update the existing saved record in place.
+                const idx = records.findIndex((r) => String(r.id) === String(editRecordId));
+                const updated = {
+                    id: editRecordId,
+                    subject: subject.name,
+                    type: subject.type,
+                    timing: `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`,
+                    start: subject.start,
+                    end: subject.end,
+                    day,
+                    batch,
+                    batchLabel: batch ? BATCH_LABELS[batch] : 'All Students',
+                    faculty: localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher',
+                    date: sessionDate,
+                    students,
+                    summary: { total, present, absent, percentage: total > 0 ? Math.round((present / total) * 100) : 0 },
+                    savedAt: (idx >= 0 && records[idx].savedAt) || new Date().toISOString(),
+                    editedAt: new Date().toISOString(),
+                };
+                if (idx >= 0) records[idx] = updated; else records.push(updated);
+                finalId = editRecordId;
+            } else {
+                const record = {
+                    id: Date.now(),
+                    subject: subject.name,
+                    type: subject.type,
+                    timing: `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`,
+                    start: subject.start,
+                    end: subject.end,
+                    day,
+                    batch,
+                    batchLabel: batch ? BATCH_LABELS[batch] : 'All Students',
+                    faculty: localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher',
+                    date: sessionDate,
+                    students,
+                    summary: { total, present, absent, percentage: total > 0 ? Math.round((present / total) * 100) : 0 },
+                    savedAt: new Date().toISOString(),
+                };
+                records.push(record);
+                finalId = record.id;
+            }
+
+            Store.set(STORAGE_KEYS.RECORDS, records);
             Store.remove(STORAGE_KEYS.DRAFT);
+            Store.remove(STORAGE_KEYS.EDIT_RECORD);
             unsavedChanges = false;
 
             successOverlay.classList.add('show');
 
+            // Keep the user logged in — just clear this attendance session's
+            // temporary state — then take them to the account/report page so
+            // they can review (or, if needed, edit again) what was just saved.
             setTimeout(() => {
-                Store.clearSession();
-                window.location.href = 'subject.html';
-            }, 1800);
-        }, 1100);
+                Store.clearAttendanceSession();
+                window.location.href = `reports.html?record=${encodeURIComponent(finalId)}`;
+            }, 1600);
+        }, 900);
     }
 
     /* --------------------------- event wiring ---------------------------- */
 
     searchInput.addEventListener('input', debounce(applyFilters, 150));
     filterStatus.addEventListener('change', applyFilters);
+    sortNameSelect.addEventListener('change', () => {
+        sortMode = sortNameSelect.value;
+        applyFilters();
+    });
     el('mark-all-present').addEventListener('click', () => markAll(true));
     el('mark-all-absent').addEventListener('click', () => markAll(false));
     el('undo-action').addEventListener('click', undoLast);
@@ -370,7 +431,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     backBtn.addEventListener('click', () => {
         if (unsavedChanges && !confirm('You have unsaved attendance marks. Leave this page anyway?')) return;
-        window.location.href = 'subject.html';
+        if (editRecordId) {
+            Store.remove(STORAGE_KEYS.EDIT_RECORD);
+            Store.clearAttendanceSession();
+            window.location.href = `reports.html?record=${encodeURIComponent(editRecordId)}`;
+        } else {
+            window.location.href = 'subject.html';
+        }
     });
 
     window.addEventListener('beforeunload', (e) => {
@@ -393,5 +460,5 @@ document.addEventListener('DOMContentLoaded', function () {
     applyFilters();
     updateStatistics();
     checkAllMarked();
-    showToast(`Roster loaded: ${students.length} student(s).`, 'info');
+    showToast(editRecordId ? `Editing saved session: ${students.length} student(s).` : `Roster loaded: ${students.length} student(s).`, 'info');
 });

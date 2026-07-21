@@ -1,3 +1,9 @@
+/**
+ * utils.js
+ * Shared helpers used across every page: storage, toasts, formatting,
+ * theme handling and small DOM conveniences.
+ */
+
 const STORAGE_KEYS = {
     LOGGED_IN: "attendanceLoggedIn",
     USERNAME: "attendanceUsername",
@@ -7,8 +13,11 @@ const STORAGE_KEYS = {
     DATE: "attendanceDate",
     RECORDS: "attendanceRecords",
     DRAFT: "attendanceDraft",
+    EDIT_RECORD: "attendanceEditRecordId",
     THEME: "attendanceTheme",
 };
+
+/* ---------------------------- storage ---------------------------- */
 
 const Store = {
     get(key, fallback = null) {
@@ -32,6 +41,7 @@ const Store = {
             localStorage.removeItem(key);
         } catch (e) { /* storage unavailable — nothing to clear anyway */ }
     },
+    // Full logout: clears the session AND the login flag itself.
     clearSession() {
         [
             STORAGE_KEYS.LOGGED_IN,
@@ -41,9 +51,25 @@ const Store = {
             STORAGE_KEYS.BATCH,
             STORAGE_KEYS.DATE,
             STORAGE_KEYS.DRAFT,
+            STORAGE_KEYS.EDIT_RECORD,
+        ].forEach((k) => Store.remove(k));
+    },
+    // Clears only the in-progress attendance selection (subject/day/batch/
+    // date/draft/edit-id) WITHOUT touching the login flag — used after
+    // saving attendance so the teacher stays signed in.
+    clearAttendanceSession() {
+        [
+            STORAGE_KEYS.SUBJECT,
+            STORAGE_KEYS.DAY,
+            STORAGE_KEYS.BATCH,
+            STORAGE_KEYS.DATE,
+            STORAGE_KEYS.DRAFT,
+            STORAGE_KEYS.EDIT_RECORD,
         ].forEach((k) => Store.remove(k));
     },
 };
+
+/* ----------------------------- time ------------------------------ */
 
 function formatTime12(timeStr) {
     const [h, m] = timeStr.split(":").map(Number);
@@ -65,6 +91,7 @@ function todayName() {
     return new Date().toLocaleDateString("en-US", { weekday: "long" });
 }
 
+/* ---------------------------- toasts ------------------------------ */
 
 function showToast(message, type = "info", duration = 3200) {
     let host = document.getElementById("toast-host");
@@ -92,6 +119,7 @@ function showToast(message, type = "info", duration = 3200) {
     }, duration);
 }
 
+/* ----------------------------- theme ------------------------------- */
 
 function safeGetItem(key, fallback = null) {
     try {
@@ -112,7 +140,9 @@ function safeSetItem(key, value) {
 }
 
 function initTheme() {
-
+    // Never let a blocked/unavailable localStorage (private browsing, some
+    // file:// contexts, sandboxed previews) throw and abort the rest of the
+    // page's setup script — always fall back to the light theme instead.
     const saved = safeGetItem(STORAGE_KEYS.THEME, "light");
     document.documentElement.setAttribute("data-theme", saved);
 }
@@ -125,6 +155,7 @@ function toggleTheme() {
     return next;
 }
 
+/* ------------------------- animated counters ------------------------ */
 
 function animateCount(el, to, duration = 500) {
     if (!el) return;
@@ -143,6 +174,7 @@ function animateCount(el, to, duration = 500) {
     requestAnimationFrame(tick);
 }
 
+/* ---------------------------- misc dom ------------------------------ */
 
 function debounce(fn, delay = 200) {
     let handle;
@@ -170,7 +202,9 @@ function requireLogin(redirectTo = "index.html") {
     return true;
 }
 
-
+/* Ripple effect for any element with the .ripple class.
+   Wrapped defensively — a ripple glitch should never prevent the real
+   click/submit handlers on the same element from being wired up. */
 function attachRipple(root = document) {
     try {
         root.querySelectorAll(".ripple").forEach((el) => {
