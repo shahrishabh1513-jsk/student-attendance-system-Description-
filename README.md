@@ -5,7 +5,7 @@
 A simple and responsive web application to manage **Students**, **Subjects**, **Attendance**, and **Reports**.
 
 [![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Open-success?style=for-the-badge)](https://bscit-attendance.netlify.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/shahrishabh1513-jsk/student-attendance-system-Description-)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/shahRishabh1513-jsk/student-attendance-system-Description-)
 
 </div>
 
@@ -67,14 +67,14 @@ student-attendance-system/
 
 ## 🚀 Live Demo
 
-🌐 https://shahrishabh1513-jsk.github.io/student-attendance-system-Description-/
+🌐 https://shahRishabh1513-jsk.github.io/student-attendance-system-Description-/
 
 ---
 
 ## 💻 Run Locally
 
 ```bash
-git clone https://github.com/shahrishabh1513-jsk/student-attendance-system-Description-.git
+git clone https://github.com/shahRishabh1513-jsk/student-attendance-system-Description-.git
 ```
 
 Open **index.html** in your browser.
@@ -84,11 +84,11 @@ Open **index.html** in your browser.
 ## 👨‍💻 Connect With Me
 
 <p align="center">
-<a href="https://github.com/shahrishabh1513-jsk">
+<a href="https://github.com/shahRishabh1513-jsk">
 <img src="https://img.shields.io/badge/GitHub-Rishabh%20Shah-181717?style=for-the-badge&logo=github">
 </a>
 
-<a href="https://www.linkedin.com/in/rishabh-alpeshabhai-shah-91b9072a6/">
+<a href="https://www.linkedin.com/in/Rishabh-alpeshabhai-shah-91b9072a6/">
 <img src="https://img.shields.io/badge/LinkedIn-Rishabh%20Shah-0077B5?style=for-the-badge&logo=linkedin">
 </a>
 </p>

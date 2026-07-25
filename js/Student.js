@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderTable() {
         if (filteredStudents.length === 0) {
             studentTableBody.innerHTML = `
-                <tr><td colspan="4">
+                <tr><td colspan="3">
                     <div class="empty-state">
                         <i class="fas fa-magnifying-glass"></i>
                         <h4>No students found</h4>
@@ -103,22 +103,20 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         studentTableBody.innerHTML = filteredStudents.map((student, i) => {
-            const statusClass = student.attendance === true ? 'status-present' : student.attendance === false ? 'status-absent' : 'status-pending';
-            const statusText = student.attendance === true ? 'Present' : student.attendance === false ? 'Absent' : 'Pending';
             return `
-                <tr data-row-id="${student.id}" style="animation-delay:${i * 25}ms">
-                    <td>
+                <tr data-row-id="${student.id}" class="row-${student.attendance === true ? 'present' : student.attendance === false ? 'absent' : 'pending'}" style="animation-delay:${i * 25}ms">
+                    <td class="cell-student">
                         <div class="student-name">${student.name}</div>
                         <div class="student-meta">${BATCH_LABELS[student.batch]}</div>
+                        <div class="student-enroll-mobile">${student.enrollmentNo}</div>
                     </td>
-                    <td class="enroll-code">${student.enrollmentNo}</td>
-                    <td>
+                    <td class="cell-enroll enroll-code">${student.enrollmentNo}</td>
+                    <td class="cell-mark">
                         <div class="mark-toggle">
-                            <button class="mark-btn present-btn ${student.attendance === true ? 'active' : ''}" data-id="${student.id}" data-value="true" title="Mark present"><i class="fas fa-check"></i></button>
-                            <button class="mark-btn absent-btn ${student.attendance === false ? 'active' : ''}" data-id="${student.id}" data-value="false" title="Mark absent"><i class="fas fa-xmark"></i></button>
+                            <button class="mark-btn present-btn ${student.attendance === true ? 'active' : ''}" data-id="${student.id}" data-value="true" title="Mark present"><i class="fas fa-check"></i> <span>Present</span></button>
+                            <button class="mark-btn absent-btn ${student.attendance === false ? 'active' : ''}" data-id="${student.id}" data-value="false" title="Mark absent"><i class="fas fa-xmark"></i> <span>Absent</span></button>
                         </div>
                     </td>
-                    <td><span class="status-pill ${statusClass}"><i class="fas fa-circle" style="font-size:6px;"></i> ${statusText}</span></td>
                 </tr>`;
         }).join('');
 
@@ -141,8 +139,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return matchesTerm && matchesStatus;
     }
 
-    // Updates just one row's status pill + buttons directly — no re-render,
-    // so marking present/absent is instant with no entrance animation.
+    // Updates just one row's mark buttons directly — no re-render, so
+    // marking present/absent is instant with no entrance animation.
     function updateRowInPlace(student) {
         const row = studentTableBody.querySelector(`tr[data-row-id="${student.id}"]`);
         if (!row) return;
@@ -155,13 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const statusClass = student.attendance === true ? 'status-present' : student.attendance === false ? 'status-absent' : 'status-pending';
-        const statusText = student.attendance === true ? 'Present' : student.attendance === false ? 'Absent' : 'Pending';
-
-        const statusPill = row.querySelector('.status-pill');
-        statusPill.className = `status-pill ${statusClass}`;
-        statusPill.innerHTML = `<i class="fas fa-circle" style="font-size:6px;"></i> ${statusText}`;
-
+        row.className = `row-${student.attendance === true ? 'present' : student.attendance === false ? 'absent' : 'pending'}`;
         row.querySelector('.present-btn').classList.toggle('active', student.attendance === true);
         row.querySelector('.absent-btn').classList.toggle('active', student.attendance === false);
     }

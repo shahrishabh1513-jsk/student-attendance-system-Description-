@@ -1,17 +1,17 @@
 /* ===================================================================
    Student Attendance Management System
-   Design tokens: Off-White / Charcoal Black / Golden Yellow —
-   a warm, editorial, high-contrast light theme.
+   Design tokens: Sky Blue on Off-White — a clean, bright, airy light
+   theme built around a single confident blue.
    =================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
 
 :root {
     /* brand */
-    --primary: #1C1B18;
-    --primary-light: #4A4844;
-    --secondary: #34322D;
-    --accent: #F4B400;
+    --primary: #0EA5E9;
+    --primary-light: #7DD3FC;
+    --secondary: #0369A1;
+    --accent: #38BDF8;
     --success: #16A34A;
     --warning: #D97706;
     --danger: #DC2626;
@@ -20,23 +20,23 @@
     --lab-bg: #FEF3C7;
     --lab-border: #F4B400;
     --lab-text: #7C5800;
-    --theory-bg: #E7E5DE;
-    --theory-border: #1C1B18;
-    --theory-text: #1C1B18;
+    --theory-bg: #E0F2FE;
+    --theory-border: #0EA5E9;
+    --theory-text: #0369A1;
 
     /* light theme surface */
-    --bg: #F7F4EC;
-    --bg-blob-1: #FBEFC9;
-    --bg-blob-2: #EFEAE0;
-    --bg-blob-3: #F2DFA6;
-    --surface: rgba(255, 253, 247, 0.9);
-    --surface-solid: #FFFEF9;
+    --bg: #F0F9FF;
+    --bg-blob-1: #E0F2FE;
+    --bg-blob-2: #DBEEFE;
+    --bg-blob-3: #BAE6FD;
+    --surface: rgba(255, 255, 255, 0.9);
+    --surface-solid: #FFFFFF;
     --surface-strong: #FFFFFF;
-    --surface-border: rgba(28, 27, 24, 0.1);
-    --text: #1C1B18;
-    --text-muted: #6B6659;
-    --text-faint: #9C9585;
-    --shadow-color: rgba(28, 27, 24, 0.1);
+    --surface-border: rgba(3, 105, 161, 0.12);
+    --text: #0B2540;
+    --text-muted: #51687D;
+    --text-faint: #8CA0B3;
+    --shadow-color: rgba(14, 165, 233, 0.14);
 
     --radius-sm: 12px;
     --radius-md: 18px;
@@ -48,30 +48,30 @@
     --font-mono: 'JetBrains Mono', monospace;
 
     --shadow-soft: 0 6px 22px var(--shadow-color);
-    --shadow-lift: 0 16px 40px rgba(28, 27, 24, 0.18);
+    --shadow-lift: 0 16px 40px rgba(14, 165, 233, 0.22);
     --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="dark"] {
-    --bg: #131210;
-    --bg-blob-1: #2A2410;
-    --bg-blob-2: #1F1D19;
-    --bg-blob-3: #332B10;
-    --surface: rgba(31, 29, 25, 0.72);
-    --surface-solid: #1C1A16;
-    --surface-strong: #242220;
+    --bg: #0A1622;
+    --bg-blob-1: #0C3A57;
+    --bg-blob-2: #0B2E45;
+    --bg-blob-3: #0E4463;
+    --surface: rgba(15, 30, 44, 0.72);
+    --surface-solid: #10202F;
+    --surface-strong: #16293A;
     --surface-border: rgba(255, 255, 255, 0.09);
-    --text: #F5F2E9;
-    --text-muted: #B4AE9E;
-    --text-faint: #7C7666;
+    --text: #EAF4FC;
+    --text-muted: #9DB6C9;
+    --text-faint: #6C889C;
     --shadow-color: rgba(0, 0, 0, 0.5);
 
     --lab-bg: rgba(244, 180, 0, 0.16);
     --lab-border: #F4B400;
     --lab-text: #FCD34D;
-    --theory-bg: rgba(255, 255, 255, 0.08);
-    --theory-border: #E8E3D6;
-    --theory-text: #E8E3D6;
+    --theory-bg: rgba(56, 189, 248, 0.14);
+    --theory-border: #38BDF8;
+    --theory-text: #7DD3FC;
 }
 
 * {
@@ -261,7 +261,7 @@ a {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: #fff;
     font-size: 18px;
-    box-shadow: 0 6px 16px rgba(28, 27, 24, 0.28);
+    box-shadow: 0 6px 16px rgba(14, 165, 233, 0.3);
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -297,7 +297,7 @@ a {
     flex-direction: column;
     padding: 6px 14px;
     border-radius: var(--radius-sm);
-    background: rgba(244, 180, 0, 0.14);
+    background: rgba(56, 189, 248, 0.16);
     font-size: 12px;
     min-width: 92px;
 }
@@ -329,7 +329,7 @@ a {
 
 .icon-btn:hover {
     transform: translateY(-2px);
-    background: rgba(244, 180, 0, 0.16);
+    background: rgba(56, 189, 248, 0.18);
 }
 
 /* ------------------------------------------------------------------ */
@@ -369,7 +369,7 @@ a {
 .btn-primary {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: #fff;
-    box-shadow: 0 10px 24px rgba(28, 27, 24, 0.3);
+    box-shadow: 0 10px 24px rgba(14, 165, 233, 0.32);
 }
 
 .btn-success {
@@ -439,8 +439,8 @@ a {
     position: absolute;
     inset: 0;
     background-image:
-        radial-gradient(circle at 12% 18%, rgba(28, 27, 24, 0.05) 0, rgba(28, 27, 24, 0.05) 1px, transparent 1px),
-        radial-gradient(circle at 88% 82%, rgba(244, 180, 0, 0.10) 0, rgba(244, 180, 0, 0.10) 1px, transparent 1px);
+        radial-gradient(circle at 12% 18%, rgba(3, 105, 161, 0.05) 0, rgba(3, 105, 161, 0.05) 1px, transparent 1px),
+        radial-gradient(circle at 88% 82%, rgba(56, 189, 248, 0.12) 0, rgba(56, 189, 248, 0.12) 1px, transparent 1px);
     background-size: 26px 26px, 30px 30px;
     opacity: 0.7;
     pointer-events: none;
@@ -456,7 +456,7 @@ a {
     background: var(--surface-solid);
     border-radius: var(--radius-lg);
     border: 1px solid var(--surface-border);
-    box-shadow: 0 30px 70px rgba(28, 27, 24, 0.14);
+    box-shadow: 0 30px 70px rgba(14, 165, 233, 0.16);
     overflow: hidden;
     animation: card-pop 560ms var(--transition);
 }
@@ -498,7 +498,7 @@ a {
     height: 12px;
     border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 0 6px rgba(244, 180, 0, 0.22);
+    box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.25);
 }
 
 /* -- Form panel -- */
@@ -515,7 +515,7 @@ a {
     margin-bottom: 18px;
     border-radius: 13px;
     overflow: hidden;
-    box-shadow: 0 8px 20px rgba(28, 27, 24, 0.22);
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.26);
 }
 
 .login-logo img {
@@ -607,7 +607,7 @@ a {
 
 .login-hint-link,
 .login-hint-link:visited {
-    color: #8A6400;
+    color: #0369A1;
 }
 
 .login-topbar {
@@ -665,7 +665,7 @@ a {
 
 .field-input input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(244, 180, 0, 0.22);
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25);
 }
 
 .login-btn {
@@ -696,8 +696,8 @@ a {
 }
 
 .alert-info {
-    background: rgba(244, 180, 0, 0.16);
-    color: #7C5800;
+    background: rgba(56, 189, 248, 0.16);
+    color: #0369A1;
 }
 
 .alert-warning {
@@ -936,8 +936,8 @@ td.period-col {
 
 .timetable-cell.selected {
     border-color: var(--primary);
-    background: rgba(244, 180, 0, 0.14);
-    box-shadow: 0 0 0 3px rgba(244, 180, 0, 0.3);
+    background: rgba(56, 189, 248, 0.16);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.32);
 }
 
 .timetable-cell.is-empty {
@@ -982,7 +982,7 @@ td.period-col {
 }
 
 .cell-badge.type-theory {
-    background: rgba(28, 27, 24, 0.08);
+    background: rgba(14, 165, 233, 0.14);
     color: var(--theory-text);
 }
 
@@ -1077,7 +1077,7 @@ td.period-col {
     margin-top: 6px;
     padding: 16px 18px;
     border-radius: var(--radius-md);
-    background: linear-gradient(135deg, rgba(244, 180, 0, .16), rgba(28, 27, 24, .05));
+    background: linear-gradient(135deg, rgba(56, 189, 248, .16), rgba(14, 165, 233, .06));
     border: 1px dashed var(--primary-light);
 }
 
@@ -1244,7 +1244,7 @@ table.student-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 13.5px;
-    min-width: 640px;
+    min-width: 460px;
 }
 
 table.student-table thead th {
@@ -1263,10 +1263,19 @@ table.student-table thead th {
 table.student-table tbody tr {
     animation: row-in 320ms var(--transition) backwards;
     transition: background var(--transition);
+    border-left: 3px solid transparent;
 }
 
 table.student-table tbody tr:hover {
-    background: rgba(244, 180, 0, 0.08);
+    background: rgba(56, 189, 248, 0.08);
+}
+
+table.student-table tbody tr.row-present {
+    border-left-color: var(--success);
+}
+
+table.student-table tbody tr.row-absent {
+    border-left-color: var(--danger);
 }
 
 table.student-table tbody td {
@@ -1301,14 +1310,18 @@ table.student-table tbody td {
     font-size: 12.5px;
 }
 
+.student-enroll-mobile {
+    display: none;
+}
+
 .course-pill {
     display: inline-block;
     padding: 3px 10px;
     border-radius: var(--radius-pill);
     font-size: 11px;
     font-weight: 700;
-    background: rgba(28, 27, 24, .08);
-    color: var(--text-muted);
+    background: rgba(14, 165, 233, .1);
+    color: var(--secondary);
 }
 
 [data-theme="dark"] .course-pill {
@@ -1340,39 +1353,133 @@ table.student-table tbody td {
     color: var(--warning);
 }
 
+.cell-mark {
+    text-align: right;
+}
+
 .mark-toggle {
     display: flex;
-    gap: 6px;
+    gap: 8px;
+    justify-content: flex-end;
 }
 
 .mark-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: var(--radius-pill);
     border: 1.5px solid var(--surface-border);
     background: var(--surface-solid);
     cursor: pointer;
-    display: grid;
-    place-items: center;
-    font-size: 13px;
+    font-size: 12.5px;
+    font-weight: 700;
     color: var(--text-faint);
     transition: var(--transition);
+    white-space: nowrap;
+}
+
+.mark-btn span {
+    display: inline;
 }
 
 .mark-btn.present-btn.active {
     background: var(--success);
     color: #fff;
     border-color: transparent;
+    box-shadow: 0 6px 16px rgba(22, 163, 74, 0.28);
 }
 
 .mark-btn.absent-btn.active {
     background: var(--danger);
     color: #fff;
     border-color: transparent;
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.24);
 }
 
 .mark-btn:hover {
     transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Mobile attendance cards (name + enrollment left, mark buttons right) */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 720px) {
+    table.student-table {
+        min-width: 0;
+    }
+
+    table.student-table thead {
+        display: none;
+    }
+
+    table.student-table,
+    table.student-table tbody,
+    table.student-table tr,
+    table.student-table td {
+        display: block;
+        width: 100%;
+    }
+
+    table.student-table tbody tr {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--surface-border);
+        border-left: 3px solid transparent;
+        background: var(--surface-solid);
+    }
+
+    table.student-table tbody tr.row-present {
+        border-left-color: var(--success);
+    }
+
+    table.student-table tbody tr.row-absent {
+        border-left-color: var(--danger);
+    }
+
+    table.student-table tbody td {
+        padding: 0;
+        border-bottom: none;
+    }
+
+    table.student-table tbody td.cell-enroll {
+        display: none;
+    }
+
+    table.student-table tbody td.cell-student {
+        flex: 1;
+        min-width: 0;
+    }
+
+    table.student-table tbody td.cell-mark {
+        flex-shrink: 0;
+    }
+
+    .student-enroll-mobile {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+    }
+
+    .mark-toggle {
+        gap: 6px;
+    }
+
+    .mark-btn {
+        padding: 9px 10px;
+    }
+
+    .mark-btn span {
+        display: none;
+    }
 }
 
 /* ------------------------------------------------------------------ */
@@ -1615,7 +1722,7 @@ table.student-table tbody td {
 
 .share-format-btn.active {
     border-color: var(--accent);
-    background: rgba(244, 180, 0, 0.14);
+    background: rgba(56, 189, 248, 0.16);
     color: var(--text);
 }
 
@@ -1659,7 +1766,7 @@ table.student-table tbody td {
 
 .share-platform-btn.device {
     background: var(--accent);
-    color: #1C1B18;
+    color: #06283D;
     grid-column: 1 / -1;
 }
 
@@ -1900,7 +2007,7 @@ table.student-table tbody td {
     gap: 10px;
     padding: 12px 16px;
     border-radius: var(--radius-md);
-    background: linear-gradient(135deg, rgba(244, 180, 0, .18), rgba(28, 27, 24, .06));
+    background: linear-gradient(135deg, rgba(56, 189, 248, .2), rgba(14, 165, 233, .07));
     border: 1px dashed var(--secondary);
     font-size: 13px;
     font-weight: 600;
@@ -1912,11 +2019,200 @@ table.student-table tbody td {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Print report                                                        */
+/*  Print / exportable report                                          */
+/*  NOTE: these are normal (non-@media) rules on purpose — the Share    */
+/*  Report feature temporarily reveals #print-report on-screen so       */
+/*  html2canvas can capture it, so its look must not depend on actual   */
+/*  browser printing to render correctly.                               */
 /* ------------------------------------------------------------------ */
 
 #print-report {
     display: none;
+    color: #0B2540;
+    font-family: 'Inter', Arial, sans-serif;
+    background: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.print-header {
+    text-align: center;
+    padding: 22px 20px 20px;
+    margin: -24px -24px 18px;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(135deg, #0EA5E9, #0369A1);
+    color: #ffffff;
+}
+
+.print-logo-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    margin: 0 auto 10px;
+    display: block;
+    background: #ffffff;
+    padding: 4px;
+}
+
+.print-header h2 {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.print-header p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    opacity: 0.92;
+    letter-spacing: 0.02em;
+}
+
+.print-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 0 0 16px;
+    font-size: 12px;
+}
+
+.print-meta-grid div {
+    background: #F0F9FF;
+    border: 1px solid #E0F2FE;
+    border-radius: 10px;
+    padding: 8px 10px;
+}
+
+.print-meta-grid div span {
+    display: block;
+    color: #51687D;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+.print-meta-grid div strong {
+    font-size: 12.5px;
+    color: #0B2540;
+}
+
+.print-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 0 0 18px;
+}
+
+.print-stat-box {
+    border-radius: 12px;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+.print-stat-box span {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    opacity: 0.85;
+}
+
+.print-stat-box strong {
+    display: block;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.print-stat-box.stat-total {
+    background: #E0F2FE;
+    color: #0369A1;
+}
+
+.print-stat-box.stat-present {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.print-stat-box.stat-absent {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+.print-stat-box.stat-percentage {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+table.print-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 11.5px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+}
+
+table.print-table th {
+    background: #0EA5E9;
+    color: #ffffff;
+    padding: 9px 10px;
+    text-align: left;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+table.print-table td {
+    padding: 8px 10px;
+    border-top: 1px solid #EEF2F6;
+}
+
+table.print-table tbody tr:nth-child(even) {
+    background: #F8FAFC;
+}
+
+table.print-table td.print-name-cell {
+    padding: 6px 10px;
+}
+
+.print-name-plain {
+    font-weight: 500;
+}
+
+.print-name-absent {
+    display: inline-block;
+    border: 1.5px solid #DC2626;
+    background: #FEE2E2;
+    color: #991B1B;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 6px;
+}
+
+.print-status-present {
+    color: #15803D;
+    font-weight: 700;
+}
+
+.print-status-absent {
+    color: #DC2626;
+    font-weight: 800;
+}
+
+.print-status-pending {
+    color: #92400E;
+    font-weight: 700;
+}
+
+.print-footer {
+    text-align: center;
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid #E2E8F0;
+    font-size: 10.5px;
+    color: #94A3B8;
 }
 
 @media print {
@@ -1937,117 +2233,7 @@ table.student-table tbody td {
 
     #print-report {
         display: block !important;
-        color: #000;
-        font-family: 'Inter', Arial, sans-serif;
-    }
-
-    .print-header {
-        text-align: center;
-        border-bottom: 3px solid #1C1B18;
-        padding-bottom: 12px;
-        margin-bottom: 16px;
-    }
-
-    .print-logo-placeholder {
-        width: 52px;
-        height: 52px;
-        border-radius: 12px;
-        margin: 0 auto 8px;
-        display: block;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .print-header h2 {
-        margin: 0;
-        font-size: 18px;
-    }
-
-    .print-header p {
-        margin: 2px 0;
-        font-size: 12px;
-    }
-
-    .print-meta-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        margin: 14px 0;
-        font-size: 12px;
-    }
-
-    .print-meta-grid div span {
-        display: block;
-        color: #64748b;
-        font-size: 10px;
-        text-transform: uppercase;
-    }
-
-    .print-summary {
-        display: flex;
-        gap: 18px;
-        margin: 14px 0;
-        font-size: 12px;
-    }
-
-    table.print-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 11.5px;
-        margin-top: 10px;
-    }
-
-    table.print-table th,
-    table.print-table td {
-        border: 1px solid #cbd5e1;
-        padding: 6px 8px;
-        text-align: left;
-    }
-
-    table.print-table th {
-        background: #eef2ff;
-    }
-
-    table.print-table td.print-name-cell {
-        padding: 4px 8px;
-    }
-
-    .print-name-plain {
-        font-weight: 500;
-    }
-
-    .print-name-absent {
-        display: inline-block;
-        border: 1.5px solid #DC2626;
-        background: #FEE2E2;
-        color: #991B1B;
-        font-weight: 700;
-        padding: 3px 9px;
-        border-radius: 6px;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .print-status-present {
-        color: #15803D;
-        font-weight: 700;
-    }
-
-    .print-status-absent {
-        color: #DC2626;
-        font-weight: 800;
-    }
-
-    .print-status-pending {
-        color: #92400E;
-        font-weight: 700;
-    }
-
-    .print-footer {
-        text-align: center;
-        margin-top: 20px;
-        font-size: 10.5px;
-        color: #64748b;
+        padding: 24px;
     }
 
     @page {

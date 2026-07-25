@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
 
-        if (username === 'SOSIT5' && password === 'ICAIT1') {
+        if (username === 'Rishabh Shah' && password === '1504') {
             // Persisting the session is best-effort: even if storage is
             // blocked in this browser/context, the redirect must still happen.
             try {
