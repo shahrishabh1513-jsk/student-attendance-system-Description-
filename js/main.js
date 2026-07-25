@@ -1,15 +1,23 @@
+/**
+ * main.js — Login page logic
+ */
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
     const loginAlert = document.getElementById('login-alert');
     const themeToggle = document.getElementById('theme-toggle');
 
+    // Wire up the Sign In handler FIRST, before anything that touches
+    // localStorage or does cosmetic setup — that way login still works
+    // even if a non-essential step below fails for some reason.
     loginForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
 
-        if (username === 'Rishabh' && password === '1504') {
+        if (username === 'SOSIT5' && password === 'ICAIT1') {
+            // Persisting the session is best-effort: even if storage is
+            // blocked in this browser/context, the redirect must still happen.
             try {
                 Store.set(STORAGE_KEYS.LOGGED_IN, true);
                 localStorage.setItem(STORAGE_KEYS.USERNAME, username);
@@ -35,7 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-
+    // Cosmetic/non-essential setup — wrapped so a failure here can never
+    // block the Sign In handler registered above.
     try {
         initTheme();
         attachRipple();
@@ -47,6 +56,17 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         themeToggle.querySelector('i').className =
             document.documentElement.getAttribute('data-theme') === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
+        const googleBtn = document.getElementById('social-google');
+        const microsoftBtn = document.getElementById('social-microsoft');
+        const forgotLink = document.getElementById('forgot-link');
+
+        if (googleBtn) googleBtn.addEventListener('click', () => showToast('Google sign-in isn\u2019t connected yet — please use your faculty username and password.', 'info'));
+        if (microsoftBtn) microsoftBtn.addEventListener('click', () => showToast('Microsoft sign-in isn\u2019t connected yet — please use your faculty username and password.', 'info'));
+        if (forgotLink) forgotLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('Please contact your system administrator to reset your login.', 'info');
+        });
     } catch (err) {
         console.error('Non-essential setup failed:', err);
     }

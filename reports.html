@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }</script>
 </head>
-
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -39,41 +37,21 @@
                     <div class="record-detail-sub" id="detail-meta">—</div>
                 </div>
                 <div class="record-detail-actions">
-                    <button class="btn btn-outline btn-sm ripple" id="detail-close"><i class="fas fa-xmark"></i>
-                        Close</button>
-                    <button class="btn btn-outline btn-sm ripple" id="detail-print"><i class="fas fa-print"></i>
-                        Print</button>
-                    <button class="btn btn-primary btn-sm ripple" id="detail-edit"><i class="fas fa-pen-to-square"></i>
-                        Edit Attendance</button>
+                    <button class="btn btn-outline btn-sm ripple" id="detail-close"><i class="fas fa-xmark"></i> Close</button>
+                    <button class="btn btn-outline btn-sm ripple" id="detail-print"><i class="fas fa-print"></i> Print</button>
+                    <button class="btn btn-outline btn-sm ripple" id="detail-share"><i class="fas fa-share-nodes"></i> Share</button>
+                    <button class="btn btn-primary btn-sm ripple" id="detail-edit"><i class="fas fa-pen-to-square"></i> Edit Attendance</button>
                 </div>
             </div>
             <div class="selected-summary show" style="margin:0 0 16px; background:transparent; border:none; padding:0;">
-                <div>
-                    <div class="label">Total</div>
-                    <div class="value" id="detail-total">0</div>
-                </div>
-                <div>
-                    <div class="label">Present</div>
-                    <div class="value" id="detail-present" style="color:var(--success);">0</div>
-                </div>
-                <div>
-                    <div class="label">Absent</div>
-                    <div class="value" id="detail-absent" style="color:var(--danger);">0</div>
-                </div>
-                <div>
-                    <div class="label">Attendance %</div>
-                    <div class="value" id="detail-percentage">0%</div>
-                </div>
+                <div><div class="label">Total</div><div class="value" id="detail-total">0</div></div>
+                <div><div class="label">Present</div><div class="value" id="detail-present" style="color:var(--success);">0</div></div>
+                <div><div class="label">Absent</div><div class="value" id="detail-absent" style="color:var(--danger);">0</div></div>
+                <div><div class="label">Attendance %</div><div class="value" id="detail-percentage">0%</div></div>
             </div>
             <div class="table-wrap">
                 <table class="student-table">
-                    <thead>
-                        <tr>
-                            <th>Student</th>
-                            <th>Enrollment No.</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Student</th><th>Enrollment No.</th><th>Status</th></tr></thead>
                     <tbody id="detail-table-body"></tbody>
                 </table>
             </div>
@@ -88,9 +66,7 @@
                 </div>
                 <div class="filter-field">
                     <label for="filter-subject">Subject</label>
-                    <select id="filter-subject">
-                        <option value="all">All subjects</option>
-                    </select>
+                    <select id="filter-subject"><option value="all">All subjects</option></select>
                 </div>
                 <div class="filter-field">
                     <label for="filter-batch">Batch</label>
@@ -101,10 +77,8 @@
                         <option value="2">Batch 2 — B.Sc. IT</option>
                     </select>
                 </div>
-                <button class="btn btn-outline btn-sm ripple" id="clear-filters"><i class="fas fa-rotate-left"></i>
-                    Clear</button>
-                <button class="btn btn-primary btn-sm ripple" id="export-all-csv" style="margin-left:auto;"><i
-                        class="fas fa-file-csv"></i> Export All (CSV)</button>
+                <button class="btn btn-outline btn-sm ripple" id="clear-filters"><i class="fas fa-rotate-left"></i> Clear</button>
+                <button class="btn btn-primary btn-sm ripple" id="export-all-csv" style="margin-left:auto;"><i class="fas fa-file-csv"></i> Export All (CSV)</button>
             </div>
         </section>
 
@@ -115,8 +89,7 @@
 
         <div class="action-bar no-print">
             <div class="action-bar-group">
-                <button class="btn btn-outline ripple" id="back-btn"><i class="fas fa-arrow-left"></i> Back to Subject
-                    Selection</button>
+                <button class="btn btn-outline ripple" id="back-btn"><i class="fas fa-arrow-left"></i> Back to Subject Selection</button>
             </div>
         </div>
     </main>
@@ -142,14 +115,7 @@
             <div>Attendance %: <strong id="print-percentage">0%</strong></div>
         </div>
         <table class="print-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Enrollment No.</th>
-                    <th>Student Name</th>
-                    <th>Present / Absent</th>
-                </tr>
-            </thead>
+            <thead><tr><th>#</th><th>Enrollment No.</th><th>Student Name</th><th>Present / Absent</th></tr></thead>
             <tbody id="print-table-body"></tbody>
         </table>
         <div class="print-footer">Generated by Student Attendance Management System — RAS15</div>
@@ -164,7 +130,9 @@
 
     <script src="js/data.js"></script>
     <script src="js/utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/share.js"></script>
     <script src="js/reports.js"></script>
 </body>
-
 </html>

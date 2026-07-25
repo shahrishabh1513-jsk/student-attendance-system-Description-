@@ -330,6 +330,29 @@ document.addEventListener('DOMContentLoaded', function () {
         window.print();
     });
 
+    const shareBtn = el('share-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+            ShareReport.openModal(() => {
+                const present = students.filter((s) => s.attendance === true).length;
+                const absent = students.filter((s) => s.attendance === false).length;
+                const total = students.length;
+                return {
+                    subject: subject.name,
+                    type: subject.type,
+                    timing: `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`,
+                    day,
+                    batch,
+                    batchLabel: batch ? BATCH_LABELS[batch] : 'All Students',
+                    faculty: localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher',
+                    date: sessionDate,
+                    students,
+                    summary: { total, present, absent, percentage: total > 0 ? Math.round((present / total) * 100) : 0 },
+                };
+            });
+        });
+    }
+
     /* ----------------------------- save flow ---------------------------- */
 
     const confirmOverlay = el('confirm-overlay');

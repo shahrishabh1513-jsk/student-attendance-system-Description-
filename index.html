@@ -26,27 +26,50 @@
     </header>
 
     <div class="login-shell">
-        <!-- Branding hero panel -->
-        <section class="login-hero">
-            <div class="login-hero-content">
-                <div class="login-hero-logo"><img src="assets/logo-mark.svg" alt="System logo"></div>
-                <h2>Attendance, made effortless.</h2>
-                <p>Track theory and lab sessions, mark attendance in seconds, and generate professional reports — all from one clean dashboard built for faculty.</p>
-                <div class="login-hero-stats">
-                    <div><strong>62</strong><span>Students</span></div>
-                    <div><strong>9</strong><span>Subjects</span></div>
-                    <div><strong>2</strong><span>Batches</span></div>
-                    <div><strong>5</strong><span>Teaching Days</span></div>
-                </div>
-            </div>
-        </section>
+        <div class="login-card-frame">
+            <!-- Illustration panel -->
+            <div class="login-illustration">
+                <div class="login-illustration-dot"></div>
+                <svg viewBox="0 0 480 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice">
+                    <!-- back hill -->
+                    <path d="M0 340 C 70 300, 130 300, 190 330 C 250 360, 300 300, 360 320 C 410 336, 450 320, 480 300 L 480 520 L 0 520 Z" fill="#DDCB94" opacity="0.55"/>
+                    <!-- mid hill -->
+                    <path d="M0 400 C 60 360, 120 380, 180 400 C 250 424, 320 370, 390 392 C 430 404, 460 392, 480 378 L 480 520 L 0 520 Z" fill="#B9A165" opacity="0.6"/>
+                    <!-- front hill (darkest, main silhouette) -->
+                    <path d="M0 440 C 50 410, 110 430, 170 448 C 230 466, 300 410, 370 434 C 415 449, 450 438, 480 420 L 480 520 L 0 520 Z" fill="#1C1B18"/>
 
-        <!-- Login form panel -->
-        <section class="login-form-side">
-            <div class="glass-card login-card">
+                    <!-- leaves cluster -->
+                    <g fill="#1C1B18">
+                        <ellipse cx="120" cy="392" rx="34" ry="13" transform="rotate(-28 120 392)"/>
+                        <ellipse cx="150" cy="368" rx="30" ry="11" transform="rotate(-52 150 368)"/>
+                        <ellipse cx="95" cy="360" rx="26" ry="10" transform="rotate(18 95 360)"/>
+                    </g>
+                    <g fill="#8A6E2E" opacity="0.85">
+                        <ellipse cx="330" cy="380" rx="30" ry="11" transform="rotate(30 330 380)"/>
+                        <ellipse cx="300" cy="356" rx="26" ry="10" transform="rotate(58 300 356)"/>
+                        <ellipse cx="360" cy="360" rx="24" ry="9" transform="rotate(-16 360 360)"/>
+                    </g>
+
+                    <!-- graduation cap resting on the hill -->
+                    <g transform="translate(220 300)">
+                        <path d="M0 -14 L44 0 L0 14 L-44 0 Z" fill="#FBF3DC"/>
+                        <path d="M-26 3 L-26 20 C-26 30 -13 38 0 38 C13 38 26 30 26 20 L26 3 L0 15 Z" fill="#FBF3DC" opacity="0.94"/>
+                        <line x1="40" y1="2" x2="40" y2="24" stroke="#F4B400" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="40" cy="29" r="4.5" fill="#F4B400"/>
+                    </g>
+
+                    <!-- floating accent circles -->
+                    <circle cx="70" cy="120" r="4" fill="#F4B400" opacity="0.8"/>
+                    <circle cx="410" cy="160" r="3" fill="#1C1B18" opacity="0.35"/>
+                    <circle cx="380" cy="90" r="5.5" fill="#FBF3DC" stroke="#F4B400" stroke-width="1.5"/>
+                </svg>
+            </div>
+
+            <!-- Login form panel -->
+            <div class="login-form-panel">
                 <div class="login-logo"><img src="assets/logo-mark.svg" alt="System logo"></div>
-                <h1>Welcome Back</h1>
-                <p>Sign in to take student attendance</p>
+                <h1>Log in</h1>
+                <p class="login-sub">Sign in to take student attendance</p>
 
                 <div id="login-alert" class="alert alert-danger" style="display:none;">
                     <i class="fas fa-circle-exclamation"></i>
@@ -55,7 +78,7 @@
 
                 <form id="login-form">
                     <div class="field">
-                        <label for="username">Username</label>
+                        <label for="username">Login, email or phone number</label>
                         <div class="field-input">
                             <i class="fas fa-user"></i>
                             <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" required>
@@ -69,13 +92,19 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block login-btn ripple">
-                        <i class="fas fa-arrow-right-to-bracket"></i> Sign In
+                        <i class="fas fa-arrow-right-to-bracket"></i> Log in
                     </button>
                 </form>
 
-                <p class="login-hint">Student Attendance Management System · RAS15</p>
+                <div class="login-divider">or log in with</div>
+                <div class="login-social-row">
+                    <button type="button" class="login-social-btn ripple" id="social-google"><i class="fa-brands fa-google"></i> Google</button>
+                    <button type="button" class="login-social-btn ripple" id="social-microsoft"><i class="fa-brands fa-microsoft"></i> Microsoft</button>
+                </div>
+
+                <a href="#" class="login-hint-link" id="forgot-link">Forgot login or password?</a>
             </div>
-        </section>
+        </div>
     </div>
 
     <footer class="main-footer">

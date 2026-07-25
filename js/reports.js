@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="bulk-actions">
                     <button class="btn btn-outline btn-sm ripple" data-action="view" data-id="${r.id}"><i class="fas fa-eye"></i> View</button>
                     <button class="btn btn-outline btn-sm ripple" data-action="print" data-id="${r.id}"><i class="fas fa-print"></i> Print</button>
+                    <button class="btn btn-outline btn-sm ripple" data-action="share" data-id="${r.id}"><i class="fas fa-share-nodes"></i> Share</button>
                     <button class="btn btn-outline btn-sm ripple" data-action="csv" data-id="${r.id}"><i class="fas fa-file-csv"></i> CSV</button>
                 </div>
             </div>
@@ -100,6 +101,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         recordsList.querySelectorAll('[data-action="print"]').forEach((btn) => {
             btn.addEventListener('click', () => printRecord(findRecord(btn.dataset.id)));
+        });
+        recordsList.querySelectorAll('[data-action="share"]').forEach((btn) => {
+            btn.addEventListener('click', () => ShareReport.openModal(() => findRecord(btn.dataset.id)));
         });
         recordsList.querySelectorAll('[data-action="csv"]').forEach((btn) => {
             btn.addEventListener('click', () => exportRecordCsv(findRecord(btn.dataset.id)));
@@ -154,6 +158,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     el('detail-print').addEventListener('click', () => {
         if (activeRecordId) printRecord(findRecord(activeRecordId));
+    });
+
+    el('detail-share').addEventListener('click', () => {
+        if (activeRecordId) ShareReport.openModal(() => findRecord(activeRecordId));
     });
 
     el('detail-edit').addEventListener('click', () => {

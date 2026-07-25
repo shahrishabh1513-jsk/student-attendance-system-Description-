@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }</script>
 </head>
-
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -27,8 +25,7 @@
         <div class="topbar-actions">
             <div class="chip"><span>Signed in as</span><span id="logged-in-user">Teacher</span></div>
             <div class="chip"><span>Time</span><span id="current-time">—</span></div>
-            <a class="icon-btn no-print" href="reports.html" title="Attendance reports"><i
-                    class="fas fa-chart-column"></i></a>
+            <a class="icon-btn no-print" href="reports.html" title="Attendance reports"><i class="fas fa-chart-column"></i></a>
             <button class="icon-btn" id="theme-toggle" title="Toggle theme"><i class="fas fa-moon"></i></button>
         </div>
     </header>
@@ -65,9 +62,7 @@
                 <div class="dash-icon"><i class="fas fa-chart-simple"></i></div>
                 <div class="dash-value" id="completion-pct">0%</div>
                 <div class="dash-label">Completion</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-                </div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
             </div>
         </div>
 
@@ -75,22 +70,10 @@
         <section class="glass-card section-card no-print">
             <div class="section-title"><i class="fas fa-info-circle"></i> Session Details</div>
             <div class="selected-summary show" style="margin:0; background:transparent; border:none; padding:0;">
-                <div>
-                    <div class="label">Subject</div>
-                    <div class="value" id="info-subject">—</div>
-                </div>
-                <div>
-                    <div class="label">Timing</div>
-                    <div class="value" id="info-time">—</div>
-                </div>
-                <div>
-                    <div class="label">Batch</div>
-                    <div class="value" id="info-batch">—</div>
-                </div>
-                <div>
-                    <div class="label">Date</div>
-                    <div class="value" id="info-date">—</div>
-                </div>
+                <div><div class="label">Subject</div><div class="value" id="info-subject">—</div></div>
+                <div><div class="label">Timing</div><div class="value" id="info-time">—</div></div>
+                <div><div class="label">Batch</div><div class="value" id="info-batch">—</div></div>
+                <div><div class="label">Date</div><div class="value" id="info-date">—</div></div>
             </div>
         </section>
 
@@ -101,8 +84,7 @@
             <div class="toolbar">
                 <div class="search-input-wrap">
                     <i class="fas fa-magnifying-glass"></i>
-                    <input type="text" id="search-student" class="search-input"
-                        placeholder="Search by name, enrollment no., course or status…">
+                    <input type="text" id="search-student" class="search-input" placeholder="Search by name, enrollment no., course or status…">
                 </div>
                 <select id="filter-status" class="filter-select">
                     <option value="all">All statuses</option>
@@ -118,14 +100,10 @@
             </div>
 
             <div class="toolbar bulk-actions">
-                <button class="btn btn-outline btn-sm ripple" id="mark-all-present"><i class="fas fa-user-check"></i>
-                    Select All Present</button>
-                <button class="btn btn-outline btn-sm ripple" id="mark-all-absent"><i class="fas fa-user-xmark"></i>
-                    Select All Absent</button>
-                <button class="btn btn-outline btn-sm ripple" id="undo-action"><i class="fas fa-rotate-left"></i> Undo
-                    Last Action</button>
-                <button class="btn btn-danger-ghost btn-sm ripple" id="reset-attendance"><i
-                        class="fas fa-arrows-rotate"></i> Reset Attendance</button>
+                <button class="btn btn-outline btn-sm ripple" id="mark-all-present"><i class="fas fa-user-check"></i> Select All Present</button>
+                <button class="btn btn-outline btn-sm ripple" id="mark-all-absent"><i class="fas fa-user-xmark"></i> Select All Absent</button>
+                <button class="btn btn-outline btn-sm ripple" id="undo-action"><i class="fas fa-rotate-left"></i> Undo Last Action</button>
+                <button class="btn btn-danger-ghost btn-sm ripple" id="reset-attendance"><i class="fas fa-arrows-rotate"></i> Reset Attendance</button>
             </div>
 
             <div class="table-wrap">
@@ -145,14 +123,12 @@
 
         <div class="action-bar no-print">
             <div class="action-bar-group">
-                <button class="btn btn-outline ripple" id="back-btn"><i class="fas fa-arrow-left"></i> Back to Subject
-                    Selection</button>
-                <button class="btn btn-outline ripple" id="print-btn"><i class="fas fa-print"></i> Print
-                    Attendance</button>
+                <button class="btn btn-outline ripple" id="back-btn"><i class="fas fa-arrow-left"></i> Back to Subject Selection</button>
+                <button class="btn btn-outline ripple" id="print-btn"><i class="fas fa-print"></i> Print Attendance</button>
+                <button class="btn btn-outline ripple" id="share-btn"><i class="fas fa-share-nodes"></i> Share Report</button>
             </div>
             <div class="action-bar-group">
-                <button class="btn btn-success ripple" id="save-attendance-btn" disabled><i class="fas fa-save"></i>
-                    Save Attendance</button>
+                <button class="btn btn-success ripple" id="save-attendance-btn" disabled><i class="fas fa-save"></i> Save Attendance</button>
             </div>
         </div>
     </main>
@@ -178,14 +154,7 @@
             <div>Attendance %: <strong id="print-percentage">0%</strong></div>
         </div>
         <table class="print-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Enrollment No.</th>
-                    <th>Student Name</th>
-                    <th>Present / Absent</th>
-                </tr>
-            </thead>
+            <thead><tr><th>#</th><th>Enrollment No.</th><th>Student Name</th><th>Present / Absent</th></tr></thead>
             <tbody id="print-table-body"></tbody>
         </table>
         <div class="print-footer">Generated by Student Attendance Management System — RAS15</div>
@@ -195,8 +164,7 @@
     <div class="overlay no-print" id="confirm-overlay">
         <div class="glass-card modal-card">
             <h3 id="confirm-title">Save this attendance?</h3>
-            <p id="confirm-text">Please double-check the marks below before saving. This cannot be edited afterwards.
-            </p>
+            <p id="confirm-text">Please double-check the marks below before saving. This cannot be edited afterwards.</p>
             <div class="modal-actions">
                 <button class="btn btn-outline ripple" id="confirm-cancel">Cancel</button>
                 <button class="btn btn-success ripple" id="confirm-ok">Yes, Save</button>
@@ -222,7 +190,9 @@
 
     <script src="js/data.js"></script>
     <script src="js/utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/share.js"></script>
     <script src="js/student.js"></script>
 </body>
-
 </html>
