@@ -1,17 +1,18 @@
 /* ===================================================================
    Student Attendance Management System
-   Design tokens: Sky Blue on Off-White — a clean, bright, airy light
-   theme built around a single confident blue.
+   Design tokens: Classroom Light Theme — white/off-white surfaces,
+   confident blue primary, clear green/red present/absent signals.
+   Chosen for maximum readability in daylight classrooms.
    =================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
 
 :root {
     /* brand */
-    --primary: #0EA5E9;
-    --primary-light: #7DD3FC;
-    --secondary: #0369A1;
-    --accent: #38BDF8;
+    --primary: #2563EB;
+    --primary-light: #93C5FD;
+    --secondary: #1D4ED8;
+    --accent: #3B82F6;
     --success: #16A34A;
     --warning: #D97706;
     --danger: #DC2626;
@@ -20,23 +21,23 @@
     --lab-bg: #FEF3C7;
     --lab-border: #F4B400;
     --lab-text: #7C5800;
-    --theory-bg: #E0F2FE;
-    --theory-border: #0EA5E9;
-    --theory-text: #0369A1;
+    --theory-bg: #DBEAFE;
+    --theory-border: #2563EB;
+    --theory-text: #1D4ED8;
 
     /* light theme surface */
-    --bg: #F0F9FF;
-    --bg-blob-1: #E0F2FE;
-    --bg-blob-2: #DBEEFE;
-    --bg-blob-3: #BAE6FD;
-    --surface: rgba(255, 255, 255, 0.9);
+    --bg: #F8FAFC;
+    --bg-blob-1: #DBEAFE;
+    --bg-blob-2: #E0E7FF;
+    --bg-blob-3: #BFDBFE;
+    --surface: rgba(255, 255, 255, 0.92);
     --surface-solid: #FFFFFF;
     --surface-strong: #FFFFFF;
-    --surface-border: rgba(3, 105, 161, 0.12);
-    --text: #0B2540;
-    --text-muted: #51687D;
-    --text-faint: #8CA0B3;
-    --shadow-color: rgba(14, 165, 233, 0.14);
+    --surface-border: rgba(30, 41, 59, 0.1);
+    --text: #1E293B;
+    --text-muted: #64748B;
+    --text-faint: #94A3B8;
+    --shadow-color: rgba(37, 99, 235, 0.12);
 
     --radius-sm: 12px;
     --radius-md: 18px;
@@ -48,30 +49,30 @@
     --font-mono: 'JetBrains Mono', monospace;
 
     --shadow-soft: 0 6px 22px var(--shadow-color);
-    --shadow-lift: 0 16px 40px rgba(14, 165, 233, 0.22);
+    --shadow-lift: 0 16px 40px rgba(37, 99, 235, 0.2);
     --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="dark"] {
-    --bg: #0A1622;
-    --bg-blob-1: #0C3A57;
-    --bg-blob-2: #0B2E45;
-    --bg-blob-3: #0E4463;
-    --surface: rgba(15, 30, 44, 0.72);
-    --surface-solid: #10202F;
-    --surface-strong: #16293A;
+    --bg: #0B1220;
+    --bg-blob-1: #1E3A8A;
+    --bg-blob-2: #1E1B4B;
+    --bg-blob-3: #0C2E5E;
+    --surface: rgba(20, 27, 45, 0.72);
+    --surface-solid: #131C2E;
+    --surface-strong: #1A2436;
     --surface-border: rgba(255, 255, 255, 0.09);
-    --text: #EAF4FC;
-    --text-muted: #9DB6C9;
-    --text-faint: #6C889C;
+    --text: #EEF2FF;
+    --text-muted: #A3AFC2;
+    --text-faint: #6C7A93;
     --shadow-color: rgba(0, 0, 0, 0.5);
 
     --lab-bg: rgba(244, 180, 0, 0.16);
     --lab-border: #F4B400;
     --lab-text: #FCD34D;
-    --theory-bg: rgba(56, 189, 248, 0.14);
-    --theory-border: #38BDF8;
-    --theory-text: #7DD3FC;
+    --theory-bg: rgba(59, 130, 246, 0.16);
+    --theory-border: #60A5FA;
+    --theory-text: #93C5FD;
 }
 
 * {
@@ -261,7 +262,7 @@ a {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: #fff;
     font-size: 18px;
-    box-shadow: 0 6px 16px rgba(14, 165, 233, 0.3);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -297,7 +298,7 @@ a {
     flex-direction: column;
     padding: 6px 14px;
     border-radius: var(--radius-sm);
-    background: rgba(56, 189, 248, 0.16);
+    background: rgba(59, 130, 246, 0.16);
     font-size: 12px;
     min-width: 92px;
 }
@@ -329,7 +330,7 @@ a {
 
 .icon-btn:hover {
     transform: translateY(-2px);
-    background: rgba(56, 189, 248, 0.18);
+    background: rgba(59, 130, 246, 0.18);
 }
 
 /* ------------------------------------------------------------------ */
@@ -369,7 +370,7 @@ a {
 .btn-primary {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: #fff;
-    box-shadow: 0 10px 24px rgba(14, 165, 233, 0.32);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.32);
 }
 
 .btn-success {
@@ -439,8 +440,8 @@ a {
     position: absolute;
     inset: 0;
     background-image:
-        radial-gradient(circle at 12% 18%, rgba(3, 105, 161, 0.05) 0, rgba(3, 105, 161, 0.05) 1px, transparent 1px),
-        radial-gradient(circle at 88% 82%, rgba(56, 189, 248, 0.12) 0, rgba(56, 189, 248, 0.12) 1px, transparent 1px);
+        radial-gradient(circle at 12% 18%, rgba(29, 78, 216, 0.05) 0, rgba(29, 78, 216, 0.05) 1px, transparent 1px),
+        radial-gradient(circle at 88% 82%, rgba(59, 130, 246, 0.12) 0, rgba(59, 130, 246, 0.12) 1px, transparent 1px);
     background-size: 26px 26px, 30px 30px;
     opacity: 0.7;
     pointer-events: none;
@@ -456,7 +457,7 @@ a {
     background: var(--surface-solid);
     border-radius: var(--radius-lg);
     border: 1px solid var(--surface-border);
-    box-shadow: 0 30px 70px rgba(14, 165, 233, 0.16);
+    box-shadow: 0 30px 70px rgba(37, 99, 235, 0.16);
     overflow: hidden;
     animation: card-pop 560ms var(--transition);
 }
@@ -498,7 +499,7 @@ a {
     height: 12px;
     border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.25);
+    box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.25);
 }
 
 /* -- Form panel -- */
@@ -515,7 +516,7 @@ a {
     margin-bottom: 18px;
     border-radius: 13px;
     overflow: hidden;
-    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.26);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.26);
 }
 
 .login-logo img {
@@ -607,7 +608,7 @@ a {
 
 .login-hint-link,
 .login-hint-link:visited {
-    color: #0369A1;
+    color: #1D4ED8;
 }
 
 .login-topbar {
@@ -665,7 +666,7 @@ a {
 
 .field-input input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
 }
 
 .login-btn {
@@ -696,8 +697,8 @@ a {
 }
 
 .alert-info {
-    background: rgba(56, 189, 248, 0.16);
-    color: #0369A1;
+    background: rgba(59, 130, 246, 0.16);
+    color: #1D4ED8;
 }
 
 .alert-warning {
@@ -936,8 +937,8 @@ td.period-col {
 
 .timetable-cell.selected {
     border-color: var(--primary);
-    background: rgba(56, 189, 248, 0.16);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.32);
+    background: rgba(59, 130, 246, 0.16);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.32);
 }
 
 .timetable-cell.is-empty {
@@ -982,7 +983,7 @@ td.period-col {
 }
 
 .cell-badge.type-theory {
-    background: rgba(14, 165, 233, 0.14);
+    background: rgba(37, 99, 235, 0.14);
     color: var(--theory-text);
 }
 
@@ -1006,6 +1007,15 @@ td.period-col {
 .timetable-cell.selected .cell-check {
     opacity: 1;
     transform: scale(1);
+}
+
+.cell-taken {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    color: var(--success);
+    font-size: 14px;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.08));
 }
 
 @keyframes rise-in {
@@ -1077,7 +1087,7 @@ td.period-col {
     margin-top: 6px;
     padding: 16px 18px;
     border-radius: var(--radius-md);
-    background: linear-gradient(135deg, rgba(56, 189, 248, .16), rgba(14, 165, 233, .06));
+    background: linear-gradient(135deg, rgba(59, 130, 246, .16), rgba(37, 99, 235, .06));
     border: 1px dashed var(--primary-light);
 }
 
@@ -1244,7 +1254,7 @@ table.student-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 13.5px;
-    min-width: 460px;
+    min-width: 560px;
 }
 
 table.student-table thead th {
@@ -1267,7 +1277,7 @@ table.student-table tbody tr {
 }
 
 table.student-table tbody tr:hover {
-    background: rgba(56, 189, 248, 0.08);
+    background: rgba(59, 130, 246, 0.08);
 }
 
 table.student-table tbody tr.row-present {
@@ -1320,7 +1330,7 @@ table.student-table tbody td {
     border-radius: var(--radius-pill);
     font-size: 11px;
     font-weight: 700;
-    background: rgba(14, 165, 233, .1);
+    background: rgba(37, 99, 235, .1);
     color: var(--secondary);
 }
 
@@ -1353,6 +1363,34 @@ table.student-table tbody td {
     color: var(--warning);
 }
 
+.total-attendance-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 5px 11px;
+    border-radius: var(--radius-pill);
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--secondary);
+}
+
+.total-attendance-pill i {
+    font-size: 11px;
+}
+
+.student-total-mobile {
+    display: none;
+    font-size: 10.5px;
+    color: var(--text-faint);
+    margin-top: 1px;
+}
+
+.student-total-mobile i {
+    font-size: 9px;
+    margin-right: 2px;
+}
+
 .cell-mark {
     text-align: right;
 }
@@ -1367,20 +1405,25 @@ table.student-table tbody td {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 9px 14px;
+    padding: 10px 16px;
     border-radius: var(--radius-pill);
     border: 1.5px solid var(--surface-border);
     background: var(--surface-solid);
     cursor: pointer;
-    font-size: 12.5px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 800;
     color: var(--text-faint);
     transition: var(--transition);
     white-space: nowrap;
+    min-height: 40px;
 }
 
-.mark-btn span {
+.mark-btn .mark-full {
     display: inline;
+}
+
+.mark-btn .mark-short {
+    display: none;
 }
 
 .mark-btn.present-btn.active {
@@ -1452,6 +1495,10 @@ table.student-table tbody td {
         display: none;
     }
 
+    table.student-table tbody td.cell-total {
+        display: none;
+    }
+
     table.student-table tbody td.cell-student {
         flex: 1;
         min-width: 0;
@@ -1469,16 +1516,38 @@ table.student-table tbody td {
         margin-top: 2px;
     }
 
+    .student-total-mobile {
+        display: block;
+        font-size: 10.5px;
+        color: var(--text-faint);
+        margin-top: 1px;
+    }
+
     .mark-toggle {
-        gap: 6px;
+        gap: 8px;
     }
 
+    /* Large, easy-to-tap P / A buttons for quick marking during a lecture */
     .mark-btn {
-        padding: 9px 10px;
+        width: 52px;
+        height: 52px;
+        padding: 0;
+        border-radius: 14px;
+        font-size: 18px;
+        font-weight: 800;
+        justify-content: center;
     }
 
-    .mark-btn span {
+    .mark-btn i {
         display: none;
+    }
+
+    .mark-btn .mark-full {
+        display: none;
+    }
+
+    .mark-btn .mark-short {
+        display: inline;
     }
 }
 
@@ -1722,7 +1791,7 @@ table.student-table tbody td {
 
 .share-format-btn.active {
     border-color: var(--accent);
-    background: rgba(56, 189, 248, 0.16);
+    background: rgba(59, 130, 246, 0.16);
     color: var(--text);
 }
 
@@ -2007,7 +2076,7 @@ table.student-table tbody td {
     gap: 10px;
     padding: 12px 16px;
     border-radius: var(--radius-md);
-    background: linear-gradient(135deg, rgba(56, 189, 248, .2), rgba(14, 165, 233, .07));
+    background: linear-gradient(135deg, rgba(59, 130, 246, .2), rgba(37, 99, 235, .07));
     border: 1px dashed var(--secondary);
     font-size: 13px;
     font-weight: 600;
@@ -2040,7 +2109,7 @@ table.student-table tbody td {
     padding: 22px 20px 20px;
     margin: -24px -24px 18px;
     border-radius: 12px 12px 0 0;
-    background: linear-gradient(135deg, #0EA5E9, #0369A1);
+    background: linear-gradient(135deg, #2563EB, #1D4ED8);
     color: #ffffff;
 }
 
@@ -2126,7 +2195,7 @@ table.student-table tbody td {
 
 .print-stat-box.stat-total {
     background: #E0F2FE;
-    color: #0369A1;
+    color: #1D4ED8;
 }
 
 .print-stat-box.stat-present {
@@ -2155,7 +2224,7 @@ table.print-table {
 }
 
 table.print-table th {
-    background: #0EA5E9;
+    background: #2563EB;
     color: #ffffff;
     padding: 9px 10px;
     text-align: left;

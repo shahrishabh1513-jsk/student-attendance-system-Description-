@@ -28,11 +28,45 @@ document.addEventListener('DOMContentLoaded', function () {
     const alertDiv = document.getElementById('selection-alert');
 
     const today = todayName();
+    const todayDateStr = new Date().toISOString().slice(0, 10);
     let selectedDay = null;
     let selectedSlot = null;
     let selectedBatch = null;
 
     const maxPeriods = Math.max(...WEEK_DAYS.map((day) => TIMETABLE[day].length));
+
+    /* ------------------------- Today's Overview dashboard ------------------------- */
+
+    const allRecords = Store.get(STORAGE_KEYS.RECORDS, []);
+    const todayRecords = allRecords.filter((r) => String(r.date).slice(0, 10) === todayDateStr);
+
+    (function renderTodayOverview() {
+        const todayPresent = todayRecords.reduce((sum, r) => sum + (r.summary?.present || 0), 0);
+        const todayAbsent = todayRecords.reduce((sum, r) => sum + (r.summary?.absent || 0), 0);
+        document.getElementById('dash-today-present').textContent = todayPresent;
+        document.getElementById('dash-today-absent').textContent = todayAbsent;
+
+        if (allRecords.length > 0) {
+            const mostRecent = allRecords.reduce((latest, r) => {
+                const t = new Date(r.editedAt || r.savedAt).getTime();
+                return t > latest.time ? { time: t, record: r } : latest;
+            }, { time: -Infinity, record: null }).record;
+            if (mostRecent) {
+                const ts = new Date(mostRecent.editedAt || mostRecent.savedAt);
+                const isToday = ts.toISOString().slice(0, 10) === todayDateStr;
+                const timeStr = ts.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('dash-last-updated').textContent = isToday ? timeStr : `${ts.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}, ${timeStr}`;
+            }
+        }
+    })();
+
+    // Which "day|subject|start" combinations already have a saved record today (for the badge).
+    const takenTodayMap = {};
+    todayRecords.forEach((r) => {
+        const key = `${r.day}|${r.subject}|${r.start || ''}`;
+        if (!takenTodayMap[key]) takenTodayMap[key] = [];
+        takenTodayMap[key].push(r.batch ? BATCH_LABELS[r.batch] : 'All Students');
+    });
 
     renderTimetable();
 
@@ -58,10 +92,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
                 const isSelected = selectedDay === day && selectedSlot === slot;
+                const takenKey = `${day}|${slot.subject}|${slot.start}`;
+                const takenBatches = takenTodayMap[takenKey];
+                const takenBadge = (day === today && takenBatches)
+                    ? `<span class="cell-taken" title="Already taken today: ${takenBatches.join(', ')}"><i class="fas fa-circle-check"></i></span>`
+                    : '';
                 body += `
                     <td>
                         <div class="timetable-cell type-${slot.type.toLowerCase()} ${isSelected ? 'selected' : ''}"
                              data-day="${day}" data-period="${period}">
+                            ${takenBadge}
                             <span class="cell-badge type-${slot.type.toLowerCase()}">${slot.type}</span>
                             <span class="cell-time">${formatTime12(slot.start)} – ${formatTime12(slot.end)}</span>
                             <span class="cell-subject">${slot.subject}</span>

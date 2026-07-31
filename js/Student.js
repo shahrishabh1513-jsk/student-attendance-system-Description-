@@ -43,6 +43,22 @@ document.addEventListener('DOMContentLoaded', function () {
     let history = []; // undo stack of {id, previous}
     let unsavedChanges = false;
 
+    // Lifetime "Total Attendance" per student — how many saved sessions
+    // (across all subjects/dates) they were marked Present for.
+    const attendanceTotals = (() => {
+        const totals = {};
+        const savedRecords = Store.get(STORAGE_KEYS.RECORDS, []);
+        savedRecords.forEach((record) => {
+            if (editRecordId && String(record.id) === String(editRecordId)) return; // avoid double-counting the record being edited
+            (record.students || []).forEach((s) => {
+                if (s.attendance === true) {
+                    totals[s.enrollmentNo] = (totals[s.enrollmentNo] || 0) + 1;
+                }
+            });
+        });
+        return totals;
+    })();
+
     /* ------------------------------ DOM ------------------------------ */
 
     const el = (id) => document.getElementById(id);
@@ -93,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderTable() {
         if (filteredStudents.length === 0) {
             studentTableBody.innerHTML = `
-                <tr><td colspan="3">
+                <tr><td colspan="4">
                     <div class="empty-state">
                         <i class="fas fa-magnifying-glass"></i>
                         <h4>No students found</h4>
@@ -103,18 +119,21 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         studentTableBody.innerHTML = filteredStudents.map((student, i) => {
+            const total = attendanceTotals[student.enrollmentNo] || 0;
             return `
                 <tr data-row-id="${student.id}" class="row-${student.attendance === true ? 'present' : student.attendance === false ? 'absent' : 'pending'}" style="animation-delay:${i * 25}ms">
                     <td class="cell-student">
                         <div class="student-name">${student.name}</div>
                         <div class="student-meta">${BATCH_LABELS[student.batch]}</div>
                         <div class="student-enroll-mobile">${student.enrollmentNo}</div>
+                        <div class="student-total-mobile"><i class="fas fa-calendar-check"></i> Attended ${total} class${total === 1 ? '' : 'es'}</div>
                     </td>
                     <td class="cell-enroll enroll-code">${student.enrollmentNo}</td>
+                    <td class="cell-total"><span class="total-attendance-pill"><i class="fas fa-calendar-check"></i> ${total}</span></td>
                     <td class="cell-mark">
                         <div class="mark-toggle">
-                            <button class="mark-btn present-btn ${student.attendance === true ? 'active' : ''}" data-id="${student.id}" data-value="true" title="Mark present"><i class="fas fa-check"></i> <span>Present</span></button>
-                            <button class="mark-btn absent-btn ${student.attendance === false ? 'active' : ''}" data-id="${student.id}" data-value="false" title="Mark absent"><i class="fas fa-xmark"></i> <span>Absent</span></button>
+                            <button class="mark-btn present-btn ${student.attendance === true ? 'active' : ''}" data-id="${student.id}" data-value="true" title="Mark present (P)"><i class="fas fa-check"></i> <span class="mark-full">Present</span><span class="mark-short">P</span></button>
+                            <button class="mark-btn absent-btn ${student.attendance === false ? 'active' : ''}" data-id="${student.id}" data-value="false" title="Mark absent (A)"><i class="fas fa-xmark"></i> <span class="mark-full">Absent</span><span class="mark-short">A</span></button>
                         </div>
                     </td>
                 </tr>`;
