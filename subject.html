@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Take Attendance | Attendance System</title>
+    <title>Select Subject & Lecture | Attendance System</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }</script>
 </head>
+
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -36,175 +38,80 @@
 
     <nav class="app-nav no-print">
         <div class="app-nav-inner">
-            <a class="app-nav-link" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span class="nav-label">Dashboard</span></a>
-            <a class="app-nav-link" href="subject.html"><i class="fas fa-calendar-days"></i> <span class="nav-label">Timetable</span></a>
-            <a class="app-nav-link active" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span class="nav-label">Take Attendance</span></a>
-            <a class="app-nav-link" href="reports.html"><i class="fas fa-chart-column"></i> <span class="nav-label">Reports</span></a>
+            <a class="app-nav-link" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span
+                    class="nav-label">Dashboard</span></a>
+            <a class="app-nav-link active" href="subject.html"><i class="fas fa-calendar-days"></i> <span
+                    class="nav-label">Timetable</span></a>
+            <a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span
+                    class="nav-label">Take Attendance</span></a>
+            <a class="app-nav-link" href="reports.html"><i class="fas fa-chart-column"></i> <span
+                    class="nav-label">Reports</span></a>
             <div class="app-nav-spacer"></div>
-            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i> <span class="nav-label">Logout</span></button>
+            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i>
+                <span class="nav-label">Logout</span></button>
         </div>
     </nav>
 
     <main class="page">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap;">
+        <div id="selection-alert" class="alert alert-warning" style="display:none;">
+            <i class="fas fa-triangle-exclamation"></i>
+            <span>Please select a lecture slot (and batch, if it's a lab) to continue.</span>
+        </div>
+
+        <section class="glass-card section-card">
+            <div class="section-title"><i class="fas fa-calendar-days"></i> Weekly Timetable</div>
+            <p class="section-sub">Tap the lecture you're about to teach. Lab sessions will ask for a batch
+                automatically.</p>
+            <div class="timetable-legend">
+                <span><span class="legend-dot dot-theory"></span> Theory</span>
+                <span><span class="legend-dot dot-lab"></span> Lab</span>
+                <span><span class="legend-dot dot-today"></span> Today</span>
+                <span><i class="fas fa-circle-check" style="color:var(--success);"></i> Already taken today</span>
+            </div>
+            <div class="timetable-wrap">
+                <table class="timetable" id="timetable"></table>
+            </div>
+        </section>
+
+        <section class="glass-card section-card" id="batch-section" style="display:none;">
+            <div class="section-title"><i class="fas fa-flask"></i> Select Batch for this Lab</div>
+            <p class="section-sub">This is a lab session — attendance is taken batch-wise.</p>
+            <div class="batch-grid" id="batch-grid"></div>
+        </section>
+
+        <div class="selected-summary glass-card" id="selected-summary">
             <div>
-                <h2 style="font-size:19px; margin-bottom:2px;">Take Attendance</h2>
-                <p style="color:var(--text-muted); font-size:13px; margin:0;" id="header-sub">Loading session…</p>
+                <div class="label">Subject</div>
+                <div class="value" id="sum-subject">—</div>
             </div>
-            <div class="chip no-print"><span>Time</span><span id="current-time">—</span></div>
-        </div>
-
-        <div id="edit-mode-banner" class="edit-mode-banner no-print" style="display:none;">
-            <i class="fas fa-pen-to-square"></i>
-            <span>You're editing a previously saved attendance session. Saving will update that record.</span>
-        </div>
-
-        <div id="attendance-alert" class="alert alert-info" style="display:none;">
-            <i class="fas fa-circle-info"></i>
-            <span id="alert-message"></span>
-        </div>
-
-        <!-- Dashboard -->
-        <div class="dash-grid no-print">
-            <div class="glass-card dash-card dash-total">
-                <div class="dash-icon"><i class="fas fa-users"></i></div>
-                <div class="dash-value" id="total-students">0</div>
-                <div class="dash-label">Total Students</div>
+            <div>
+                <div class="label">Timing</div>
+                <div class="value" id="sum-time">—</div>
             </div>
-            <div class="glass-card dash-card dash-present">
-                <div class="dash-icon"><i class="fas fa-user-check"></i></div>
-                <div class="dash-value" id="present-count">0</div>
-                <div class="dash-label">Present</div>
+            <div>
+                <div class="label">Type</div>
+                <div class="value" id="sum-type">—</div>
             </div>
-            <div class="glass-card dash-card dash-absent">
-                <div class="dash-icon"><i class="fas fa-user-xmark"></i></div>
-                <div class="dash-value" id="absent-count">0</div>
-                <div class="dash-label">Absent</div>
-            </div>
-            <div class="glass-card dash-card dash-progress">
-                <div class="dash-icon"><i class="fas fa-chart-simple"></i></div>
-                <div class="dash-value" id="completion-pct">0%</div>
-                <div class="dash-label">Completion</div>
-                <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+            <div>
+                <div class="label">Batch</div>
+                <div class="value" id="sum-batch">All Students</div>
             </div>
         </div>
 
-        <!-- Session info -->
-        <section class="glass-card section-card no-print">
-            <div class="section-title"><i class="fas fa-info-circle"></i> Session Details</div>
-            <div class="selected-summary show" style="margin:0; background:transparent; border:none; padding:0;">
-                <div><div class="label">Subject</div><div class="value" id="info-subject">—</div></div>
-                <div><div class="label">Timing</div><div class="value" id="info-time">—</div></div>
-                <div><div class="label">Batch</div><div class="value" id="info-batch">—</div></div>
-                <div><div class="label">Date</div><div class="value" id="info-date">—</div></div>
-            </div>
-        </section>
-
-        <!-- Student list -->
-        <section class="glass-card section-card no-print">
-            <div class="section-title"><i class="fas fa-list-check"></i> Student List</div>
-
-            <div class="toolbar">
-                <div class="search-input-wrap">
-                    <i class="fas fa-magnifying-glass"></i>
-                    <input type="text" id="search-student" class="search-input" placeholder="Search by name, enrollment no., course or status…">
-                </div>
-                <select id="filter-status" class="filter-select">
-                    <option value="all">All statuses</option>
-                    <option value="present">Present</option>
-                    <option value="absent">Absent</option>
-                    <option value="pending">Pending</option>
-                </select>
-                <select id="sort-name" class="filter-select">
-                    <option value="none">Sort by name</option>
-                    <option value="asc">Name: A → Z</option>
-                    <option value="desc">Name: Z → A</option>
-                </select>
-            </div>
-
-            <div class="toolbar bulk-actions">
-                <button class="btn btn-outline btn-sm ripple" id="mark-all-present"><i class="fas fa-user-check"></i> Select All Present</button>
-                <button class="btn btn-outline btn-sm ripple" id="mark-all-absent"><i class="fas fa-user-xmark"></i> Select All Absent</button>
-                <button class="btn btn-outline btn-sm ripple" id="undo-action"><i class="fas fa-rotate-left"></i> Undo Last Action</button>
-                <button class="btn btn-danger-ghost btn-sm ripple" id="reset-attendance"><i class="fas fa-arrows-rotate"></i> Reset Attendance</button>
-            </div>
-
-            <div class="table-wrap">
-                <table class="student-table">
-                    <thead>
-                        <tr>
-                            <th>Student</th>
-                            <th>Enrollment No.</th>
-                            <th>Total Attendance</th>
-                            <th>Mark</th>
-                        </tr>
-                    </thead>
-                    <tbody id="student-table-body"></tbody>
-                </table>
-            </div>
-        </section>
-
-        <div class="action-bar no-print">
+        <div class="action-bar">
             <div class="action-bar-group">
-                <button class="btn btn-outline ripple" id="back-btn"><i class="fas fa-arrow-left"></i> Back to Subject Selection</button>
-                <button class="btn btn-outline ripple" id="print-btn"><i class="fas fa-print"></i> Print Attendance</button>
-                <button class="btn btn-outline ripple" id="share-btn"><i class="fas fa-share-nodes"></i> Share Report</button>
+                <a class="btn btn-outline ripple" href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to
+                    Dashboard</a>
             </div>
             <div class="action-bar-group">
-                <button class="btn btn-success ripple" id="save-attendance-btn" disabled><i class="fas fa-save"></i> Save Attendance</button>
+                <button class="btn btn-primary ripple" id="take-attendance-btn" disabled>
+                    <i class="fas fa-clipboard-check"></i> Take Attendance Now
+                </button>
             </div>
         </div>
     </main>
 
-    <!-- Printable report (only visible when printing) -->
-    <div id="print-report">
-        <div class="print-header">
-            <img class="print-logo-placeholder" src="assets/logo-mark.svg" alt="Logo">
-            <h2 id="print-college">School of Sciences</h2>
-            <p>Student Attendance Report</p>
-        </div>
-        <div class="print-meta-grid">
-            <div><span>Subject</span><strong id="print-subject">—</strong></div>
-            <div><span>Faculty</span><strong id="print-faculty">—</strong></div>
-            <div><span>Date</span><strong id="print-date">—</strong></div>
-            <div><span>Lecture Timing</span><strong id="print-time">—</strong></div>
-            <div><span>Batch / Group</span><strong id="print-batch">—</strong></div>
-        </div>
-        <div class="print-summary">
-            <div class="print-stat-box stat-total"><span>Total</span><strong id="print-total">0</strong></div>
-            <div class="print-stat-box stat-present"><span>Present</span><strong id="print-present">0</strong></div>
-            <div class="print-stat-box stat-absent"><span>Absent</span><strong id="print-absent">0</strong></div>
-            <div class="print-stat-box stat-percentage"><span>Attendance</span><strong id="print-percentage">0%</strong></div>
-        </div>
-        <table class="print-table">
-            <thead><tr><th>#</th><th>Enrollment No.</th><th>Student Name</th><th>Present / Absent</th></tr></thead>
-            <tbody id="print-table-body"></tbody>
-        </table>
-        <div class="print-footer">Generated by Student Attendance Management System — RAS15</div>
-    </div>
-
-    <!-- Confirmation modal -->
-    <div class="overlay no-print" id="confirm-overlay">
-        <div class="glass-card modal-card">
-            <h3 id="confirm-title">Save this attendance?</h3>
-            <p id="confirm-text">Please double-check the marks below before saving. This cannot be edited afterwards.</p>
-            <div class="modal-actions">
-                <button class="btn btn-outline ripple" id="confirm-cancel">Cancel</button>
-                <button class="btn btn-success ripple" id="confirm-ok">Yes, Save</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Success overlay -->
-    <div class="overlay no-print" id="success-overlay">
-        <div class="glass-card overlay-card">
-            <div class="success-check"><i class="fas fa-check"></i></div>
-            <h3>Attendance Saved!</h3>
-            <p style="color:var(--text-muted); font-size:13px;">Redirecting to subject selection…</p>
-        </div>
-    </div>
-
-    <footer class="main-footer no-print">
+    <footer class="main-footer">
         <p>&copy; 2026 Student Attendance Management System | Designed for Educational Institutions | RAS15</p>
         <p class="footer-signature">&#10022; Designed with purpose &amp; passion &#10022; &copy; 2026 Rishabh Shah</p>
     </footer>
@@ -213,9 +120,7 @@
 
     <script src="js/data.js"></script>
     <script src="js/utils.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="js/share.js"></script>
-    <script src="js/student.js"></script>
+    <script src="js/subject.js"></script>
 </body>
+
 </html>

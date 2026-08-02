@@ -1,30 +1,19 @@
 /**
  * subject.js — Weekly timetable grid + batch selection logic
- * Flow: tap a cell in the timetable -> (if Lab) pick a batch -> continue
  */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();
     setupScrollToTop(document.getElementById('scroll-top'));
+    wireAppNav();
 
     if (!requireLogin('index.html')) return;
-
-    document.getElementById('logged-in-user').textContent = localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher';
-    document.getElementById('current-date').textContent = formatDateLong(new Date());
-
-    const themeToggle = document.getElementById('theme-toggle');
-    themeToggle.querySelector('i').className = document.documentElement.getAttribute('data-theme') === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    themeToggle.addEventListener('click', () => {
-        const next = toggleTheme();
-        themeToggle.querySelector('i').className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    });
 
     const timetableEl = document.getElementById('timetable');
     const batchSection = document.getElementById('batch-section');
     const batchGridEl = document.getElementById('batch-grid');
     const summaryEl = document.getElementById('selected-summary');
     const takeAttendanceBtn = document.getElementById('take-attendance-btn');
-    const backBtn = document.getElementById('back-btn');
     const alertDiv = document.getElementById('selection-alert');
 
     const today = todayName();
@@ -35,32 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const maxPeriods = Math.max(...WEEK_DAYS.map((day) => TIMETABLE[day].length));
 
-    /* ------------------------- Today's Overview dashboard ------------------------- */
-
+    // Get today's records for the "already taken" badge
     const allRecords = Store.get(STORAGE_KEYS.RECORDS, []);
     const todayRecords = allRecords.filter((r) => String(r.date).slice(0, 10) === todayDateStr);
-
-    (function renderTodayOverview() {
-        const todayPresent = todayRecords.reduce((sum, r) => sum + (r.summary?.present || 0), 0);
-        const todayAbsent = todayRecords.reduce((sum, r) => sum + (r.summary?.absent || 0), 0);
-        document.getElementById('dash-today-present').textContent = todayPresent;
-        document.getElementById('dash-today-absent').textContent = todayAbsent;
-
-        if (allRecords.length > 0) {
-            const mostRecent = allRecords.reduce((latest, r) => {
-                const t = new Date(r.editedAt || r.savedAt).getTime();
-                return t > latest.time ? { time: t, record: r } : latest;
-            }, { time: -Infinity, record: null }).record;
-            if (mostRecent) {
-                const ts = new Date(mostRecent.editedAt || mostRecent.savedAt);
-                const isToday = ts.toISOString().slice(0, 10) === todayDateStr;
-                const timeStr = ts.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                document.getElementById('dash-last-updated').textContent = isToday ? timeStr : `${ts.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}, ${timeStr}`;
-            }
-        }
-    })();
-
-    // Which "day|subject|start" combinations already have a saved record today (for the badge).
     const takenTodayMap = {};
     todayRecords.forEach((r) => {
         const key = `${r.day}|${r.subject}|${r.start || ''}`;
@@ -213,11 +179,6 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => {
             window.location.href = 'student.html';
         }, 700);
-    });
-
-    backBtn.addEventListener('click', function () {
-        Store.clearSession();
-        window.location.href = 'index.html';
     });
 
     updateSummary();

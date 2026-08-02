@@ -7,13 +7,6 @@
 const COLLEGE_NAME = "School of Sciences";
 const SYSTEM_NAME = "Student Attendance Management System";
 
-/* ------------------------------------------------------------------ */
-/*  STUDENTS                                                          */
-/* ------------------------------------------------------------------ */
-/* Course + Batch are derived automatically from the enrollment code:
-   ...CA... -> BCA -> Batch 1
-   ...IT... -> B.Sc. IT -> Batch 2                                    */
-
 function detectCourse(enrollmentNo) {
     if (/CA\d+$/i.test(enrollmentNo)) return "BCA";
     if (/IT\d+$/i.test(enrollmentNo)) return "BSc IT";
@@ -25,7 +18,6 @@ function detectBatch(course) {
 }
 
 const RAW_STUDENTS = [
-    // Batch 1 — BCA (23 students)
     ["23SS02CA001", "Gautam G.A. Anand Murthy G.S."],
     ["23SS02CA002", "Aghera Dhruviben Navneetbhai"],
     ["23SS02CA007", "Barad Trusha Kirankumar"],
@@ -50,7 +42,6 @@ const RAW_STUDENTS = [
     ["23SS02CA119", "Malek Noorfatima Salauddin"],
     ["24IC08CA002", "Khan Iqrar Mo. Ibrar"],
 
-    // Batch 2 — B.Sc. IT (39 students)
     ["23SS02IT007", "Anaghan Krunal Bharatbhai"],
     ["23SS02IT014", "Bhaidu Sadiya Shabbir"],
     ["23SS02IT018", "Kakadiya Bansariben Bhaveshbhai"],
@@ -107,12 +98,6 @@ const BATCH_LABELS = {
     1: "Batch 1 — BCA",
     2: "Batch 2 — B.Sc. IT",
 };
-
-/* ------------------------------------------------------------------ */
-/*  WEEKLY TIMETABLE                                                   */
-/* ------------------------------------------------------------------ */
-/* type: "Lab" slots require a batch to be picked before attendance.
-   type: "Theory" slots include every student, both batches together. */
 
 const TIMETABLE = {
     Tuesday: [

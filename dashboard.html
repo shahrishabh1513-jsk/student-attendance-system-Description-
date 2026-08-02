@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }</script>
 </head>
+
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -36,12 +38,17 @@
 
     <nav class="app-nav no-print">
         <div class="app-nav-inner">
-            <a class="app-nav-link active" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span class="nav-label">Dashboard</span></a>
-            <a class="app-nav-link" href="subject.html"><i class="fas fa-calendar-days"></i> <span class="nav-label">Timetable</span></a>
-            <a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span class="nav-label">Take Attendance</span></a>
-            <a class="app-nav-link" href="reports.html"><i class="fas fa-chart-column"></i> <span class="nav-label">Reports</span></a>
+            <a class="app-nav-link active" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span
+                    class="nav-label">Dashboard</span></a>
+            <a class="app-nav-link" href="subject.html"><i class="fas fa-calendar-days"></i> <span
+                    class="nav-label">Timetable</span></a>
+            <a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span
+                    class="nav-label">Take Attendance</span></a>
+            <a class="app-nav-link" href="reports.html"><i class="fas fa-chart-column"></i> <span
+                    class="nav-label">Reports</span></a>
             <div class="app-nav-spacer"></div>
-            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i> <span class="nav-label">Logout</span></button>
+            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i>
+                <span class="nav-label">Logout</span></button>
         </div>
     </nav>
 
@@ -49,7 +56,6 @@
         <h2 style="font-size:19px; margin-bottom:2px;">Dashboard</h2>
         <p style="color:var(--text-muted); font-size:13px; margin:0 0 20px;" id="page-subtitle">—</p>
 
-        <!-- Today's Overview -->
         <div class="dash-grid">
             <div class="glass-card dash-card dash-total">
                 <div class="dash-icon"><i class="fas fa-users"></i></div>
@@ -74,7 +80,6 @@
         </div>
 
         <div class="dashboard-columns">
-            <!-- Profile card -->
             <div class="glass-card profile-card">
                 <div class="profile-card-photo" id="profile-photo">T</div>
                 <div class="profile-card-name" id="profile-name">Teacher</div>
@@ -84,12 +89,12 @@
                     <div class="profile-info-row"><span>Username</span><span id="profile-username">—</span></div>
                     <div class="profile-info-row"><span>Today's Date</span><span id="profile-date">—</span></div>
                     <div class="profile-info-row"><span>Total Subjects</span><span>9</span></div>
-                    <div class="profile-info-row"><span>Batches</span><span>Batch 1 (BCA) · Batch 2 (B.Sc. IT)</span></div>
+                    <div class="profile-info-row"><span>Batches</span><span>Batch 1 (BCA) · Batch 2 (B.Sc. IT)</span>
+                    </div>
                     <div class="profile-info-row"><span>System</span><span>Local Storage (offline)</span></div>
                 </div>
             </div>
 
-            <!-- Notifications / Recent Activity -->
             <div class="glass-card notif-card">
                 <div class="notif-card-header"><i class="fas fa-bell"></i> Notifications</div>
                 <div class="notif-tabs">
@@ -130,4 +135,5 @@
     <script src="js/utils.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
+
 </html>

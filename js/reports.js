@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();
     setupScrollToTop(document.getElementById('scroll-top'));
+    wireAppNav();
 
     if (!requireLogin('index.html')) return;
 
@@ -27,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const filterBatch = el('filter-batch');
     const detailPanel = el('record-detail');
 
-    // Populate subject filter dynamically from saved records
     const subjectNames = [...new Set(records.map((r) => r.subject))];
     subjectNames.forEach((name) => {
         const opt = document.createElement('option');
@@ -43,8 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return dateOk && subjectOk && batchOk;
     }
 
-    // Accepts either a "HH:MM" (24h) string, or a "H:MM AM/PM" display string
-    // from older saved records, and always returns 24h "HH:MM".
     function toTwentyFourHour(value) {
         if (!value) return '';
         const ampmMatch = value.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
@@ -55,14 +53,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (period.toUpperCase() === 'AM' && hh === 12) hh = 0;
             return `${String(hh).padStart(2, '0')}:${mm}`;
         }
-        return value; // already 24h "HH:MM"
+        return value;
     }
 
     function findRecord(id) {
         return records.find((r) => String(r.id) === String(id));
     }
-
-    /* ------------------------------ list render ------------------------------ */
 
     function render() {
         const visible = records.filter(matchesFilters);
@@ -110,8 +106,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* ------------------------------ detail panel ------------------------------ */
-
     let activeRecordId = null;
 
     function openDetail(id, { scroll = false } = {}) {
@@ -150,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function () {
     el('detail-close').addEventListener('click', () => {
         detailPanel.style.display = 'none';
         activeRecordId = null;
-        // Clean the ?record= param out of the URL without reloading.
         const url = new URL(window.location.href);
         url.searchParams.delete('record');
         window.history.replaceState({}, '', url);
@@ -167,9 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
     el('detail-edit').addEventListener('click', () => {
         const r = findRecord(activeRecordId);
         if (!r) return;
-        // Hand this record's data to the attendance page as an editable draft.
         const draftKey = `${r.subject}|${r.day}|${r.batch}|${String(r.date).slice(0, 10)}`;
-        // Older records (saved before this field existed) fall back to parsing the display string.
         const fallbackParts = String(r.timing || '').split(' – ');
         const rawStart = r.start || toTwentyFourHour(fallbackParts[0]) || '';
         const rawEnd = r.end || toTwentyFourHour(fallbackParts[1]) || '';
@@ -181,8 +172,6 @@ document.addEventListener('DOMContentLoaded', function () {
         Store.set(STORAGE_KEYS.EDIT_RECORD, r.id);
         window.location.href = 'student.html';
     });
-
-    /* ------------------------------ print + export ------------------------------ */
 
     function printRecord(r) {
         if (!r) return;
@@ -197,7 +186,6 @@ document.addEventListener('DOMContentLoaded', function () {
         el('print-absent').textContent = r.summary.absent;
         el('print-percentage').textContent = `${r.summary.percentage}%`;
 
-        // Absent students get a red boxed name; everyone else stays plain.
         el('print-table-body').innerHTML = r.students.map((s, i) => {
             const isAbsent = s.attendance === false;
             const statusLabel = s.attendance === true ? 'Present' : s.attendance === false ? 'Absent' : 'Pending';
@@ -260,8 +248,6 @@ document.addEventListener('DOMContentLoaded', function () {
         showToast('All matching records exported to CSV.', 'success');
     });
 
-    /* ------------------------------ wiring ------------------------------ */
-
     filterDate.addEventListener('change', render);
     filterSubject.addEventListener('change', render);
     filterBatch.addEventListener('change', render);
@@ -272,11 +258,8 @@ document.addEventListener('DOMContentLoaded', function () {
         render();
     });
 
-    el('back-btn').addEventListener('click', () => { window.location.href = 'subject.html'; });
-
     render();
 
-    // Arriving here right after Save (or via a "View" link) opens the record automatically.
     const params = new URLSearchParams(window.location.search);
     const recordParam = params.get('record');
     if (recordParam) {

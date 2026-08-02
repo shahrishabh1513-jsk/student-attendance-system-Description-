@@ -6,9 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginAlert = document.getElementById('login-alert');
     const themeToggle = document.getElementById('theme-toggle');
 
-    // Wire up the Sign In handler FIRST, before anything that touches
-    // localStorage or does cosmetic setup — that way login still works
-    // even if a non-essential step below fails for some reason.
     loginForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
@@ -18,17 +15,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const password = document.getElementById('password').value;
 
         if (role === 'student') {
-            try { showToast('This portal is for faculty attendance marking. Please switch the Role above to Staff.', 'info'); } catch (err) { /* ignore */ }
+            try { showToast('This portal is for faculty attendance marking. Please switch the Role above to Staff.', 'info'); } catch (err) { }
             return;
         }
 
         if (username === 'Rishabh Shah' && password === '1504') {
-            // Persisting the session is best-effort: even if storage is
-            // blocked in this browser/context, the redirect must still happen.
             try {
                 Store.set(STORAGE_KEYS.LOGGED_IN, true);
                 localStorage.setItem(STORAGE_KEYS.USERNAME, username);
-            } catch (err) { /* storage unavailable — continue anyway */ }
+            } catch (err) { }
 
             loginAlert.style.display = 'none';
 
@@ -36,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.innerHTML = '<span class="spinner"></span> Signing in...';
             submitBtn.disabled = true;
 
-            try { showToast('Login successful. Redirecting…', 'success'); } catch (err) { /* ignore */ }
+            try { showToast('Login successful. Redirecting…', 'success'); } catch (err) { }
 
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
@@ -50,8 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Cosmetic/non-essential setup — wrapped so a failure here can never
-    // block the Sign In handler registered above.
     try {
         initTheme();
         attachRipple();
@@ -70,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const showPasswordCheckbox = document.getElementById('show-password');
         const passwordInput = document.getElementById('password');
 
-        if (googleBtn) googleBtn.addEventListener('click', () => showToast('Google sign-in isn\u2019t connected yet — please use your faculty username and password.', 'info'));
+        if (googleBtn) googleBtn.addEventListener('click', () => showToast('Google sign-in isn\'t connected yet — please use your faculty username and password.', 'info'));
 
         const explainForgot = (e) => {
             if (e) e.preventDefault();

@@ -17,8 +17,6 @@ const STORAGE_KEYS = {
     THEME: "attendanceTheme",
 };
 
-/* ---------------------------- storage ---------------------------- */
-
 const Store = {
     get(key, fallback = null) {
         try {
@@ -39,9 +37,8 @@ const Store = {
     remove(key) {
         try {
             localStorage.removeItem(key);
-        } catch (e) { /* storage unavailable — nothing to clear anyway */ }
+        } catch (e) { }
     },
-    // Full logout: clears the session AND the login flag itself.
     clearSession() {
         [
             STORAGE_KEYS.LOGGED_IN,
@@ -54,9 +51,6 @@ const Store = {
             STORAGE_KEYS.EDIT_RECORD,
         ].forEach((k) => Store.remove(k));
     },
-    // Clears only the in-progress attendance selection (subject/day/batch/
-    // date/draft/edit-id) WITHOUT touching the login flag — used after
-    // saving attendance so the teacher stays signed in.
     clearAttendanceSession() {
         [
             STORAGE_KEYS.SUBJECT,
@@ -69,9 +63,8 @@ const Store = {
     },
 };
 
-/* ----------------------------- time ------------------------------ */
-
 function formatTime12(timeStr) {
+    if (!timeStr) return '';
     const [h, m] = timeStr.split(":").map(Number);
     const ampm = h >= 12 ? "PM" : "AM";
     const displayHour = h % 12 === 0 ? 12 : h % 12;
@@ -90,8 +83,6 @@ function formatDateLong(date) {
 function todayName() {
     return new Date().toLocaleDateString("en-US", { weekday: "long" });
 }
-
-/* ---------------------------- toasts ------------------------------ */
 
 function showToast(message, type = "info", duration = 3200) {
     let host = document.getElementById("toast-host");
@@ -119,8 +110,6 @@ function showToast(message, type = "info", duration = 3200) {
     }, duration);
 }
 
-/* ----------------------------- theme ------------------------------- */
-
 function safeGetItem(key, fallback = null) {
     try {
         const value = localStorage.getItem(key);
@@ -140,9 +129,6 @@ function safeSetItem(key, value) {
 }
 
 function initTheme() {
-    // Never let a blocked/unavailable localStorage (private browsing, some
-    // file:// contexts, sandboxed previews) throw and abort the rest of the
-    // page's setup script — always fall back to the light theme instead.
     const saved = safeGetItem(STORAGE_KEYS.THEME, "light");
     document.documentElement.setAttribute("data-theme", saved);
 }
@@ -154,8 +140,6 @@ function toggleTheme() {
     safeSetItem(STORAGE_KEYS.THEME, next);
     return next;
 }
-
-/* ------------------------- animated counters ------------------------ */
 
 function animateCount(el, to, duration = 500) {
     if (!el) return;
@@ -173,8 +157,6 @@ function animateCount(el, to, duration = 500) {
     }
     requestAnimationFrame(tick);
 }
-
-/* ---------------------------- misc dom ------------------------------ */
 
 function debounce(fn, delay = 200) {
     let handle;
@@ -202,9 +184,6 @@ function requireLogin(redirectTo = "index.html") {
     return true;
 }
 
-/* Ripple effect for any element with the .ripple class.
-   Wrapped defensively — a ripple glitch should never prevent the real
-   click/submit handlers on the same element from being wired up. */
 function attachRipple(root = document) {
     try {
         root.querySelectorAll(".ripple").forEach((el) => {
@@ -221,17 +200,12 @@ function attachRipple(root = document) {
                     circle.style.top = `${e.clientY - rect.top - size / 2}px`;
                     this.appendChild(circle);
                     setTimeout(() => circle.remove(), 650);
-                } catch (err) { /* purely cosmetic — ignore failures */ }
+                } catch (err) { }
             });
         });
-    } catch (err) { /* purely cosmetic — ignore failures */ }
+    } catch (err) { }
 }
 
-/* ------------------------- shared app header / nav ------------------------- */
-/* Wires up the common .app-header + .app-nav bar used on the Dashboard,
-   Timetable, Attendance and Reports pages: theme toggle, user name/avatar,
-   the "Take Attendance" smart link, and Logout. Safe to call even if some
-   of these elements aren't present on a given page. */
 function wireAppNav() {
     try {
         const themeToggle = document.getElementById('theme-toggle');

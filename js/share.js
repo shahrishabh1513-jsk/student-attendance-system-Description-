@@ -1,17 +1,9 @@
 /**
  * share.js — "Share Report" feature.
- *
- * Generates a report as an Image (PNG), PDF, or Excel (.xls) file, then
- * either hands it to the device's native share sheet (so the user can pick
- * WhatsApp, Gmail, etc. directly) or falls back to downloading the file and
- * opening WhatsApp Web / the default mail app with a pre-filled message —
- * the browser platform has no way to attach a file to those links directly,
- * so the fallback path always tells the user to attach the file manually.
  */
-
 const ShareReport = (() => {
     let modalEl = null;
-    let currentRecordProvider = null; // function returning the record-like object to share
+    let currentRecordProvider = null;
     let selectedFormat = 'image';
 
     function ensureModal() {
@@ -88,14 +80,10 @@ const ShareReport = (() => {
         if (modalEl) modalEl.classList.remove('show');
     }
 
-    /* ------------------------- file generation ------------------------- */
-
     function fileSafeName(record) {
         return `${record.subject}_${String(record.date).slice(0, 10)}`.replace(/[^a-z0-9]+/gi, '_');
     }
 
-    // Renders the given record into the page's hidden #print-report element
-    // (reusing the exact print layout) so it can be captured or printed.
     function populatePrintReport(record) {
         const el = (id) => document.getElementById(id);
         el('print-college').textContent = COLLEGE_NAME;
@@ -126,8 +114,6 @@ const ShareReport = (() => {
         }).join('');
     }
 
-    // html2canvas needs the node to actually render — temporarily reveal it
-    // off-screen (not display:none) at a fixed width, capture, then hide again.
     async function captureReportCanvas(record) {
         if (typeof html2canvas === 'undefined') {
             throw new Error('Image/PDF export library did not load. Check your internet connection and try again.');
@@ -224,8 +210,6 @@ const ShareReport = (() => {
         return generateExcelFile(record);
     }
 
-    /* --------------------------- share actions --------------------------- */
-
     function downloadBlob(blob, filename) {
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -258,9 +242,8 @@ const ShareReport = (() => {
                     showToast('Report shared.', 'success');
                     return;
                 }
-                // No native file-share support — fall back to a plain download.
                 downloadBlob(blob, filename);
-                setStatus('Your device doesn\u2019t support direct file sharing — the file was downloaded instead.');
+                setStatus('Your device doesn\'t support direct file sharing — the file was downloaded instead.');
                 showToast('File downloaded. Share it manually from your downloads.', 'info');
                 return;
             }
