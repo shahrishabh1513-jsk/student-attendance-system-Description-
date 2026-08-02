@@ -26,83 +26,173 @@
     </header>
 
     <div class="login-shell">
-        <div class="login-card-frame">
-            <!-- Illustration panel -->
-            <div class="login-illustration">
-                <div class="login-illustration-dot"></div>
-                <svg viewBox="0 0 480 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice">
-                    <!-- back hill -->
-                    <path d="M0 340 C 70 300, 130 300, 190 330 C 250 360, 300 300, 360 320 C 410 336, 450 320, 480 300 L 480 520 L 0 520 Z" fill="#DDCB94" opacity="0.55"/>
-                    <!-- mid hill -->
-                    <path d="M0 400 C 60 360, 120 380, 180 400 C 250 424, 320 370, 390 392 C 430 404, 460 392, 480 378 L 480 520 L 0 520 Z" fill="#B9A165" opacity="0.6"/>
-                    <!-- front hill (darkest, main silhouette) -->
-                    <path d="M0 440 C 50 410, 110 430, 170 448 C 230 466, 300 410, 370 434 C 415 449, 450 438, 480 420 L 480 520 L 0 520 Z" fill="#1C1B18"/>
+        <!-- Illustration panel: original campus artwork (not a photo) -->
+        <div class="login-illustration">
+            <div class="login-illustration-dot"></div>
+            <svg viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice">
+                <!-- sky accents -->
+                <circle cx="120" cy="110" r="3" fill="#2563EB" opacity="0.3"/>
+                <circle cx="680" cy="160" r="4" fill="#2563EB" opacity="0.25"/>
+                <circle cx="600" cy="90" r="2.5" fill="#2563EB" opacity="0.35"/>
 
-                    <!-- leaves cluster -->
-                    <g fill="#1C1B18">
-                        <ellipse cx="120" cy="392" rx="34" ry="13" transform="rotate(-28 120 392)"/>
-                        <ellipse cx="150" cy="368" rx="30" ry="11" transform="rotate(-52 150 368)"/>
-                        <ellipse cx="95" cy="360" rx="26" ry="10" transform="rotate(18 95 360)"/>
-                    </g>
-                    <g fill="#8A6E2E" opacity="0.85">
-                        <ellipse cx="330" cy="380" rx="30" ry="11" transform="rotate(30 330 380)"/>
-                        <ellipse cx="300" cy="356" rx="26" ry="10" transform="rotate(58 300 356)"/>
-                        <ellipse cx="360" cy="360" rx="24" ry="9" transform="rotate(-16 360 360)"/>
-                    </g>
+                <!-- distant tree line -->
+                <g fill="#BBD8C6" opacity="0.6">
+                    <circle cx="60" cy="560" r="38"/>
+                    <circle cx="740" cy="540" r="46"/>
+                    <circle cx="120" cy="580" r="30"/>
+                </g>
 
-                    <!-- graduation cap resting on the hill -->
-                    <g transform="translate(220 300)">
-                        <path d="M0 -14 L44 0 L0 14 L-44 0 Z" fill="#FBF3DC"/>
-                        <path d="M-26 3 L-26 20 C-26 30 -13 38 0 38 C13 38 26 30 26 20 L26 3 L0 15 Z" fill="#FBF3DC" opacity="0.94"/>
-                        <line x1="40" y1="2" x2="40" y2="24" stroke="#F4B400" stroke-width="3" stroke-linecap="round"/>
-                        <circle cx="40" cy="29" r="4.5" fill="#F4B400"/>
-                    </g>
+                <!-- ground / courtyard -->
+                <rect x="0" y="620" width="800" height="280" fill="#E7EEF6"/>
+                <path d="M0 640 L800 600 L800 640 L0 680 Z" fill="#D8E4F1"/>
 
-                    <!-- floating accent circles -->
-                    <circle cx="70" cy="120" r="4" fill="#F4B400" opacity="0.8"/>
-                    <circle cx="410" cy="160" r="3" fill="#1C1B18" opacity="0.35"/>
-                    <circle cx="380" cy="90" r="5.5" fill="#FBF3DC" stroke="#F4B400" stroke-width="1.5"/>
-                </svg>
+                <!-- main path -->
+                <path d="M330 900 L370 620 L430 620 L470 900 Z" fill="#F4C979" opacity="0.9"/>
+                <path d="M330 900 L370 620 L385 620 L358 900 Z" fill="#F0BD5C" opacity="0.7"/>
+
+                <!-- Building 1 (left, mid height) -->
+                <g>
+                    <rect x="90" y="470" width="150" height="170" rx="4" fill="#FFFFFF" stroke="#CBD9EA" stroke-width="2"/>
+                    <rect x="90" y="470" width="150" height="18" fill="#2563EB"/>
+                    <g fill="#BFDBFE">
+                        <rect x="106" y="504" width="26" height="26" rx="2"/>
+                        <rect x="142" y="504" width="26" height="26" rx="2"/>
+                        <rect x="178" y="504" width="26" height="26" rx="2"/>
+                        <rect x="106" y="546" width="26" height="26" rx="2"/>
+                        <rect x="142" y="546" width="26" height="26" rx="2"/>
+                        <rect x="178" y="546" width="26" height="26" rx="2"/>
+                        <rect x="106" y="588" width="26" height="26" rx="2"/>
+                        <rect x="142" y="588" width="26" height="26" rx="2"/>
+                        <rect x="178" y="588" width="26" height="26" rx="2"/>
+                    </g>
+                </g>
+
+                <!-- Building 2 (center, tallest) -->
+                <g>
+                    <rect x="500" y="380" width="190" height="260" rx="4" fill="#FFFFFF" stroke="#CBD9EA" stroke-width="2"/>
+                    <rect x="500" y="380" width="190" height="18" fill="#1D4ED8"/>
+                    <g fill="#DBEAFE">
+                        <rect x="518" y="414" width="28" height="30" rx="2"/>
+                        <rect x="558" y="414" width="28" height="30" rx="2"/>
+                        <rect x="598" y="414" width="28" height="30" rx="2"/>
+                        <rect x="638" y="414" width="28" height="30" rx="2"/>
+                        <rect x="518" y="460" width="28" height="30" rx="2"/>
+                        <rect x="558" y="460" width="28" height="30" rx="2"/>
+                        <rect x="598" y="460" width="28" height="30" rx="2"/>
+                        <rect x="638" y="460" width="28" height="30" rx="2"/>
+                        <rect x="518" y="506" width="28" height="30" rx="2"/>
+                        <rect x="558" y="506" width="28" height="30" rx="2"/>
+                        <rect x="598" y="506" width="28" height="30" rx="2"/>
+                        <rect x="638" y="506" width="28" height="30" rx="2"/>
+                        <rect x="518" y="552" width="28" height="30" rx="2"/>
+                        <rect x="558" y="552" width="28" height="30" rx="2"/>
+                        <rect x="598" y="552" width="28" height="30" rx="2"/>
+                        <rect x="638" y="552" width="28" height="30" rx="2"/>
+                    </g>
+                    <rect x="575" y="600" width="40" height="40" fill="#93C5FD"/>
+                </g>
+
+                <!-- Building 3 (right, low wing) -->
+                <g>
+                    <rect x="600" y="560" width="170" height="80" rx="4" fill="#F1F6FC" stroke="#CBD9EA" stroke-width="2"/>
+                    <g fill="#C7DDF8">
+                        <rect x="616" y="578" width="24" height="24" rx="2"/>
+                        <rect x="650" y="578" width="24" height="24" rx="2"/>
+                        <rect x="684" y="578" width="24" height="24" rx="2"/>
+                        <rect x="718" y="578" width="24" height="24" rx="2"/>
+                    </g>
+                </g>
+
+                <!-- flag pole + flag on center building -->
+                <line x1="595" y1="380" x2="595" y2="330" stroke="#94A3B8" stroke-width="3"/>
+                <path d="M595 332 L630 340 L595 350 Z" fill="#2563EB"/>
+
+                <!-- trees along the path -->
+                <g>
+                    <circle cx="260" cy="700" r="26" fill="#8FC79B"/>
+                    <rect x="256" y="722" width="8" height="20" fill="#8A6E2E"/>
+                    <circle cx="540" cy="720" r="30" fill="#7FB98B"/>
+                    <rect x="536" y="744" width="8" height="22" fill="#8A6E2E"/>
+                    <circle cx="200" cy="760" r="20" fill="#8FC79B"/>
+                    <rect x="196" y="778" width="7" height="16" fill="#8A6E2E"/>
+                    <circle cx="600" cy="770" r="18" fill="#7FB98B"/>
+                    <rect x="596" y="786" width="7" height="14" fill="#8A6E2E"/>
+                </g>
+
+                <!-- small fountain/pond accent -->
+                <ellipse cx="400" cy="760" rx="46" ry="16" fill="#BFDBFE"/>
+                <ellipse cx="400" cy="758" rx="46" ry="16" fill="none" stroke="#93C5FD" stroke-width="2"/>
+                <circle cx="400" cy="750" r="5" fill="#2563EB"/>
+
+                <!-- two small figures walking (abstract) -->
+                <g fill="#334155" opacity="0.5">
+                    <circle cx="300" cy="810" r="5"/>
+                    <rect x="296" y="815" width="8" height="18" rx="3"/>
+                    <circle cx="470" cy="830" r="5"/>
+                    <rect x="466" y="835" width="8" height="18" rx="3"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Login form panel -->
+        <div class="login-form-panel">
+            <div class="login-logo"><img src="assets/logo-mark.svg" alt="System logo"></div>
+            <h1>Log in</h1>
+            <p class="login-sub">Sign in to take student attendance</p>
+
+            <div id="login-alert" class="alert alert-danger" style="display:none;">
+                <i class="fas fa-circle-exclamation"></i>
+                <span>Invalid username or password. Please try again.</span>
             </div>
 
-            <!-- Login form panel -->
-            <div class="login-form-panel">
-                <div class="login-logo"><img src="assets/logo-mark.svg" alt="System logo"></div>
-                <h1>Log in</h1>
-                <p class="login-sub">Sign in to take student attendance</p>
-
-                <div id="login-alert" class="alert alert-danger" style="display:none;">
-                    <i class="fas fa-circle-exclamation"></i>
-                    <span>Invalid username or password. Please try again.</span>
+            <form id="login-form">
+                <div class="login-role-group">
+                    <span class="role-label"><span style="color:var(--danger)">*</span>Role</span>
+                    <div class="login-role-options">
+                        <label class="login-role-option"><input type="radio" name="role" value="staff" checked> Staff</label>
+                        <label class="login-role-option"><input type="radio" name="role" value="student"> Student</label>
+                    </div>
                 </div>
 
-                <form id="login-form">
-                    <div class="field">
-                        <label for="username">Login, email or phone number</label>
-                        <div class="field-input">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" required>
-                        </div>
+                <div class="field">
+                    <label for="username">Username</label>
+                    <div class="field-input">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" required>
                     </div>
-                    <div class="field">
-                        <label for="password">Password</label>
-                        <div class="field-input">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
-                        </div>
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <div class="field-input">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block login-btn ripple">
-                        <i class="fas fa-arrow-right-to-bracket"></i> Log in
+                </div>
+                <div class="login-checkbox-row">
+                    <input type="checkbox" id="show-password">
+                    <label for="show-password">Show Password</label>
+                </div>
+
+                <div class="login-btn-row">
+                    <button type="submit" class="btn btn-primary login-btn ripple">
+                        <i class="fas fa-arrow-right-to-bracket"></i> Login
                     </button>
-                </form>
-
-                <div class="login-divider">or log in with</div>
-                <div class="login-social-row">
-                    <button type="button" class="login-social-btn ripple" id="social-google"><i class="fa-brands fa-google"></i> Google</button>
-                    <button type="button" class="login-social-btn ripple" id="social-microsoft"><i class="fa-brands fa-microsoft"></i> Microsoft</button>
+                    <button type="button" class="btn btn-danger-solid ripple" id="forgot-btn">Forgot Password</button>
                 </div>
+            </form>
 
-                <a href="#" class="login-hint-link" id="forgot-link">Forgot login or password?</a>
+            <a href="#" class="login-hint-link" id="forgot-link">New Faculty? Contact Admin</a>
+
+            <div class="login-divider">or log in with</div>
+            <div class="login-social-row">
+                <button type="button" class="login-social-btn ripple" id="social-google"><i class="fa-brands fa-google"></i> Sign in with Google</button>
+            </div>
+
+            <p class="login-browser-tip">Please use Google Chrome for the best experience.</p>
+
+            <div class="login-notice-box">
+                <i class="fas fa-circle-info"></i>
+                This is a self-contained demo — attendance data is saved only in this browser's local storage, not on a server.
             </div>
         </div>
     </div>

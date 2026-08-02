@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Student Attendance System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }</script>
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <header class="app-header no-print">
+        <div class="app-header-brand">
+            <img src="assets/logo-mark.svg" alt="Logo">
+            <div class="app-header-brand-text">
+                <strong>Student Attendance System</strong>
+                <span>Faculty Portal</span>
+            </div>
+        </div>
+        <div class="app-header-right">
+            <button class="icon-btn" id="theme-toggle" title="Toggle theme"><i class="fas fa-moon"></i></button>
+            <div class="app-header-user">
+                <div class="app-avatar" id="user-avatar">T</div>
+                <div class="app-header-user-text">
+                    <span class="greet">Welcome back</span>
+                    <strong id="header-username">Teacher</strong>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="app-nav no-print">
+        <div class="app-nav-inner">
+            <a class="app-nav-link active" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span class="nav-label">Dashboard</span></a>
+            <a class="app-nav-link" href="subject.html"><i class="fas fa-calendar-days"></i> <span class="nav-label">Timetable</span></a>
+            <a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span class="nav-label">Take Attendance</span></a>
+            <a class="app-nav-link" href="reports.html"><i class="fas fa-chart-column"></i> <span class="nav-label">Reports</span></a>
+            <div class="app-nav-spacer"></div>
+            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i> <span class="nav-label">Logout</span></button>
+        </div>
+    </nav>
+
+    <main class="page">
+        <h2 style="font-size:19px; margin-bottom:2px;">Dashboard</h2>
+        <p style="color:var(--text-muted); font-size:13px; margin:0 0 20px;" id="page-subtitle">—</p>
+
+        <!-- Today's Overview -->
+        <div class="dash-grid">
+            <div class="glass-card dash-card dash-total">
+                <div class="dash-icon"><i class="fas fa-users"></i></div>
+                <div class="dash-value" id="dash-total-students">62</div>
+                <div class="dash-label">Total Students</div>
+            </div>
+            <div class="glass-card dash-card dash-present">
+                <div class="dash-icon"><i class="fas fa-user-check"></i></div>
+                <div class="dash-value" id="dash-today-present">0</div>
+                <div class="dash-label">Today Present</div>
+            </div>
+            <div class="glass-card dash-card dash-absent">
+                <div class="dash-icon"><i class="fas fa-user-xmark"></i></div>
+                <div class="dash-value" id="dash-today-absent">0</div>
+                <div class="dash-label">Today Absent</div>
+            </div>
+            <div class="glass-card dash-card dash-progress">
+                <div class="dash-icon"><i class="fas fa-clock-rotate-left"></i></div>
+                <div class="dash-value" id="dash-last-updated" style="font-size:16px;">No sessions yet</div>
+                <div class="dash-label">Last Updated</div>
+            </div>
+        </div>
+
+        <div class="dashboard-columns">
+            <!-- Profile card -->
+            <div class="glass-card profile-card">
+                <div class="profile-card-photo" id="profile-photo">T</div>
+                <div class="profile-card-name" id="profile-name">Teacher</div>
+                <span class="profile-badge"><i class="fas fa-circle-check"></i> Active Faculty</span>
+                <div class="profile-info-list">
+                    <div class="profile-info-row"><span>Role</span><span>Teaching Faculty</span></div>
+                    <div class="profile-info-row"><span>Username</span><span id="profile-username">—</span></div>
+                    <div class="profile-info-row"><span>Today's Date</span><span id="profile-date">—</span></div>
+                    <div class="profile-info-row"><span>Total Subjects</span><span>9</span></div>
+                    <div class="profile-info-row"><span>Batches</span><span>Batch 1 (BCA) · Batch 2 (B.Sc. IT)</span></div>
+                    <div class="profile-info-row"><span>System</span><span>Local Storage (offline)</span></div>
+                </div>
+            </div>
+
+            <!-- Notifications / Recent Activity -->
+            <div class="glass-card notif-card">
+                <div class="notif-card-header"><i class="fas fa-bell"></i> Notifications</div>
+                <div class="notif-tabs">
+                    <button class="notif-tab active" data-tab="notifications">Notifications</button>
+                    <button class="notif-tab" data-tab="activity">Recent Activity</button>
+                </div>
+                <div class="notif-list" id="notif-list"></div>
+            </div>
+        </div>
+
+        <div class="quick-links-row">
+            <a class="glass-card quick-link-card hoverable" href="subject.html">
+                <i class="fas fa-calendar-days"></i>
+                <strong>Weekly Timetable</strong>
+                <span>Pick a lecture and mark attendance</span>
+            </a>
+            <a class="glass-card quick-link-card hoverable" href="reports.html">
+                <i class="fas fa-chart-column"></i>
+                <strong>Attendance Reports</strong>
+                <span>View, edit, print or share sessions</span>
+            </a>
+            <a class="glass-card quick-link-card hoverable" href="reports.html">
+                <i class="fas fa-file-export"></i>
+                <strong>Export Data</strong>
+                <span>Download as Image, PDF, Excel or CSV</span>
+            </a>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Student Attendance Management System | Designed for Educational Institutions | RAS15</p>
+        <p class="footer-signature">&#10022; Designed with purpose &amp; passion &#10022; &copy; 2026 Rishabh Shah</p>
+    </footer>
+
+    <button class="scroll-top-btn no-print" id="scroll-top"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

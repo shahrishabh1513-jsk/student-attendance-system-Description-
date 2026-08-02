@@ -14,21 +14,41 @@
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
 
-    <header class="topbar no-print">
-        <div class="brand">
-            <div class="brand-mark"><img src="assets/logo-mark.svg" alt="Logo"></div>
-            <div class="brand-text">
-                <h1>Attendance Reports</h1>
-                <p>Review, edit and export your saved attendance sessions</p>
+    <header class="app-header no-print">
+        <div class="app-header-brand">
+            <img src="assets/logo-mark.svg" alt="Logo">
+            <div class="app-header-brand-text">
+                <strong>Student Attendance System</strong>
+                <span>Faculty Portal</span>
             </div>
         </div>
-        <div class="topbar-actions">
-            <div class="chip"><span>Signed in as</span><span id="logged-in-user">Teacher</span></div>
+        <div class="app-header-right">
             <button class="icon-btn" id="theme-toggle" title="Toggle theme"><i class="fas fa-moon"></i></button>
+            <div class="app-header-user">
+                <div class="app-avatar" id="user-avatar">T</div>
+                <div class="app-header-user-text">
+                    <span class="greet">Welcome back</span>
+                    <strong id="header-username">Teacher</strong>
+                </div>
+            </div>
         </div>
     </header>
 
+    <nav class="app-nav no-print">
+        <div class="app-nav-inner">
+            <a class="app-nav-link" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span class="nav-label">Dashboard</span></a>
+            <a class="app-nav-link" href="subject.html"><i class="fas fa-calendar-days"></i> <span class="nav-label">Timetable</span></a>
+            <a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span class="nav-label">Take Attendance</span></a>
+            <a class="app-nav-link active" href="reports.html"><i class="fas fa-chart-column"></i> <span class="nav-label">Reports</span></a>
+            <div class="app-nav-spacer"></div>
+            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i> <span class="nav-label">Logout</span></button>
+        </div>
+    </nav>
+
     <main class="page">
+        <h2 style="font-size:19px; margin-bottom:2px;">Attendance Reports</h2>
+        <p style="color:var(--text-muted); font-size:13px; margin:0 0 18px;">Review, edit and export your saved attendance sessions</p>
+
         <!-- Detail panel: shown right after saving, or when "View" is clicked on a record -->
         <section class="glass-card record-detail no-print" id="record-detail" style="display:none;">
             <div class="record-detail-top">
@@ -89,7 +109,7 @@
 
         <div class="action-bar no-print">
             <div class="action-bar-group">
-                <button class="btn btn-outline ripple" id="back-btn"><i class="fas fa-arrow-left"></i> Back to Subject Selection</button>
+                <a class="btn btn-outline ripple" href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
             </div>
         </div>
     </main>

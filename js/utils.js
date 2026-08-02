@@ -226,3 +226,49 @@ function attachRipple(root = document) {
         });
     } catch (err) { /* purely cosmetic — ignore failures */ }
 }
+
+/* ------------------------- shared app header / nav ------------------------- */
+/* Wires up the common .app-header + .app-nav bar used on the Dashboard,
+   Timetable, Attendance and Reports pages: theme toggle, user name/avatar,
+   the "Take Attendance" smart link, and Logout. Safe to call even if some
+   of these elements aren't present on a given page. */
+function wireAppNav() {
+    try {
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const next = toggleTheme();
+                const icon = themeToggle.querySelector('i');
+                if (icon) icon.className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            });
+            const icon = themeToggle.querySelector('i');
+            if (icon) icon.className = document.documentElement.getAttribute('data-theme') === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        const username = safeGetItem(STORAGE_KEYS.USERNAME) || 'Teacher';
+        const nameEl = document.getElementById('header-username');
+        if (nameEl) nameEl.textContent = username;
+        const avatarEl = document.getElementById('user-avatar');
+        if (avatarEl) avatarEl.textContent = (username.trim().charAt(0) || 'T').toUpperCase();
+
+        const takeAttendanceLink = document.getElementById('nav-take-attendance');
+        if (takeAttendanceLink) {
+            takeAttendanceLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                const subject = Store.get(STORAGE_KEYS.SUBJECT);
+                const day = Store.get(STORAGE_KEYS.DAY);
+                window.location.href = (subject && day) ? 'student.html' : 'subject.html';
+            });
+        }
+
+        const logoutBtn = document.getElementById('nav-logout');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                Store.clearSession();
+                window.location.href = 'index.html';
+            });
+        }
+    } catch (err) {
+        console.error('App nav setup failed:', err);
+    }
+}
