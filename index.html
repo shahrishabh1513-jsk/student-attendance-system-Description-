@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +11,6 @@
         try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
     </script>
 </head>
-
 <body>
     <header class="topbar no-print login-topbar">
         <div class="brand">
@@ -28,95 +26,169 @@
     </header>
 
     <div class="login-shell">
+      <div class="login-card-frame">
+        <!-- Illustration panel: original campus artwork (not a photo) -->
         <div class="login-illustration">
             <div class="login-illustration-dot"></div>
-            <svg viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice">
-                <circle cx="120" cy="110" r="3" fill="#2563EB" opacity="0.3" />
-                <circle cx="680" cy="160" r="4" fill="#2563EB" opacity="0.25" />
-                <circle cx="600" cy="90" r="2.5" fill="#2563EB" opacity="0.35" />
-                <g fill="#BBD8C6" opacity="0.6">
-                    <circle cx="60" cy="560" r="38" />
-                    <circle cx="740" cy="540" r="46" />
-                    <circle cx="120" cy="580" r="30" />
+            <svg viewBox="0 0 1200 680" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#DBEAFE"/>
+                        <stop offset="100%" stop-color="#F0F7FF"/>
+                    </linearGradient>
+                    <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#E4EEF9"/>
+                        <stop offset="100%" stop-color="#D3E3F3"/>
+                    </linearGradient>
+                </defs>
+
+                <rect x="0" y="0" width="1200" height="230" fill="url(#skyGrad)"/>
+                <g fill="#FFFFFF" opacity="0.75">
+                    <ellipse cx="150" cy="70" rx="60" ry="16"/>
+                    <ellipse cx="195" cy="62" rx="40" ry="13"/>
+                    <ellipse cx="980" cy="50" rx="70" ry="17"/>
+                    <ellipse cx="1030" cy="60" rx="42" ry="12"/>
                 </g>
-                <rect x="0" y="620" width="800" height="280" fill="#E7EEF6" />
-                <path d="M0 640 L800 600 L800 640 L0 680 Z" fill="#D8E4F1" />
-                <path d="M330 900 L370 620 L430 620 L470 900 Z" fill="#F4C979" opacity="0.9" />
-                <path d="M330 900 L370 620 L385 620 L358 900 Z" fill="#F0BD5C" opacity="0.7" />
+
+                <rect x="0" y="220" width="1200" height="460" fill="url(#groundGrad)"/>
+
+                <path d="M0 260 L1200 230 L1200 270 L0 300 Z" fill="#CBD9EA"/>
+                <path d="M0 640 L1200 610 L1200 650 L0 680 Z" fill="#CBD9EA"/>
+
+                <g fill="#AFCBBA" opacity="0.75">
+                    <circle cx="40" cy="290" r="26"/>
+                    <circle cx="80" cy="300" r="22"/>
+                    <circle cx="1140" cy="280" r="30"/>
+                    <circle cx="1180" cy="295" r="22"/>
+                </g>
+
+                <g fill="#F4C979" opacity="0.85">
+                    <path d="M600 340 L560 660 L600 660 L620 340 Z"/>
+                    <path d="M600 340 L780 640 L810 620 L630 340 Z"/>
+                    <path d="M600 340 L420 640 L390 620 L570 340 Z"/>
+                </g>
+                <g fill="#EFB65B" opacity="0.55">
+                    <path d="M600 340 L586 660 L600 660 L608 340 Z"/>
+                </g>
+
+                <circle cx="600" cy="340" r="46" fill="#BFDBFE"/>
+                <circle cx="600" cy="340" r="46" fill="none" stroke="#93C5FD" stroke-width="3"/>
+                <circle cx="600" cy="340" r="12" fill="#2563EB"/>
+
+                <g fill="#9FCBAE" opacity="0.55">
+                    <ellipse cx="430" cy="480" rx="90" ry="46"/>
+                    <ellipse cx="790" cy="470" rx="100" ry="50"/>
+                    <ellipse cx="600" cy="580" rx="130" ry="40"/>
+                </g>
+
                 <g>
-                    <rect x="90" y="470" width="150" height="170" rx="4" fill="#FFFFFF" stroke="#CBD9EA"
-                        stroke-width="2" />
-                    <rect x="90" y="470" width="150" height="18" fill="#2563EB" />
+                    <rect x="70" y="330" width="230" height="150" rx="5" fill="#FFFFFF" stroke="#C7D6E8" stroke-width="2"/>
+                    <rect x="70" y="330" width="230" height="16" fill="#2563EB"/>
                     <g fill="#BFDBFE">
-                        <rect x="106" y="504" width="26" height="26" rx="2" />
-                        <rect x="142" y="504" width="26" height="26" rx="2" />
-                        <rect x="178" y="504" width="26" height="26" rx="2" />
-                        <rect x="106" y="546" width="26" height="26" rx="2" />
-                        <rect x="142" y="546" width="26" height="26" rx="2" />
-                        <rect x="178" y="546" width="26" height="26" rx="2" />
-                        <rect x="106" y="588" width="26" height="26" rx="2" />
-                        <rect x="142" y="588" width="26" height="26" rx="2" />
-                        <rect x="178" y="588" width="26" height="26" rx="2" />
+                        <rect x="90" y="360" width="24" height="24" rx="2"/>
+                        <rect x="124" y="360" width="24" height="24" rx="2"/>
+                        <rect x="158" y="360" width="24" height="24" rx="2"/>
+                        <rect x="192" y="360" width="24" height="24" rx="2"/>
+                        <rect x="226" y="360" width="24" height="24" rx="2"/>
+                        <rect x="260" y="360" width="24" height="24" rx="2"/>
+                        <rect x="90" y="396" width="24" height="24" rx="2"/>
+                        <rect x="124" y="396" width="24" height="24" rx="2"/>
+                        <rect x="158" y="396" width="24" height="24" rx="2"/>
+                        <rect x="192" y="396" width="24" height="24" rx="2"/>
+                        <rect x="226" y="396" width="24" height="24" rx="2"/>
+                        <rect x="260" y="396" width="24" height="24" rx="2"/>
+                        <rect x="90" y="432" width="24" height="24" rx="2"/>
+                        <rect x="124" y="432" width="24" height="24" rx="2"/>
+                        <rect x="158" y="432" width="24" height="24" rx="2"/>
+                        <rect x="192" y="432" width="24" height="24" rx="2"/>
+                        <rect x="226" y="432" width="24" height="24" rx="2"/>
+                        <rect x="260" y="432" width="24" height="24" rx="2"/>
                     </g>
                 </g>
+
                 <g>
-                    <rect x="500" y="380" width="190" height="260" rx="4" fill="#FFFFFF" stroke="#CBD9EA"
-                        stroke-width="2" />
-                    <rect x="500" y="380" width="190" height="18" fill="#1D4ED8" />
+                    <rect x="470" y="150" width="260" height="190" rx="5" fill="#FFFFFF" stroke="#C7D6E8" stroke-width="2"/>
+                    <rect x="470" y="150" width="260" height="16" fill="#1D4ED8"/>
                     <g fill="#DBEAFE">
-                        <rect x="518" y="414" width="28" height="30" rx="2" />
-                        <rect x="558" y="414" width="28" height="30" rx="2" />
-                        <rect x="598" y="414" width="28" height="30" rx="2" />
-                        <rect x="638" y="414" width="28" height="30" rx="2" />
-                        <rect x="518" y="460" width="28" height="30" rx="2" />
-                        <rect x="558" y="460" width="28" height="30" rx="2" />
-                        <rect x="598" y="460" width="28" height="30" rx="2" />
-                        <rect x="638" y="460" width="28" height="30" rx="2" />
-                        <rect x="518" y="506" width="28" height="30" rx="2" />
-                        <rect x="558" y="506" width="28" height="30" rx="2" />
-                        <rect x="598" y="506" width="28" height="30" rx="2" />
-                        <rect x="638" y="506" width="28" height="30" rx="2" />
-                        <rect x="518" y="552" width="28" height="30" rx="2" />
-                        <rect x="558" y="552" width="28" height="30" rx="2" />
-                        <rect x="598" y="552" width="28" height="30" rx="2" />
-                        <rect x="638" y="552" width="28" height="30" rx="2" />
+                        <rect x="488" y="180" width="26" height="26" rx="2"/>
+                        <rect x="524" y="180" width="26" height="26" rx="2"/>
+                        <rect x="560" y="180" width="26" height="26" rx="2"/>
+                        <rect x="596" y="180" width="26" height="26" rx="2"/>
+                        <rect x="632" y="180" width="26" height="26" rx="2"/>
+                        <rect x="668" y="180" width="26" height="26" rx="2"/>
+                        <rect x="488" y="220" width="26" height="26" rx="2"/>
+                        <rect x="524" y="220" width="26" height="26" rx="2"/>
+                        <rect x="560" y="220" width="26" height="26" rx="2"/>
+                        <rect x="596" y="220" width="26" height="26" rx="2"/>
+                        <rect x="632" y="220" width="26" height="26" rx="2"/>
+                        <rect x="668" y="220" width="26" height="26" rx="2"/>
+                        <rect x="488" y="260" width="26" height="26" rx="2"/>
+                        <rect x="524" y="260" width="26" height="26" rx="2"/>
+                        <rect x="560" y="260" width="26" height="26" rx="2"/>
+                        <rect x="596" y="260" width="26" height="26" rx="2"/>
+                        <rect x="632" y="260" width="26" height="26" rx="2"/>
+                        <rect x="668" y="260" width="26" height="26" rx="2"/>
                     </g>
-                    <rect x="575" y="600" width="40" height="40" fill="#93C5FD" />
+                    <rect x="580" y="300" width="40" height="40" fill="#93C5FD"/>
+                    <rect x="560" y="336" width="80" height="8" fill="#2563EB"/>
                 </g>
+                <line x1="600" y1="150" x2="600" y2="108" stroke="#94A3B8" stroke-width="3"/>
+                <path d="M600 110 L638 118 L600 128 Z" fill="#2563EB"/>
+
                 <g>
-                    <rect x="600" y="560" width="170" height="80" rx="4" fill="#F1F6FC" stroke="#CBD9EA"
-                        stroke-width="2" />
+                    <rect x="870" y="300" width="240" height="130" rx="5" fill="#F1F6FC" stroke="#C7D6E8" stroke-width="2"/>
+                    <rect x="870" y="300" width="240" height="14" fill="#3B82F6"/>
                     <g fill="#C7DDF8">
-                        <rect x="616" y="578" width="24" height="24" rx="2" />
-                        <rect x="650" y="578" width="24" height="24" rx="2" />
-                        <rect x="684" y="578" width="24" height="24" rx="2" />
-                        <rect x="718" y="578" width="24" height="24" rx="2" />
+                        <rect x="888" y="328" width="22" height="22" rx="2"/>
+                        <rect x="920" y="328" width="22" height="22" rx="2"/>
+                        <rect x="952" y="328" width="22" height="22" rx="2"/>
+                        <rect x="984" y="328" width="22" height="22" rx="2"/>
+                        <rect x="1016" y="328" width="22" height="22" rx="2"/>
+                        <rect x="1048" y="328" width="22" height="22" rx="2"/>
+                        <rect x="888" y="362" width="22" height="22" rx="2"/>
+                        <rect x="920" y="362" width="22" height="22" rx="2"/>
+                        <rect x="952" y="362" width="22" height="22" rx="2"/>
+                        <rect x="984" y="362" width="22" height="22" rx="2"/>
+                        <rect x="1016" y="362" width="22" height="22" rx="2"/>
+                        <rect x="1048" y="362" width="22" height="22" rx="2"/>
                     </g>
                 </g>
-                <line x1="595" y1="380" x2="595" y2="330" stroke="#94A3B8" stroke-width="3" />
-                <path d="M595 332 L630 340 L595 350 Z" fill="#2563EB" />
+
                 <g>
-                    <circle cx="260" cy="700" r="26" fill="#8FC79B" />
-                    <rect x="256" y="722" width="8" height="20" fill="#8A6E2E" />
-                    <circle cx="540" cy="720" r="30" fill="#7FB98B" />
-                    <rect x="536" y="744" width="8" height="22" fill="#8A6E2E" />
-                    <circle cx="200" cy="760" r="20" fill="#8FC79B" />
-                    <rect x="196" y="778" width="7" height="16" fill="#8A6E2E" />
-                    <circle cx="600" cy="770" r="18" fill="#7FB98B" />
-                    <rect x="596" y="786" width="7" height="14" fill="#8A6E2E" />
+                    <rect x="220" y="540" width="150" height="90" rx="5" fill="#FFFFFF" stroke="#C7D6E8" stroke-width="2"/>
+                    <g fill="#BFDBFE">
+                        <rect x="236" y="560" width="20" height="20" rx="2"/>
+                        <rect x="264" y="560" width="20" height="20" rx="2"/>
+                        <rect x="292" y="560" width="20" height="20" rx="2"/>
+                        <rect x="320" y="560" width="20" height="20" rx="2"/>
+                    </g>
                 </g>
-                <ellipse cx="400" cy="760" rx="46" ry="16" fill="#BFDBFE" />
-                <ellipse cx="400" cy="758" rx="46" ry="16" fill="none" stroke="#93C5FD" stroke-width="2" />
-                <circle cx="400" cy="750" r="5" fill="#2563EB" />
-                <g fill="#334155" opacity="0.5">
-                    <circle cx="300" cy="810" r="5" />
-                    <rect x="296" y="815" width="8" height="18" rx="3" />
-                    <circle cx="470" cy="830" r="5" />
-                    <rect x="466" y="835" width="8" height="18" rx="3" />
+
+                <rect x="840" y="500" width="260" height="130" rx="8" fill="#BFE3C8" opacity="0.7"/>
+                <rect x="840" y="500" width="260" height="130" rx="8" fill="none" stroke="#93C5A8" stroke-width="2" opacity="0.7"/>
+                <line x1="970" y1="500" x2="970" y2="630" stroke="#93C5A8" stroke-width="2" opacity="0.7"/>
+                <circle cx="970" cy="565" r="24" fill="none" stroke="#93C5A8" stroke-width="2" opacity="0.7"/>
+
+                <g>
+                    <circle cx="380" cy="420" r="16" fill="#8FC79B"/>
+                    <circle cx="410" cy="410" r="20" fill="#7FB98B"/>
+                    <circle cx="830" cy="420" r="18" fill="#8FC79B"/>
+                    <circle cx="800" cy="440" r="15" fill="#7FB98B"/>
+                    <circle cx="480" cy="600" r="16" fill="#8FC79B"/>
+                    <circle cx="720" cy="600" r="18" fill="#7FB98B"/>
+                    <circle cx="150" cy="500" r="15" fill="#8FC79B"/>
+                </g>
+
+                <g fill="#334155" opacity="0.45">
+                    <circle cx="560" cy="500" r="4"/>
+                    <rect x="557" y="504" width="6" height="14" rx="2"/>
+                    <circle cx="650" cy="520" r="4"/>
+                    <rect x="647" y="524" width="6" height="14" rx="2"/>
                 </g>
             </svg>
         </div>
 
+        <!-- Login form panel -->
         <div class="login-form-panel">
             <div class="login-logo"><img src="assets/logo-mark.svg" alt="System logo"></div>
             <h1>Log in</h1>
@@ -131,10 +203,8 @@
                 <div class="login-role-group">
                     <span class="role-label"><span style="color:var(--danger)">*</span>Role</span>
                     <div class="login-role-options">
-                        <label class="login-role-option"><input type="radio" name="role" value="staff" checked>
-                            Staff</label>
-                        <label class="login-role-option"><input type="radio" name="role" value="student">
-                            Student</label>
+                        <label class="login-role-option"><input type="radio" name="role" value="staff" checked> Staff</label>
+                        <label class="login-role-option"><input type="radio" name="role" value="student"> Student</label>
                     </div>
                 </div>
 
@@ -142,16 +212,14 @@
                     <label for="username">Username</label>
                     <div class="field-input">
                         <i class="fas fa-user"></i>
-                        <input type="text" id="username" name="username" placeholder="Enter your username"
-                            autocomplete="username" required>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" required>
                     </div>
                 </div>
                 <div class="field">
                     <label for="password">Password</label>
                     <div class="field-input">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="password" name="password" placeholder="Enter your password"
-                            autocomplete="current-password" required>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
                     </div>
                 </div>
                 <div class="login-checkbox-row">
@@ -171,18 +239,17 @@
 
             <div class="login-divider">or log in with</div>
             <div class="login-social-row">
-                <button type="button" class="login-social-btn ripple" id="social-google"><i
-                        class="fa-brands fa-google"></i> Sign in with Google</button>
+                <button type="button" class="login-social-btn ripple" id="social-google"><i class="fa-brands fa-google"></i> Sign in with Google</button>
             </div>
 
             <p class="login-browser-tip">Please use Google Chrome for the best experience.</p>
 
             <div class="login-notice-box">
                 <i class="fas fa-circle-info"></i>
-                This is a self-contained demo — attendance data is saved only in this browser's local storage, not on a
-                server.
+                This is a self-contained demo — attendance data is saved only in this browser's local storage, not on a server.
             </div>
         </div>
+      </div>
     </div>
 
     <footer class="main-footer">
@@ -193,5 +260,4 @@
     <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
 </body>
-
 </html>
