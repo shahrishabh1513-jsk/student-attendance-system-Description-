@@ -1,13 +1,16 @@
 /**
  * student.js — Attendance-taking page logic
+ * Supports both a fresh attendance session and "editing" a previously
+ * saved record (entered via the Reports/Account page).
  */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();
     setupScrollToTop(document.getElementById('scroll-top'));
-    wireAppNav();
 
     if (!requireLogin('index.html')) return;
+
+    wireAppNav();
 
     const subject = Store.get(STORAGE_KEYS.SUBJECT);
     const day = Store.get(STORAGE_KEYS.DAY);
@@ -16,16 +19,31 @@ document.addEventListener('DOMContentLoaded', function () {
     const editRecordId = Store.get(STORAGE_KEYS.EDIT_RECORD, null);
 
     if (!subject || !day) {
-        window.location.href = 'subject.html';
+        // Show a clear, actionable message right away instead of leaving a
+        // blank/loading-looking page — the auto-redirect below is just a
+        // convenience on top of that, in case it's blocked or delayed.
+        const noSessionEl = document.getElementById('no-session-state');
+        const contentEl = document.getElementById('attendance-content');
+        if (noSessionEl) noSessionEl.style.display = 'block';
+        if (contentEl) contentEl.style.display = 'none';
+        setTimeout(() => {
+            window.location.href = 'subject.html';
+        }, 1800);
         return;
     }
+
+    /* ------------------------- roster setup ------------------------- */
+    try {
 
     const roster = (batch === 1 || batch === 2)
         ? STUDENTS.filter((s) => s.batch === batch)
         : STUDENTS.slice();
 
+    // Attendance state per student: true = present, false = absent, null = pending
     let students = roster.map((s) => ({ ...s, attendance: null }));
 
+    // Try to resume a draft for this exact session (same subject/day/batch/date).
+    // This is also how "Edit Attendance" from the Reports page hands off its data.
     const draft = Store.get(STORAGE_KEYS.DRAFT);
     const draftKey = `${subject.name}|${day}|${batch}|${sessionDate.slice(0, 10)}`;
     if (draft && draft.key === draftKey && Array.isArray(draft.students)) {
@@ -33,15 +51,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let filteredStudents = [...students];
-    let sortMode = 'none';
-    let history = [];
+    let sortMode = 'none'; // 'none' | 'asc' | 'desc'
+    let history = []; // undo stack of {id, previous}
     let unsavedChanges = false;
 
+    // Lifetime "Total Attendance" per student — how many saved sessions
+    // (across all subjects/dates) they were marked Present for.
     const attendanceTotals = (() => {
         const totals = {};
         const savedRecords = Store.get(STORAGE_KEYS.RECORDS, []);
         savedRecords.forEach((record) => {
-            if (editRecordId && String(record.id) === String(editRecordId)) return;
+            if (editRecordId && String(record.id) === String(editRecordId)) return; // avoid double-counting the record being edited
             (record.students || []).forEach((s) => {
                 if (s.attendance === true) {
                     totals[s.enrollmentNo] = (totals[s.enrollmentNo] || 0) + 1;
@@ -51,8 +71,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return totals;
     })();
 
+    /* ------------------------------ DOM ------------------------------ */
+
     const el = (id) => document.getElementById(id);
-    const themeToggle = el('theme-toggle');
     const totalStudentsElem = el('total-students');
     const presentCountElem = el('present-count');
     const absentCountElem = el('absent-count');
@@ -68,7 +89,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const sortNameSelect = el('sort-name');
     const editBanner = el('edit-mode-banner');
 
-    el('logged-in-user').textContent = localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher';
+    /* ------------------------------ header ---------------------------- */
+
     el('header-sub').textContent = `${subject.name} · ${day}`;
     el('info-subject').textContent = subject.name;
     el('info-time').textContent = `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`;
@@ -86,11 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
     updateClock();
     setInterval(updateClock, 30000);
 
-    themeToggle.querySelector('i').className = document.documentElement.getAttribute('data-theme') === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    themeToggle.addEventListener('click', () => {
-        const next = toggleTheme();
-        themeToggle.querySelector('i').className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    });
+    /* ------------------------------ render ---------------------------- */
 
     function renderTable() {
         if (filteredStudents.length === 0) {
@@ -130,6 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // True if a student still matches the currently typed search term / status filter.
     function matchesCurrentFilters(student) {
         const term = searchInput.value.trim().toLowerCase();
         const statusFilter = filterStatus.value;
@@ -143,11 +162,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return matchesTerm && matchesStatus;
     }
 
+    // Updates just one row's mark buttons directly — no re-render, so
+    // marking present/absent is instant with no entrance animation.
     function updateRowInPlace(student) {
         const row = studentTableBody.querySelector(`tr[data-row-id="${student.id}"]`);
         if (!row) return;
 
         if (!matchesCurrentFilters(student)) {
+            // No longer matches the active search/filter — drop it from view.
             row.remove();
             filteredStudents = filteredStudents.filter((s) => s.id !== student.id);
             if (filteredStudents.length === 0) renderTable();
@@ -163,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const total = students.length;
         const present = students.filter((s) => s.attendance === true).length;
         const absent = students.filter((s) => s.attendance === false).length;
+        const pending = total - present - absent;
 
         animateCount(totalStudentsElem, total);
         animateCount(presentCountElem, present);
@@ -210,6 +233,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         renderTable();
     }
+
+    /* --------------------------- mutations ---------------------------- */
 
     function markAttendance(studentId, isPresent, { recordHistory = true } = {}) {
         const student = students.find((s) => s.id === studentId);
@@ -269,12 +294,16 @@ document.addEventListener('DOMContentLoaded', function () {
         showToast('Attendance reset. Start marking again.', 'warning');
     }
 
+    /* ----------------------------- alerts ------------------------------ */
+
     function showAlert(message, type = 'info') {
         alertDiv.className = `alert alert-${type}`;
         alertDiv.querySelector('#alert-message').textContent = message;
         alertDiv.style.display = 'flex';
     }
     function hideAlert() { alertDiv.style.display = 'none'; }
+
+    /* ----------------------------- print ------------------------------- */
 
     function preparePrintReport() {
         const present = students.filter((s) => s.attendance === true).length;
@@ -293,6 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
         el('print-absent').textContent = absent;
         el('print-percentage').textContent = `${pct}%`;
 
+        // Absent students get a red boxed name to stand out; everyone else stays plain.
         el('print-table-body').innerHTML = students.map((s, i) => {
             const isAbsent = s.attendance === false;
             const statusLabel = s.attendance === true ? 'Present' : s.attendance === false ? 'Absent' : 'Pending';
@@ -338,6 +368,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    /* ----------------------------- save flow ---------------------------- */
+
     const confirmOverlay = el('confirm-overlay');
     const successOverlay = el('success-overlay');
 
@@ -363,6 +395,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let finalId;
 
             if (editRecordId) {
+                // Update the existing saved record in place.
                 const idx = records.findIndex((r) => String(r.id) === String(editRecordId));
                 const updated = {
                     id: editRecordId,
@@ -411,12 +444,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             successOverlay.classList.add('show');
 
+            // Keep the user logged in — just clear this attendance session's
+            // temporary state — then take them to the account/report page so
+            // they can review (or, if needed, edit again) what was just saved.
             setTimeout(() => {
                 Store.clearAttendanceSession();
                 window.location.href = `reports.html?record=${encodeURIComponent(finalId)}`;
             }, 1600);
         }, 900);
     }
+
+    /* --------------------------- event wiring ---------------------------- */
 
     searchInput.addEventListener('input', debounce(applyFilters, 150));
     filterStatus.addEventListener('change', applyFilters);
@@ -447,6 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Keyboard shortcuts: "p" print, "s" save (when enabled), "/" focus search
     document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT') return;
         if (e.key === 'p') printBtn.click();
@@ -454,8 +493,25 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === '/') { e.preventDefault(); searchInput.focus(); }
     });
 
+    /* ------------------------------ init ------------------------------- */
+
     applyFilters();
     updateStatistics();
     checkAllMarked();
     showToast(editRecordId ? `Editing saved session: ${students.length} student(s).` : `Roster loaded: ${students.length} student(s).`, 'info');
+
+    } catch (err) {
+        console.error('Failed to load the attendance page:', err);
+        const noSessionEl = document.getElementById('no-session-state');
+        const contentEl = document.getElementById('attendance-content');
+        if (contentEl) contentEl.style.display = 'none';
+        if (noSessionEl) {
+            noSessionEl.style.display = 'block';
+            const heading = noSessionEl.querySelector('h4');
+            const para = noSessionEl.querySelector('p');
+            if (heading) heading.textContent = 'Something went wrong loading this session';
+            if (para) para.textContent = 'Please go back to the Timetable and select the lecture again. If this keeps happening, try refreshing the page.';
+        }
+        try { showToast('Could not load the attendance page. Please try again from the Timetable.', 'error'); } catch (e2) { /* ignore */ }
+    }
 });

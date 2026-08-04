@@ -1,13 +1,15 @@
 /**
  * subject.js — Weekly timetable grid + batch selection logic
+ * Flow: tap a cell in the timetable -> (if Lab) pick a batch -> continue
  */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();
     setupScrollToTop(document.getElementById('scroll-top'));
-    wireAppNav();
 
     if (!requireLogin('index.html')) return;
+
+    wireAppNav();
 
     const timetableEl = document.getElementById('timetable');
     const batchSection = document.getElementById('batch-section');
@@ -24,9 +26,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const maxPeriods = Math.max(...WEEK_DAYS.map((day) => TIMETABLE[day].length));
 
-    // Get today's records for the "already taken" badge
+    /* ------------------------- "already taken today" lookup ------------------------- */
+
     const allRecords = Store.get(STORAGE_KEYS.RECORDS, []);
     const todayRecords = allRecords.filter((r) => String(r.date).slice(0, 10) === todayDateStr);
+
+    // Which "day|subject|start" combinations already have a saved record today (for the badge).
     const takenTodayMap = {};
     todayRecords.forEach((r) => {
         const key = `${r.day}|${r.subject}|${r.start || ''}`;
@@ -149,7 +154,8 @@ document.addEventListener('DOMContentLoaded', function () {
         takeAttendanceBtn.disabled = !ready;
     }
 
-    function showAlert(message) {
+    function showAlert(message, type = 'warning') {
+        alertDiv.className = `alert alert-${type}`;
         alertDiv.querySelector('span').textContent = message;
         alertDiv.style.display = 'flex';
     }
@@ -167,10 +173,25 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        Store.set(STORAGE_KEYS.SUBJECT, { name: selectedSlot.subject, type: selectedSlot.type, start: selectedSlot.start, end: selectedSlot.end });
+        const sessionSubject = { name: selectedSlot.subject, type: selectedSlot.type, start: selectedSlot.start, end: selectedSlot.end };
+        const sessionBatch = selectedSlot.type === 'Lab' ? selectedBatch : 0;
+        const sessionDate = new Date().toISOString();
+
+        Store.set(STORAGE_KEYS.SUBJECT, sessionSubject);
         Store.set(STORAGE_KEYS.DAY, selectedDay);
-        Store.set(STORAGE_KEYS.BATCH, selectedSlot.type === 'Lab' ? selectedBatch : 0);
-        localStorage.setItem(STORAGE_KEYS.DATE, new Date().toISOString());
+        Store.set(STORAGE_KEYS.BATCH, sessionBatch);
+        localStorage.setItem(STORAGE_KEYS.DATE, sessionDate);
+
+        // Verify the session actually persisted before navigating away — if
+        // storage silently failed (private browsing, quota, disabled
+        // storage), landing on student.html would otherwise show a stuck,
+        // empty page with no way to tell what went wrong.
+        const savedSubject = Store.get(STORAGE_KEYS.SUBJECT);
+        const savedDay = Store.get(STORAGE_KEYS.DAY);
+        if (!savedSubject || savedSubject.name !== sessionSubject.name || savedDay !== selectedDay) {
+            showAlert('Could not save your selection — this browser may be blocking local storage (e.g. private/incognito mode). Please allow site storage and try again.', 'danger');
+            return;
+        }
 
         const originalText = takeAttendanceBtn.innerHTML;
         takeAttendanceBtn.innerHTML = '<span class="spinner"></span> Redirecting…';

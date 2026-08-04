@@ -54,6 +54,17 @@
             <div class="chip no-print"><span>Time</span><span id="current-time">—</span></div>
         </div>
 
+        <!-- Shown only if there's no valid session in storage (e.g. navigated here directly, or storage failed to save) -->
+        <div id="no-session-state" class="glass-card section-card no-print" style="display:none; text-align:center; padding:56px 24px;">
+            <div class="empty-state">
+                <i class="fas fa-calendar-xmark"></i>
+                <h4>No active attendance session</h4>
+                <p>You've landed here without picking a lecture first — or your browser may be blocking local storage. Head to the Timetable to select a subject and start marking attendance.</p>
+            </div>
+            <a href="subject.html" class="btn btn-primary ripple" style="margin-top:16px;"><i class="fas fa-calendar-days"></i> Go to Timetable</a>
+        </div>
+
+        <div id="attendance-content">
         <div id="edit-mode-banner" class="edit-mode-banner no-print" style="display:none;">
             <i class="fas fa-pen-to-square"></i>
             <span>You're editing a previously saved attendance session. Saving will update that record.</span>
@@ -153,6 +164,7 @@
             <div class="action-bar-group">
                 <button class="btn btn-success ripple" id="save-attendance-btn" disabled><i class="fas fa-save"></i> Save Attendance</button>
             </div>
+        </div>
         </div>
     </main>
 
