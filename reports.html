@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }</script>
 </head>
+
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -36,18 +38,24 @@
 
     <nav class="app-nav no-print">
         <div class="app-nav-inner">
-            <a class="app-nav-link" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span class="nav-label">Dashboard</span></a>
-            <a class="app-nav-link" href="subject.html"><i class="fas fa-calendar-days"></i> <span class="nav-label">Timetable</span></a>
-            <a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span class="nav-label">Take Attendance</span></a>
-            <a class="app-nav-link active" href="reports.html"><i class="fas fa-chart-column"></i> <span class="nav-label">Reports</span></a>
+            <a class="app-nav-link" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span
+                    class="nav-label">Dashboard</span></a>
+            <a class="app-nav-link" href="subject.html"><i class="fas fa-calendar-days"></i> <span
+                    class="nav-label">Timetable</span></a>
+            <a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span
+                    class="nav-label">Take Attendance</span></a>
+            <a class="app-nav-link active" href="reports.html"><i class="fas fa-chart-column"></i> <span
+                    class="nav-label">Reports</span></a>
             <div class="app-nav-spacer"></div>
-            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i> <span class="nav-label">Logout</span></button>
+            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i>
+                <span class="nav-label">Logout</span></button>
         </div>
     </nav>
 
     <main class="page">
         <h2 style="font-size:19px; margin-bottom:2px;">Attendance Reports</h2>
-        <p style="color:var(--text-muted); font-size:13px; margin:0 0 18px;">Review, edit and export your saved attendance sessions</p>
+        <p style="color:var(--text-muted); font-size:13px; margin:0 0 18px;">Review, edit and export your saved
+            attendance sessions</p>
 
         <!-- Detail panel: shown right after saving, or when "View" is clicked on a record -->
         <section class="glass-card record-detail no-print" id="record-detail" style="display:none;">
@@ -57,21 +65,43 @@
                     <div class="record-detail-sub" id="detail-meta">—</div>
                 </div>
                 <div class="record-detail-actions">
-                    <button class="btn btn-outline btn-sm ripple" id="detail-close"><i class="fas fa-xmark"></i> Close</button>
-                    <button class="btn btn-outline btn-sm ripple" id="detail-print"><i class="fas fa-print"></i> Print</button>
-                    <button class="btn btn-outline btn-sm ripple" id="detail-share"><i class="fas fa-share-nodes"></i> Share</button>
-                    <button class="btn btn-primary btn-sm ripple" id="detail-edit"><i class="fas fa-pen-to-square"></i> Edit Attendance</button>
+                    <button class="btn btn-outline btn-sm ripple" id="detail-close"><i class="fas fa-xmark"></i>
+                        Close</button>
+                    <button class="btn btn-outline btn-sm ripple" id="detail-print"><i class="fas fa-print"></i>
+                        Print</button>
+                    <button class="btn btn-outline btn-sm ripple" id="detail-share"><i class="fas fa-share-nodes"></i>
+                        Share</button>
+                    <button class="btn btn-primary btn-sm ripple" id="detail-edit"><i class="fas fa-pen-to-square"></i>
+                        Edit Attendance</button>
                 </div>
             </div>
             <div class="selected-summary show" style="margin:0 0 16px; background:transparent; border:none; padding:0;">
-                <div><div class="label">Total</div><div class="value" id="detail-total">0</div></div>
-                <div><div class="label">Present</div><div class="value" id="detail-present" style="color:var(--success);">0</div></div>
-                <div><div class="label">Absent</div><div class="value" id="detail-absent" style="color:var(--danger);">0</div></div>
-                <div><div class="label">Attendance %</div><div class="value" id="detail-percentage">0%</div></div>
+                <div>
+                    <div class="label">Total</div>
+                    <div class="value" id="detail-total">0</div>
+                </div>
+                <div>
+                    <div class="label">Present</div>
+                    <div class="value" id="detail-present" style="color:var(--success);">0</div>
+                </div>
+                <div>
+                    <div class="label">Absent</div>
+                    <div class="value" id="detail-absent" style="color:var(--danger);">0</div>
+                </div>
+                <div>
+                    <div class="label">Attendance %</div>
+                    <div class="value" id="detail-percentage">0%</div>
+                </div>
             </div>
             <div class="table-wrap">
                 <table class="student-table">
-                    <thead><tr><th>Student</th><th>Enrollment No.</th><th>Status</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Enrollment No.</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
                     <tbody id="detail-table-body"></tbody>
                 </table>
             </div>
@@ -86,7 +116,9 @@
                 </div>
                 <div class="filter-field">
                     <label for="filter-subject">Subject</label>
-                    <select id="filter-subject"><option value="all">All subjects</option></select>
+                    <select id="filter-subject">
+                        <option value="all">All subjects</option>
+                    </select>
                 </div>
                 <div class="filter-field">
                     <label for="filter-batch">Batch</label>
@@ -97,9 +129,12 @@
                         <option value="2">Batch 2 — B.Sc. IT</option>
                     </select>
                 </div>
-                <button class="btn btn-outline btn-sm ripple" id="clear-filters"><i class="fas fa-rotate-left"></i> Clear</button>
-                <button class="btn btn-outline btn-sm ripple" id="refresh-records-btn" title="Reload records from storage"><i class="fas fa-arrows-rotate"></i> Refresh</button>
-                <button class="btn btn-primary btn-sm ripple" id="export-all-csv" style="margin-left:auto;"><i class="fas fa-file-csv"></i> Export All (CSV)</button>
+                <button class="btn btn-outline btn-sm ripple" id="clear-filters"><i class="fas fa-rotate-left"></i>
+                    Clear</button>
+                <button class="btn btn-outline btn-sm ripple" id="refresh-records-btn"
+                    title="Reload records from storage"><i class="fas fa-arrows-rotate"></i> Refresh</button>
+                <button class="btn btn-primary btn-sm ripple" id="export-all-csv" style="margin-left:auto;"><i
+                        class="fas fa-file-csv"></i> Export All (CSV)</button>
             </div>
         </section>
 
@@ -110,7 +145,8 @@
 
         <div class="action-bar no-print">
             <div class="action-bar-group">
-                <a class="btn btn-outline ripple" href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                <a class="btn btn-outline ripple" href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to
+                    Dashboard</a>
             </div>
         </div>
     </main>
@@ -133,10 +169,18 @@
             <div class="print-stat-box stat-total"><span>Total</span><strong id="print-total">0</strong></div>
             <div class="print-stat-box stat-present"><span>Present</span><strong id="print-present">0</strong></div>
             <div class="print-stat-box stat-absent"><span>Absent</span><strong id="print-absent">0</strong></div>
-            <div class="print-stat-box stat-percentage"><span>Attendance</span><strong id="print-percentage">0%</strong></div>
+            <div class="print-stat-box stat-percentage"><span>Attendance</span><strong id="print-percentage">0%</strong>
+            </div>
         </div>
         <table class="print-table">
-            <thead><tr><th>#</th><th>Enrollment No.</th><th>Student Name</th><th>Present / Absent</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Enrollment No.</th>
+                    <th>Student Name</th>
+                    <th>Present / Absent</th>
+                </tr>
+            </thead>
             <tbody id="print-table-body"></tbody>
         </table>
         <div class="print-footer">Generated by Student Attendance Management System — RAS15</div>
@@ -156,4 +200,5 @@
     <script src="js/share.js"></script>
     <script src="js/reports.js"></script>
 </body>
+
 </html>

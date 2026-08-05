@@ -1,6 +1,3 @@
-/**
- * main.js — Login page logic
- */
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
     const loginAlert = document.getElementById('login-alert');

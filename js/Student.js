@@ -1,8 +1,4 @@
-/**
- * student.js — Attendance-taking page logic
- * Supports both a fresh attendance session and "editing" a previously
- * saved record (entered via the Reports/Account page).
- */
+
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();

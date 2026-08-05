@@ -1,9 +1,3 @@
-/**
- * utils.js
- * Shared helpers used across every page: storage, toasts, formatting,
- * theme handling and small DOM conveniences.
- */
-
 const STORAGE_KEYS = {
     LOGGED_IN: "attendanceLoggedIn",
     USERNAME: "attendanceUsername",

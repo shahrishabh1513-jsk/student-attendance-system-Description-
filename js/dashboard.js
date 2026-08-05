@@ -1,6 +1,3 @@
-/**
- * dashboard.js — Dashboard (post-login landing) page logic
- */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();

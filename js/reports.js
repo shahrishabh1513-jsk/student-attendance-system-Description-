@@ -1,7 +1,3 @@
-/**
- * reports.js — Also serves as the "account" page: filter, view, edit,
- * print and export saved attendance records.
- */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();

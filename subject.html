@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }</script>
 </head>
+
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -36,12 +38,17 @@
 
     <nav class="app-nav no-print">
         <div class="app-nav-inner">
-            <a class="app-nav-link" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span class="nav-label">Dashboard</span></a>
-            <a class="app-nav-link active" href="subject.html"><i class="fas fa-calendar-days"></i> <span class="nav-label">Timetable</span></a>
-            <a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span class="nav-label">Take Attendance</span></a>
-            <a class="app-nav-link" href="reports.html"><i class="fas fa-chart-column"></i> <span class="nav-label">Reports</span></a>
+            <a class="app-nav-link" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span
+                    class="nav-label">Dashboard</span></a>
+            <a class="app-nav-link active" href="subject.html"><i class="fas fa-calendar-days"></i> <span
+                    class="nav-label">Timetable</span></a>
+            <a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span
+                    class="nav-label">Take Attendance</span></a>
+            <a class="app-nav-link" href="reports.html"><i class="fas fa-chart-column"></i> <span
+                    class="nav-label">Reports</span></a>
             <div class="app-nav-spacer"></div>
-            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i> <span class="nav-label">Logout</span></button>
+            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i>
+                <span class="nav-label">Logout</span></button>
         </div>
     </nav>
 
@@ -54,7 +61,8 @@
         <!-- Timetable -->
         <section class="glass-card section-card">
             <div class="section-title"><i class="fas fa-calendar-days"></i> Weekly Timetable</div>
-            <p class="section-sub">Tap the lecture you're about to teach. Lab sessions will ask for a batch automatically.</p>
+            <p class="section-sub">Tap the lecture you're about to teach. Lab sessions will ask for a batch
+                automatically.</p>
             <div class="timetable-legend">
                 <span><i class="legend-dot dot-theory"></i> Theory</span>
                 <span><i class="legend-dot dot-lab"></i> Lab</span>
@@ -75,15 +83,28 @@
 
         <!-- Summary -->
         <div class="selected-summary glass-card" id="selected-summary">
-            <div><div class="label">Subject</div><div class="value" id="sum-subject">—</div></div>
-            <div><div class="label">Timing</div><div class="value" id="sum-time">—</div></div>
-            <div><div class="label">Type</div><div class="value" id="sum-type">—</div></div>
-            <div><div class="label">Batch</div><div class="value" id="sum-batch">All Students</div></div>
+            <div>
+                <div class="label">Subject</div>
+                <div class="value" id="sum-subject">—</div>
+            </div>
+            <div>
+                <div class="label">Timing</div>
+                <div class="value" id="sum-time">—</div>
+            </div>
+            <div>
+                <div class="label">Type</div>
+                <div class="value" id="sum-type">—</div>
+            </div>
+            <div>
+                <div class="label">Batch</div>
+                <div class="value" id="sum-batch">All Students</div>
+            </div>
         </div>
 
         <div class="action-bar">
             <div class="action-bar-group">
-                <a class="btn btn-outline ripple" href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                <a class="btn btn-outline ripple" href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to
+                    Dashboard</a>
             </div>
             <div class="action-bar-group">
                 <button class="btn btn-primary ripple" id="take-attendance-btn" disabled>
@@ -104,4 +125,5 @@
     <script src="js/utils.js"></script>
     <script src="js/subject.js"></script>
 </body>
+
 </html>

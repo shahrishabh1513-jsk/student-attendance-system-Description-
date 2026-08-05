@@ -1,7 +1,3 @@
-/**
- * subject.js — Weekly timetable grid + batch selection logic
- * Flow: tap a cell in the timetable -> (if Lab) pick a batch -> continue
- */
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     attachRipple();

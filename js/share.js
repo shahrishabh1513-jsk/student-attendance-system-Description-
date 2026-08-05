@@ -1,6 +1,3 @@
-/**
- * share.js — "Share Report" feature.
- */
 const ShareReport = (() => {
     let modalEl = null;
     let currentRecordProvider = null;

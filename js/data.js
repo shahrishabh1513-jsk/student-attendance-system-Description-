@@ -1,9 +1,3 @@
-/**
- * data.js
- * Central data store for the Attendance Management System.
- * Semester 7 — BCA (Batch 1) + B.Sc. IT (Batch 2)
- */
-
 const COLLEGE_NAME = "School of Sciences";
 const SYSTEM_NAME = "Student Attendance Management System";
 
