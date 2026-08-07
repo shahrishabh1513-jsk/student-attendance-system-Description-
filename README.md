@@ -40,10 +40,9 @@
 
 <table>
 <tr>
-<td width="50%" align="center"><img width="1899" height="874" alt="Day_2_login_Page" src="https://github.com/user-attachments/assets/2f7a5db2-dede-4382-b9f6-360256bf802c" />
-
-" alt="Login Page" width="100%"/><br><b>🔐 Login Page</b></td>
-<td width="50%" align="center"><img src="screenshots/dashboard.png" alt="Dashboard" width="100%"/><br><b>🏠 Dashboard</b></td>
+<td width="50%" align="center"><img width="1899" height="874" alt="Day_2_login_Page" src="https://github.com/user-attachments/assets/2f7a5db2-dede-4382-b9f6-360256bf802c" /><br><b>🔐 Login Page</b></td>
+<td width="50%" align="center"><img width="1875" height="888" alt="image" src="https://github.com/user-attachments/assets/85270119-362f-441e-8ed7-7bbaf85583a0" />
+<br><b>🏠 Dashboard</b></td>
 </tr>
 </table>
 
