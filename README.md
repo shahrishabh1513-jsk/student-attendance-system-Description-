@@ -40,12 +40,12 @@
 
 <table>
 <tr>
-<td width="50%" align="center"><img src="screenshots/login.png" alt="Login Page" width="100%"/><br><b>🔐 Login Page</b></td>
+<td width="50%" align="center"><img width="1899" height="874" alt="Day_2_login_Page" src="https://github.com/user-attachments/assets/2f7a5db2-dede-4382-b9f6-360256bf802c" />
+
+" alt="Login Page" width="100%"/><br><b>🔐 Login Page</b></td>
 <td width="50%" align="center"><img src="screenshots/dashboard.png" alt="Dashboard" width="100%"/><br><b>🏠 Dashboard</b></td>
 </tr>
 </table>
-
-> 📸 Replace the images above with your own screenshots — create a `screenshots/` folder at the project root and save your images as `screenshots/login.png` and `screenshots/dashboard.png`. Add more rows the same way for the Timetable, Take Attendance, or Reports pages.
 
 ---
 
