@@ -24,19 +24,28 @@
 
 ## 📖 Table of Contents
 
-- [About the Project](#-about-the-project)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
-- [Demo Login](#-demo-login)
-- [How It Works](#-how-it-works)
-- [Data & Privacy](#-data--privacy)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [Author](#-author)
-- [License](#-license)
-- [Acknowledgements](#-acknowledgements)
+| # | Section | # | Section |
+|:---:|---|:---:|---|
+| 1️⃣ | [Preview](#-preview) | 8️⃣ | [How It Works](#-how-it-works) |
+| 2️⃣ | [About the Project](#-about-the-project) | 9️⃣ | [Data & Privacy](#-data--privacy) |
+| 3️⃣ | [Features](#-features) | 🔟 | [Roadmap](#-roadmap) |
+| 4️⃣ | [Tech Stack](#-tech-stack) | ⓫ | [Contributing](#-contributing) |
+| 5️⃣ | [Project Structure](#-project-structure) | ⓬ | [Author](#-author) |
+| 6️⃣ | [Getting Started](#-getting-started) | ⓭ | [License](#-license) |
+| 7️⃣ | [Demo Login](#-demo-login) | | |
+
+---
+
+## 🖼 Preview
+
+<table>
+<tr>
+<td width="50%" align="center"><img src="screenshots/login.png" alt="Login Page" width="100%"/><br><b>🔐 Login Page</b></td>
+<td width="50%" align="center"><img src="screenshots/dashboard.png" alt="Dashboard" width="100%"/><br><b>🏠 Dashboard</b></td>
+</tr>
+</table>
+
+> 📸 Replace the images above with your own screenshots — create a `screenshots/` folder at the project root and save your images as `screenshots/login.png` and `screenshots/dashboard.png`. Add more rows the same way for the Timetable, Take Attendance, or Reports pages.
 
 ---
 
@@ -253,37 +262,8 @@ Contributions make the open-source community amazing. Any contributions are **gr
 
 ## 📄 License
 
-This project is licensed under the **MIT License** — feel free to use, modify, and distribute it.
-
-```
-MIT License
-
-Copyright (c) 2026 Rishabh Shah
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-```
-
-*(Add a `LICENSE` file with this text at the repo root to make it official.)*
-
----
-
-## 🙏 Acknowledgements
-
-- [Font Awesome](https://fontawesome.com/) — icon library
-- [html2canvas](https://html2canvas.hertzen.com/) — HTML-to-image export
-- [jsPDF](https://github.com/parallax/jsPDF) — PDF generation
-- [Google Fonts](https://fonts.google.com/) — Manrope & Inter typefaces
+Licensed under the **MIT License** — free to use, modify, and distribute, with attribution.
+See [`LICENSE`](LICENSE) for full details.
 
 ---
 
