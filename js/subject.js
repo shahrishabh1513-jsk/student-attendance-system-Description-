@@ -17,12 +17,13 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="tt-day ${day === today ? 'is-today' : ''}" data-day="${day}">
             <div class="tt-day-head"><b>${day}</b><small>${day === today ? 'Today' : TIMETABLE[day].length + ' lectures'}</small></div>
             ${TIMETABLE[day].map((s, i) => {
-                const t = taken[`${day}|${s.subject}|${s.start}`];
-                return `<div class="tt-cell type-${s.type.toLowerCase()}" data-day="${day}" data-period="${i}" style="animation-delay:${i * 0.06}s">
+        const t = taken[`${day}|${s.subject}|${s.start}`];
+        return `<div class="tt-cell type-${s.type.toLowerCase()}" data-day="${day}" data-period="${i}" style="animation-delay:${i * 0.06}s">
                     ${day === today && t ? `<span class="tt-taken" title="Already taken: ${t.join(', ')}"><i class="fas fa-circle-check"></i></span>` : ''}
                     <span class="tt-type">${s.type}</span>
                     <span class="tt-time">${formatTime12(s.start)} – ${formatTime12(s.end)}</span>
-                    <span class="tt-subj">${s.subject}</span></div>`; }).join('')}
+                    <span class="tt-subj">${s.subject}</span></div>`;
+    }).join('')}
         </div>`).join('');
 
     function showDay(d) {

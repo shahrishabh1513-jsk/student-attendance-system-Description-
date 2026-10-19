@@ -15,9 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const editRecordId = Store.get(STORAGE_KEYS.EDIT_RECORD, null);
 
     if (!subject || !day) {
-        // Show a clear, actionable message right away instead of leaving a
-        // blank/loading-looking page — the auto-redirect below is just a
-        // convenience on top of that, in case it's blocked or delayed.
         const noSessionEl = document.getElementById('no-session-state');
         const contentEl = document.getElementById('attendance-content');
         if (noSessionEl) noSessionEl.style.display = 'block';
@@ -31,84 +28,84 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ------------------------- roster setup ------------------------- */
     try {
 
-    const roster = (batch === 1 || batch === 2)
-        ? STUDENTS.filter((s) => s.batch === batch)
-        : STUDENTS.slice();
+        const roster = (batch === 1 || batch === 2)
+            ? STUDENTS.filter((s) => s.batch === batch)
+            : STUDENTS.slice();
 
-    // Attendance state per student: true = present, false = absent, null = pending
-    let students = roster.map((s) => ({ ...s, attendance: null }));
+        // Attendance state per student: true = present, false = absent, null = pending
+        let students = roster.map((s) => ({ ...s, attendance: null }));
 
-    // Try to resume a draft for this exact session (same subject/day/batch/date).
-    // This is also how "Edit Attendance" from the Reports page hands off its data.
-    const draft = Store.get(STORAGE_KEYS.DRAFT);
-    const draftKey = `${subject.name}|${day}|${batch}|${sessionDate.slice(0, 10)}`;
-    if (draft && draft.key === draftKey && Array.isArray(draft.students)) {
-        students = draft.students;
-    }
+        // Try to resume a draft for this exact session (same subject/day/batch/date).
+        // This is also how "Edit Attendance" from the Reports page hands off its data.
+        const draft = Store.get(STORAGE_KEYS.DRAFT);
+        const draftKey = `${subject.name}|${day}|${batch}|${sessionDate.slice(0, 10)}`;
+        if (draft && draft.key === draftKey && Array.isArray(draft.students)) {
+            students = draft.students;
+        }
 
-    let filteredStudents = [...students];
-    let sortMode = 'none'; // 'none' | 'asc' | 'desc'
-    let history = []; // undo stack of {id, previous}
-    let unsavedChanges = false;
+        let filteredStudents = [...students];
+        let sortMode = 'none'; // 'none' | 'asc' | 'desc'
+        let history = []; // undo stack of {id, previous}
+        let unsavedChanges = false;
 
-    // Lifetime "Total Attendance" per student — how many saved sessions
-    // (across all subjects/dates) they were marked Present for.
-    const attendanceTotals = (() => {
-        const totals = {};
-        const savedRecords = Store.get(STORAGE_KEYS.RECORDS, []);
-        savedRecords.forEach((record) => {
-            if (editRecordId && String(record.id) === String(editRecordId)) return; // avoid double-counting the record being edited
-            (record.students || []).forEach((s) => {
-                if (s.attendance === true) {
-                    totals[s.enrollmentNo] = (totals[s.enrollmentNo] || 0) + 1;
-                }
+        // Lifetime "Total Attendance" per student — how many saved sessions
+        // (across all subjects/dates) they were marked Present for.
+        const attendanceTotals = (() => {
+            const totals = {};
+            const savedRecords = Store.get(STORAGE_KEYS.RECORDS, []);
+            savedRecords.forEach((record) => {
+                if (editRecordId && String(record.id) === String(editRecordId)) return; // avoid double-counting the record being edited
+                (record.students || []).forEach((s) => {
+                    if (s.attendance === true) {
+                        totals[s.enrollmentNo] = (totals[s.enrollmentNo] || 0) + 1;
+                    }
+                });
             });
-        });
-        return totals;
-    })();
+            return totals;
+        })();
 
-    /* ------------------------------ DOM ------------------------------ */
+        /* ------------------------------ DOM ------------------------------ */
 
-    const el = (id) => document.getElementById(id);
-    const totalStudentsElem = el('total-students');
-    const presentCountElem = el('present-count');
-    const absentCountElem = el('absent-count');
-    const completionPctElem = el('completion-pct');
-    const progressFill = el('progress-fill');
-    const studentTableBody = el('student-table-body');
-    const saveAttendanceBtn = el('save-attendance-btn');
-    const backBtn = el('back-btn');
-    const printBtn = el('print-btn');
-    const alertDiv = el('attendance-alert');
-    const searchInput = el('search-student');
-    const filterStatus = el('filter-status');
-    const sortNameSelect = el('sort-name');
-    const editBanner = el('edit-mode-banner');
+        const el = (id) => document.getElementById(id);
+        const totalStudentsElem = el('total-students');
+        const presentCountElem = el('present-count');
+        const absentCountElem = el('absent-count');
+        const completionPctElem = el('completion-pct');
+        const progressFill = el('progress-fill');
+        const studentTableBody = el('student-table-body');
+        const saveAttendanceBtn = el('save-attendance-btn');
+        const backBtn = el('back-btn');
+        const printBtn = el('print-btn');
+        const alertDiv = el('attendance-alert');
+        const searchInput = el('search-student');
+        const filterStatus = el('filter-status');
+        const sortNameSelect = el('sort-name');
+        const editBanner = el('edit-mode-banner');
 
-    /* ------------------------------ header ---------------------------- */
+        /* ------------------------------ header ---------------------------- */
 
-    el('header-sub').textContent = `${subject.name} · ${day}`;
-    el('info-subject').textContent = subject.name;
-    el('info-time').textContent = `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`;
-    el('info-batch').textContent = batch ? BATCH_LABELS[batch] : 'All Students (Both Batches)';
-    el('info-date').textContent = formatDateLong(sessionDate);
+        el('header-sub').textContent = `${subject.name} · ${day}`;
+        el('info-subject').textContent = subject.name;
+        el('info-time').textContent = `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`;
+        el('info-batch').textContent = batch ? BATCH_LABELS[batch] : 'All Students (Both Batches)';
+        el('info-date').textContent = formatDateLong(sessionDate);
 
-    if (editRecordId && editBanner) {
-        editBanner.style.display = 'flex';
-        el('save-attendance-btn').innerHTML = '<i class="fas fa-save"></i> Update Attendance';
-    }
+        if (editRecordId && editBanner) {
+            editBanner.style.display = 'flex';
+            el('save-attendance-btn').innerHTML = '<i class="fas fa-save"></i> Update Attendance';
+        }
 
-    function updateClock() {
-        el('current-time').textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    }
-    updateClock();
-    setInterval(updateClock, 30000);
+        function updateClock() {
+            el('current-time').textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+        updateClock();
+        setInterval(updateClock, 30000);
 
-    /* ------------------------------ render ---------------------------- */
+        /* ------------------------------ render ---------------------------- */
 
-    function renderTable() {
-        if (filteredStudents.length === 0) {
-            studentTableBody.innerHTML = `
+        function renderTable() {
+            if (filteredStudents.length === 0) {
+                studentTableBody.innerHTML = `
                 <tr><td colspan="4">
                     <div class="empty-state">
                         <i class="fas fa-magnifying-glass"></i>
@@ -116,11 +113,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p>Try a different search term or filter.</p>
                     </div>
                 </td></tr>`;
-            return;
-        }
-        studentTableBody.innerHTML = filteredStudents.map((student, i) => {
-            const total = attendanceTotals[student.enrollmentNo] || 0;
-            return `
+                return;
+            }
+            studentTableBody.innerHTML = filteredStudents.map((student, i) => {
+                const total = attendanceTotals[student.enrollmentNo] || 0;
+                return `
                 <tr data-row-id="${student.id}" class="row-${student.attendance === true ? 'present' : student.attendance === false ? 'absent' : 'pending'}" style="animation-delay:${i * 25}ms">
                     <td class="cell-student">
                         <div class="student-name">${student.name}</div>
@@ -137,364 +134,364 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </td>
                 </tr>`;
-        }).join('');
+            }).join('');
 
-        studentTableBody.querySelectorAll('.mark-btn').forEach((btn) => {
-            btn.addEventListener('click', () => markAttendance(Number(btn.dataset.id), btn.dataset.value === 'true'));
-        });
-    }
-
-    // True if a student still matches the currently typed search term / status filter.
-    function matchesCurrentFilters(student) {
-        const term = searchInput.value.trim().toLowerCase();
-        const statusFilter = filterStatus.value;
-        const statusWord = student.attendance === true ? 'present' : student.attendance === false ? 'absent' : 'pending';
-        const matchesTerm = !term ||
-            student.name.toLowerCase().includes(term) ||
-            student.enrollmentNo.toLowerCase().includes(term) ||
-            student.course.toLowerCase().includes(term) ||
-            statusWord.includes(term);
-        const matchesStatus = statusFilter === 'all' || statusFilter === statusWord;
-        return matchesTerm && matchesStatus;
-    }
-
-    // Updates just one row's mark buttons directly — no re-render, so
-    // marking present/absent is instant with no entrance animation.
-    function updateRowInPlace(student) {
-        const row = studentTableBody.querySelector(`tr[data-row-id="${student.id}"]`);
-        if (!row) return;
-
-        if (!matchesCurrentFilters(student)) {
-            // No longer matches the active search/filter — drop it from view.
-            row.remove();
-            filteredStudents = filteredStudents.filter((s) => s.id !== student.id);
-            if (filteredStudents.length === 0) renderTable();
-            return;
+            studentTableBody.querySelectorAll('.mark-btn').forEach((btn) => {
+                btn.addEventListener('click', () => markAttendance(Number(btn.dataset.id), btn.dataset.value === 'true'));
+            });
         }
 
-        row.className = `row-${student.attendance === true ? 'present' : student.attendance === false ? 'absent' : 'pending'}`;
-        row.querySelector('.present-btn').classList.toggle('active', student.attendance === true);
-        row.querySelector('.absent-btn').classList.toggle('active', student.attendance === false);
-    }
-
-    function updateStatistics() {
-        const total = students.length;
-        const present = students.filter((s) => s.attendance === true).length;
-        const absent = students.filter((s) => s.attendance === false).length;
-        const pending = total - present - absent;
-
-        animateCount(totalStudentsElem, total);
-        animateCount(presentCountElem, present);
-        animateCount(absentCountElem, absent);
-
-        const pct = total > 0 ? Math.round(((present + absent) / total) * 100) : 0;
-        completionPctElem.textContent = `${pct}%`;
-        progressFill.style.width = `${pct}%`;
-    }
-
-    function checkAllMarked() {
-        const pending = students.filter((s) => s.attendance === null).length;
-        if (pending === 0 && students.length > 0) {
-            saveAttendanceBtn.disabled = false;
-            hideAlert();
-        } else {
-            saveAttendanceBtn.disabled = true;
-            if (pending > 0) showAlert(`${pending} student(s) still pending. Mark everyone before saving.`, 'warning');
-        }
-    }
-
-    function persistDraft() {
-        Store.set(STORAGE_KEYS.DRAFT, { key: draftKey, students });
-    }
-
-    function applyFilters() {
-        const term = searchInput.value.trim().toLowerCase();
-        const statusFilter = filterStatus.value;
-        filteredStudents = students.filter((s) => {
-            const statusWord = s.attendance === true ? 'present' : s.attendance === false ? 'absent' : 'pending';
+        // True if a student still matches the currently typed search term / status filter.
+        function matchesCurrentFilters(student) {
+            const term = searchInput.value.trim().toLowerCase();
+            const statusFilter = filterStatus.value;
+            const statusWord = student.attendance === true ? 'present' : student.attendance === false ? 'absent' : 'pending';
             const matchesTerm = !term ||
-                s.name.toLowerCase().includes(term) ||
-                s.enrollmentNo.toLowerCase().includes(term) ||
-                s.course.toLowerCase().includes(term) ||
+                student.name.toLowerCase().includes(term) ||
+                student.enrollmentNo.toLowerCase().includes(term) ||
+                student.course.toLowerCase().includes(term) ||
                 statusWord.includes(term);
             const matchesStatus = statusFilter === 'all' || statusFilter === statusWord;
             return matchesTerm && matchesStatus;
-        });
-
-        if (sortMode === 'asc') {
-            filteredStudents.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sortMode === 'desc') {
-            filteredStudents.sort((a, b) => b.name.localeCompare(a.name));
         }
 
-        renderTable();
-    }
+        // Updates just one row's mark buttons directly — no re-render, so
+        // marking present/absent is instant with no entrance animation.
+        function updateRowInPlace(student) {
+            const row = studentTableBody.querySelector(`tr[data-row-id="${student.id}"]`);
+            if (!row) return;
 
-    /* --------------------------- mutations ---------------------------- */
+            if (!matchesCurrentFilters(student)) {
+                // No longer matches the active search/filter — drop it from view.
+                row.remove();
+                filteredStudents = filteredStudents.filter((s) => s.id !== student.id);
+                if (filteredStudents.length === 0) renderTable();
+                return;
+            }
 
-    function markAttendance(studentId, isPresent, { recordHistory = true } = {}) {
-        const student = students.find((s) => s.id === studentId);
-        if (!student) return;
-        if (recordHistory) history.push({ id: studentId, previous: student.attendance });
-        student.attendance = isPresent;
-        unsavedChanges = true;
-
-        updateRowInPlace(student);
-        updateStatistics();
-        checkAllMarked();
-        persistDraft();
-    }
-
-    function markAll(isPresent) {
-        history.push({ bulk: true, previous: students.map((s) => ({ id: s.id, attendance: s.attendance })) });
-        students.forEach((s) => { s.attendance = isPresent; });
-        unsavedChanges = true;
-        applyFilters();
-        updateStatistics();
-        checkAllMarked();
-        persistDraft();
-        showToast(`All students marked ${isPresent ? 'present' : 'absent'}.`, 'info');
-    }
-
-    function undoLast() {
-        const last = history.pop();
-        if (!last) {
-            showToast('Nothing to undo.', 'warning');
-            return;
+            row.className = `row-${student.attendance === true ? 'present' : student.attendance === false ? 'absent' : 'pending'}`;
+            row.querySelector('.present-btn').classList.toggle('active', student.attendance === true);
+            row.querySelector('.absent-btn').classList.toggle('active', student.attendance === false);
         }
-        if (last.bulk) {
-            last.previous.forEach(({ id, attendance }) => {
-                const s = students.find((st) => st.id === id);
-                if (s) s.attendance = attendance;
+
+        function updateStatistics() {
+            const total = students.length;
+            const present = students.filter((s) => s.attendance === true).length;
+            const absent = students.filter((s) => s.attendance === false).length;
+            const pending = total - present - absent;
+
+            animateCount(totalStudentsElem, total);
+            animateCount(presentCountElem, present);
+            animateCount(absentCountElem, absent);
+
+            const pct = total > 0 ? Math.round(((present + absent) / total) * 100) : 0;
+            completionPctElem.textContent = `${pct}%`;
+            progressFill.style.width = `${pct}%`;
+        }
+
+        function checkAllMarked() {
+            const pending = students.filter((s) => s.attendance === null).length;
+            if (pending === 0 && students.length > 0) {
+                saveAttendanceBtn.disabled = false;
+                hideAlert();
+            } else {
+                saveAttendanceBtn.disabled = true;
+                if (pending > 0) showAlert(`${pending} student(s) still pending. Mark everyone before saving.`, 'warning');
+            }
+        }
+
+        function persistDraft() {
+            Store.set(STORAGE_KEYS.DRAFT, { key: draftKey, students });
+        }
+
+        function applyFilters() {
+            const term = searchInput.value.trim().toLowerCase();
+            const statusFilter = filterStatus.value;
+            filteredStudents = students.filter((s) => {
+                const statusWord = s.attendance === true ? 'present' : s.attendance === false ? 'absent' : 'pending';
+                const matchesTerm = !term ||
+                    s.name.toLowerCase().includes(term) ||
+                    s.enrollmentNo.toLowerCase().includes(term) ||
+                    s.course.toLowerCase().includes(term) ||
+                    statusWord.includes(term);
+                const matchesStatus = statusFilter === 'all' || statusFilter === statusWord;
+                return matchesTerm && matchesStatus;
             });
-        } else {
-            const s = students.find((st) => st.id === last.id);
-            if (s) s.attendance = last.previous;
+
+            if (sortMode === 'asc') {
+                filteredStudents.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sortMode === 'desc') {
+                filteredStudents.sort((a, b) => b.name.localeCompare(a.name));
+            }
+
+            renderTable();
         }
-        unsavedChanges = true;
-        applyFilters();
-        updateStatistics();
-        checkAllMarked();
-        persistDraft();
-        showToast('Last action undone.', 'info');
-    }
 
-    function resetAttendance() {
-        history.push({ bulk: true, previous: students.map((s) => ({ id: s.id, attendance: s.attendance })) });
-        students.forEach((s) => { s.attendance = null; });
-        unsavedChanges = true;
-        applyFilters();
-        updateStatistics();
-        checkAllMarked();
-        persistDraft();
-        showToast('Attendance reset. Start marking again.', 'warning');
-    }
+        /* --------------------------- mutations ---------------------------- */
 
-    /* ----------------------------- alerts ------------------------------ */
+        function markAttendance(studentId, isPresent, { recordHistory = true } = {}) {
+            const student = students.find((s) => s.id === studentId);
+            if (!student) return;
+            if (recordHistory) history.push({ id: studentId, previous: student.attendance });
+            student.attendance = isPresent;
+            unsavedChanges = true;
 
-    function showAlert(message, type = 'info') {
-        alertDiv.className = `alert alert-${type}`;
-        alertDiv.querySelector('#alert-message').textContent = message;
-        alertDiv.style.display = 'flex';
-    }
-    function hideAlert() { alertDiv.style.display = 'none'; }
+            updateRowInPlace(student);
+            updateStatistics();
+            checkAllMarked();
+            persistDraft();
+        }
 
-    /* ----------------------------- print ------------------------------- */
+        function markAll(isPresent) {
+            history.push({ bulk: true, previous: students.map((s) => ({ id: s.id, attendance: s.attendance })) });
+            students.forEach((s) => { s.attendance = isPresent; });
+            unsavedChanges = true;
+            applyFilters();
+            updateStatistics();
+            checkAllMarked();
+            persistDraft();
+            showToast(`All students marked ${isPresent ? 'present' : 'absent'}.`, 'info');
+        }
 
-    function preparePrintReport() {
-        const present = students.filter((s) => s.attendance === true).length;
-        const absent = students.filter((s) => s.attendance === false).length;
-        const total = students.length;
-        const pct = total > 0 ? Math.round((present / total) * 100) : 0;
+        function undoLast() {
+            const last = history.pop();
+            if (!last) {
+                showToast('Nothing to undo.', 'warning');
+                return;
+            }
+            if (last.bulk) {
+                last.previous.forEach(({ id, attendance }) => {
+                    const s = students.find((st) => st.id === id);
+                    if (s) s.attendance = attendance;
+                });
+            } else {
+                const s = students.find((st) => st.id === last.id);
+                if (s) s.attendance = last.previous;
+            }
+            unsavedChanges = true;
+            applyFilters();
+            updateStatistics();
+            checkAllMarked();
+            persistDraft();
+            showToast('Last action undone.', 'info');
+        }
 
-        el('print-college').textContent = COLLEGE_NAME;
-        el('print-subject').textContent = subject.name;
-        el('print-faculty').textContent = localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher';
-        el('print-date').textContent = formatDateLong(sessionDate);
-        el('print-time').textContent = `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`;
-        el('print-batch').textContent = batch ? BATCH_LABELS[batch] : 'All Students (Both Batches)';
-        el('print-total').textContent = total;
-        el('print-present').textContent = present;
-        el('print-absent').textContent = absent;
-        el('print-percentage').textContent = `${pct}%`;
+        function resetAttendance() {
+            history.push({ bulk: true, previous: students.map((s) => ({ id: s.id, attendance: s.attendance })) });
+            students.forEach((s) => { s.attendance = null; });
+            unsavedChanges = true;
+            applyFilters();
+            updateStatistics();
+            checkAllMarked();
+            persistDraft();
+            showToast('Attendance reset. Start marking again.', 'warning');
+        }
 
-        // Absent students get a red boxed name to stand out; everyone else stays plain.
-        el('print-table-body').innerHTML = students.map((s, i) => {
-            const isAbsent = s.attendance === false;
-            const statusLabel = s.attendance === true ? 'Present' : s.attendance === false ? 'Absent' : 'Pending';
-            const statusClass = s.attendance === true ? 'print-status-present' : s.attendance === false ? 'print-status-absent' : 'print-status-pending';
-            const nameHtml = isAbsent
-                ? `<span class="print-name-absent">${s.name}</span>`
-                : `<span class="print-name-plain">${s.name}</span>`;
-            return `
+        /* ----------------------------- alerts ------------------------------ */
+
+        function showAlert(message, type = 'info') {
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.querySelector('#alert-message').textContent = message;
+            alertDiv.style.display = 'flex';
+        }
+        function hideAlert() { alertDiv.style.display = 'none'; }
+
+        /* ----------------------------- print ------------------------------- */
+
+        function preparePrintReport() {
+            const present = students.filter((s) => s.attendance === true).length;
+            const absent = students.filter((s) => s.attendance === false).length;
+            const total = students.length;
+            const pct = total > 0 ? Math.round((present / total) * 100) : 0;
+
+            el('print-college').textContent = COLLEGE_NAME;
+            el('print-subject').textContent = subject.name;
+            el('print-faculty').textContent = localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher';
+            el('print-date').textContent = formatDateLong(sessionDate);
+            el('print-time').textContent = `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`;
+            el('print-batch').textContent = batch ? BATCH_LABELS[batch] : 'All Students (Both Batches)';
+            el('print-total').textContent = total;
+            el('print-present').textContent = present;
+            el('print-absent').textContent = absent;
+            el('print-percentage').textContent = `${pct}%`;
+
+            // Absent students get a red boxed name to stand out; everyone else stays plain.
+            el('print-table-body').innerHTML = students.map((s, i) => {
+                const isAbsent = s.attendance === false;
+                const statusLabel = s.attendance === true ? 'Present' : s.attendance === false ? 'Absent' : 'Pending';
+                const statusClass = s.attendance === true ? 'print-status-present' : s.attendance === false ? 'print-status-absent' : 'print-status-pending';
+                const nameHtml = isAbsent
+                    ? `<span class="print-name-absent">${s.name}</span>`
+                    : `<span class="print-name-plain">${s.name}</span>`;
+                return `
                 <tr>
                     <td>${i + 1}</td>
                     <td>${s.enrollmentNo}</td>
                     <td class="print-name-cell">${nameHtml}</td>
                     <td class="${statusClass}">${statusLabel}</td>
                 </tr>`;
-        }).join('');
-    }
+            }).join('');
+        }
 
-    printBtn.addEventListener('click', () => {
-        preparePrintReport();
-        window.print();
-    });
+        printBtn.addEventListener('click', () => {
+            preparePrintReport();
+            window.print();
+        });
 
-    const shareBtn = el('share-btn');
-    if (shareBtn) {
-        shareBtn.addEventListener('click', () => {
-            ShareReport.openModal(() => {
+        const shareBtn = el('share-btn');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', () => {
+                ShareReport.openModal(() => {
+                    const present = students.filter((s) => s.attendance === true).length;
+                    const absent = students.filter((s) => s.attendance === false).length;
+                    const total = students.length;
+                    return {
+                        subject: subject.name,
+                        type: subject.type,
+                        timing: `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`,
+                        day,
+                        batch,
+                        batchLabel: batch ? BATCH_LABELS[batch] : 'All Students',
+                        faculty: localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher',
+                        date: sessionDate,
+                        students,
+                        summary: { total, present, absent, percentage: total > 0 ? Math.round((present / total) * 100) : 0 },
+                    };
+                });
+            });
+        }
+
+        /* ----------------------------- save flow ---------------------------- */
+
+        const confirmOverlay = el('confirm-overlay');
+        const successOverlay = el('success-overlay');
+
+        saveAttendanceBtn.addEventListener('click', () => {
+            confirmOverlay.classList.add('show');
+        });
+        el('confirm-cancel').addEventListener('click', () => confirmOverlay.classList.remove('show'));
+        el('confirm-ok').addEventListener('click', () => {
+            confirmOverlay.classList.remove('show');
+            saveAttendance();
+        });
+
+        function saveAttendance() {
+            saveAttendanceBtn.innerHTML = '<span class="spinner"></span> Saving…';
+            saveAttendanceBtn.disabled = true;
+
+            setTimeout(() => {
                 const present = students.filter((s) => s.attendance === true).length;
                 const absent = students.filter((s) => s.attendance === false).length;
                 const total = students.length;
-                return {
-                    subject: subject.name,
-                    type: subject.type,
-                    timing: `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`,
-                    day,
-                    batch,
-                    batchLabel: batch ? BATCH_LABELS[batch] : 'All Students',
-                    faculty: localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher',
-                    date: sessionDate,
-                    students,
-                    summary: { total, present, absent, percentage: total > 0 ? Math.round((present / total) * 100) : 0 },
-                };
-            });
+
+                const records = Store.get(STORAGE_KEYS.RECORDS, []);
+                let finalId;
+
+                if (editRecordId) {
+                    // Update the existing saved record in place.
+                    const idx = records.findIndex((r) => String(r.id) === String(editRecordId));
+                    const updated = {
+                        id: editRecordId,
+                        subject: subject.name,
+                        type: subject.type,
+                        timing: `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`,
+                        start: subject.start,
+                        end: subject.end,
+                        day,
+                        batch,
+                        batchLabel: batch ? BATCH_LABELS[batch] : 'All Students',
+                        faculty: localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher',
+                        date: sessionDate,
+                        students,
+                        summary: { total, present, absent, percentage: total > 0 ? Math.round((present / total) * 100) : 0 },
+                        savedAt: (idx >= 0 && records[idx].savedAt) || new Date().toISOString(),
+                        editedAt: new Date().toISOString(),
+                    };
+                    if (idx >= 0) records[idx] = updated; else records.push(updated);
+                    finalId = editRecordId;
+                } else {
+                    const record = {
+                        id: Date.now(),
+                        subject: subject.name,
+                        type: subject.type,
+                        timing: `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`,
+                        start: subject.start,
+                        end: subject.end,
+                        day,
+                        batch,
+                        batchLabel: batch ? BATCH_LABELS[batch] : 'All Students',
+                        faculty: localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher',
+                        date: sessionDate,
+                        students,
+                        summary: { total, present, absent, percentage: total > 0 ? Math.round((present / total) * 100) : 0 },
+                        savedAt: new Date().toISOString(),
+                    };
+                    records.push(record);
+                    finalId = record.id;
+                }
+
+                Store.set(STORAGE_KEYS.RECORDS, records);
+                Store.remove(STORAGE_KEYS.DRAFT);
+                Store.remove(STORAGE_KEYS.EDIT_RECORD);
+                unsavedChanges = false;
+
+                successOverlay.classList.add('show');
+
+                // Keep the user logged in — just clear this attendance session's
+                // temporary state — then take them to the account/report page so
+                // they can review (or, if needed, edit again) what was just saved.
+                setTimeout(() => {
+                    Store.clearAttendanceSession();
+                    window.location.href = `reports.html?record=${encodeURIComponent(finalId)}`;
+                }, 1600);
+            }, 900);
+        }
+
+        /* --------------------------- event wiring ---------------------------- */
+
+        searchInput.addEventListener('input', debounce(applyFilters, 150));
+        filterStatus.addEventListener('change', applyFilters);
+        sortNameSelect.addEventListener('change', () => {
+            sortMode = sortNameSelect.value;
+            applyFilters();
         });
-    }
+        el('mark-all-present').addEventListener('click', () => markAll(true));
+        el('mark-all-absent').addEventListener('click', () => markAll(false));
+        el('undo-action').addEventListener('click', undoLast);
+        el('reset-attendance').addEventListener('click', resetAttendance);
 
-    /* ----------------------------- save flow ---------------------------- */
-
-    const confirmOverlay = el('confirm-overlay');
-    const successOverlay = el('success-overlay');
-
-    saveAttendanceBtn.addEventListener('click', () => {
-        confirmOverlay.classList.add('show');
-    });
-    el('confirm-cancel').addEventListener('click', () => confirmOverlay.classList.remove('show'));
-    el('confirm-ok').addEventListener('click', () => {
-        confirmOverlay.classList.remove('show');
-        saveAttendance();
-    });
-
-    function saveAttendance() {
-        saveAttendanceBtn.innerHTML = '<span class="spinner"></span> Saving…';
-        saveAttendanceBtn.disabled = true;
-
-        setTimeout(() => {
-            const present = students.filter((s) => s.attendance === true).length;
-            const absent = students.filter((s) => s.attendance === false).length;
-            const total = students.length;
-
-            const records = Store.get(STORAGE_KEYS.RECORDS, []);
-            let finalId;
-
+        backBtn.addEventListener('click', () => {
+            if (unsavedChanges && !confirm('You have unsaved attendance marks. Leave this page anyway?')) return;
             if (editRecordId) {
-                // Update the existing saved record in place.
-                const idx = records.findIndex((r) => String(r.id) === String(editRecordId));
-                const updated = {
-                    id: editRecordId,
-                    subject: subject.name,
-                    type: subject.type,
-                    timing: `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`,
-                    start: subject.start,
-                    end: subject.end,
-                    day,
-                    batch,
-                    batchLabel: batch ? BATCH_LABELS[batch] : 'All Students',
-                    faculty: localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher',
-                    date: sessionDate,
-                    students,
-                    summary: { total, present, absent, percentage: total > 0 ? Math.round((present / total) * 100) : 0 },
-                    savedAt: (idx >= 0 && records[idx].savedAt) || new Date().toISOString(),
-                    editedAt: new Date().toISOString(),
-                };
-                if (idx >= 0) records[idx] = updated; else records.push(updated);
-                finalId = editRecordId;
-            } else {
-                const record = {
-                    id: Date.now(),
-                    subject: subject.name,
-                    type: subject.type,
-                    timing: `${formatTime12(subject.start)} – ${formatTime12(subject.end)}`,
-                    start: subject.start,
-                    end: subject.end,
-                    day,
-                    batch,
-                    batchLabel: batch ? BATCH_LABELS[batch] : 'All Students',
-                    faculty: localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher',
-                    date: sessionDate,
-                    students,
-                    summary: { total, present, absent, percentage: total > 0 ? Math.round((present / total) * 100) : 0 },
-                    savedAt: new Date().toISOString(),
-                };
-                records.push(record);
-                finalId = record.id;
-            }
-
-            Store.set(STORAGE_KEYS.RECORDS, records);
-            Store.remove(STORAGE_KEYS.DRAFT);
-            Store.remove(STORAGE_KEYS.EDIT_RECORD);
-            unsavedChanges = false;
-
-            successOverlay.classList.add('show');
-
-            // Keep the user logged in — just clear this attendance session's
-            // temporary state — then take them to the account/report page so
-            // they can review (or, if needed, edit again) what was just saved.
-            setTimeout(() => {
+                Store.remove(STORAGE_KEYS.EDIT_RECORD);
                 Store.clearAttendanceSession();
-                window.location.href = `reports.html?record=${encodeURIComponent(finalId)}`;
-            }, 1600);
-        }, 900);
-    }
+                window.location.href = `reports.html?record=${encodeURIComponent(editRecordId)}`;
+            } else {
+                window.location.href = 'subject.html';
+            }
+        });
 
-    /* --------------------------- event wiring ---------------------------- */
+        window.addEventListener('beforeunload', (e) => {
+            if (unsavedChanges) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
 
-    searchInput.addEventListener('input', debounce(applyFilters, 150));
-    filterStatus.addEventListener('change', applyFilters);
-    sortNameSelect.addEventListener('change', () => {
-        sortMode = sortNameSelect.value;
+        // Keyboard shortcuts: "p" print, "s" save (when enabled), "/" focus search
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT') return;
+            if (e.key === 'p') printBtn.click();
+            if (e.key === 's' && !saveAttendanceBtn.disabled) saveAttendanceBtn.click();
+            if (e.key === '/') { e.preventDefault(); searchInput.focus(); }
+        });
+
+        /* ------------------------------ init ------------------------------- */
+
         applyFilters();
-    });
-    el('mark-all-present').addEventListener('click', () => markAll(true));
-    el('mark-all-absent').addEventListener('click', () => markAll(false));
-    el('undo-action').addEventListener('click', undoLast);
-    el('reset-attendance').addEventListener('click', resetAttendance);
-
-    backBtn.addEventListener('click', () => {
-        if (unsavedChanges && !confirm('You have unsaved attendance marks. Leave this page anyway?')) return;
-        if (editRecordId) {
-            Store.remove(STORAGE_KEYS.EDIT_RECORD);
-            Store.clearAttendanceSession();
-            window.location.href = `reports.html?record=${encodeURIComponent(editRecordId)}`;
-        } else {
-            window.location.href = 'subject.html';
-        }
-    });
-
-    window.addEventListener('beforeunload', (e) => {
-        if (unsavedChanges) {
-            e.preventDefault();
-            e.returnValue = '';
-        }
-    });
-
-    // Keyboard shortcuts: "p" print, "s" save (when enabled), "/" focus search
-    document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT') return;
-        if (e.key === 'p') printBtn.click();
-        if (e.key === 's' && !saveAttendanceBtn.disabled) saveAttendanceBtn.click();
-        if (e.key === '/') { e.preventDefault(); searchInput.focus(); }
-    });
-
-    /* ------------------------------ init ------------------------------- */
-
-    applyFilters();
-    updateStatistics();
-    checkAllMarked();
-    showToast(editRecordId ? `Editing saved session: ${students.length} student(s).` : `Roster loaded: ${students.length} student(s).`, 'info');
+        updateStatistics();
+        checkAllMarked();
+        showToast(editRecordId ? `Editing saved session: ${students.length} student(s).` : `Roster loaded: ${students.length} student(s).`, 'info');
 
     } catch (err) {
         console.error('Failed to load the attendance page:', err);

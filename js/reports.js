@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const filterBatch = el('filter-batch');
     const detailPanel = el('record-detail');
 
-    // Populate subject filter dynamically from saved records
     const subjectNames = [...new Set(records.map((r) => r.subject))];
     subjectNames.forEach((name) => {
         const opt = document.createElement('option');
@@ -32,8 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return dateOk && subjectOk && batchOk;
     }
 
-    // Accepts either a "HH:MM" (24h) string, or a "H:MM AM/PM" display string
-    // from older saved records, and always returns 24h "HH:MM".
+
     function toTwentyFourHour(value) {
         if (!value) return '';
         const ampmMatch = value.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
