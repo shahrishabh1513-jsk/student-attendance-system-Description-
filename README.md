@@ -26,7 +26,7 @@
 <a href="https://github.com/shahrishabh1513-jsk/student-attendance-system-Description-"><img src="https://img.shields.io/badge/REPOSITORY-View_Code-1F2937?style=for-the-badge&logo=github&logoColor=white"/></a>
 <a href="https://github.com/shahrishabh1513-jsk/student-attendance-system-Description-/stargazers"><img src="https://img.shields.io/badge/⭐_STAR-Support_This_Repo-D97706?style=for-the-badge"/></a>
 
-<br/>
+<br/><br/>
 
 <a href="#-login-screen"><img src="https://img.shields.io/badge/🔐_LOGIN-B91C1C?style=flat-square"/></a>
 <a href="#-dashboard"><img src="https://img.shields.io/badge/📊_DASHBOARD-D97706?style=flat-square"/></a>
@@ -34,14 +34,15 @@
 <a href="#-take-attendance"><img src="https://img.shields.io/badge/✅_TAKE_ATTENDANCE-1F2937?style=flat-square"/></a>
 <a href="#-reports"><img src="https://img.shields.io/badge/📑_REPORTS-B91C1C?style=flat-square"/></a>
 <a href="#-share-report"><img src="https://img.shields.io/badge/📤_SHARE-D97706?style=flat-square"/></a>
-<br/>
+
+<br/><br/>
 
 <img src="https://img.shields.io/badge/BACKEND-None_Needed-16A34A?style=for-the-badge&labelColor=1F2937"/>
 <img src="https://img.shields.io/badge/STORAGE-Browser_localStorage-D97706?style=for-the-badge&labelColor=1F2937"/>
 <img src="https://img.shields.io/badge/EXPORT-Image%2C_PDF_%26_Excel-DC2626?style=for-the-badge&labelColor=1F2937"/>
 <img src="https://img.shields.io/badge/BUILT_FOR-Faculty-16A34A?style=for-the-badge&labelColor=1F2937"/>
 
-<br/>
+<br/><br/>
 
 <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white"/>
 <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white"/>
@@ -99,15 +100,15 @@
 
 ## 📸 App Screens (Output)
 
-<table>
+<table width="100%">
 <tr>
 <td width="50%" valign="top">
 
 ### 🔐 Login Screen
 
-<table width="50%">
+<table width="100%">
 <tr><td>🔴 🟡 🟢 &nbsp; <sub>Faculty sign-in</sub></td></tr>
-<tr><td align="center"><img src="https://github.com/user-attachments/assets/b038992a-01d1-4053-a584-86f69c444a86" width="50%" alt="Login screen output"/></td></tr>
+<tr><td align="center"><img src="https://github.com/user-attachments/assets/b038992a-01d1-4053-a584-86f69c444a86" width="100%" alt="Login screen output"/></td></tr>
 </table>
 
 Faculty sign-in with a Staff / Student role selector and a campus illustration panel.
@@ -117,9 +118,9 @@ Faculty sign-in with a Staff / Student role selector and a campus illustration p
 
 ### 📊 Dashboard
 
-<table width="50%">
+<table width="100%">
 <tr><td>🔴 🟡 🟢 &nbsp; <sub>Today's overview</sub></td></tr>
-<tr><td align="center"><img src="https://github.com/user-attachments/assets/94c95768-fb27-4b25-a008-fc82aae384dc" width="50%" alt="Dashboard output"/></td></tr>
+<tr><td align="center"><img src="https://github.com/user-attachments/assets/94c95768-fb27-4b25-a008-fc82aae384dc" width="100%" alt="Dashboard output"/></td></tr>
 </table>
 
 Today's totals — Present, Absent and Last Updated — plus the faculty profile card and recent activity.
@@ -131,9 +132,9 @@ Today's totals — Present, Absent and Last Updated — plus the faculty profile
 
 ### 📅 Weekly Timetable
 
-<table width="50%">
+<table width="100%">
 <tr><td>🔴 🟡 🟢 &nbsp; <sub>Periods × days grid</sub></td></tr>
-<tr><td align="center"><img src="https://github.com/user-attachments/assets/cce0ad1b-756d-4592-b201-ffa026994078" width="50%" alt="Weekly timetable output"/></td></tr>
+<tr><td align="center"><img src="https://github.com/user-attachments/assets/cce0ad1b-756d-4592-b201-ffa026994078" width="100%" alt="Weekly timetable output"/></td></tr>
 </table>
 
 Tue–Sat grid with Lab and Theory lectures colour-coded, and an "Already Taken Today" badge.
@@ -147,7 +148,6 @@ Tue–Sat grid with Lab and Theory lectures colour-coded, and an "Already Taken 
 <tr><td>🔴 🟡 🟢 &nbsp; <sub>One-tap P / A marking</sub></td></tr>
 <tr><td align="center"><img src="https://github.com/user-attachments/assets/4bc9f4e4-f595-4304-8ebd-de70bc325bd1" width="100%" alt="Take attendance output"/></td></tr>
 </table>
-
 
 Big Present / Absent buttons, live search, A–Z sort and bulk actions — with an auto-saved draft.
 
@@ -175,13 +175,11 @@ Every saved session, filterable by date, subject or batch — view, edit, print 
 <tr><td align="center"><img src="https://github.com/user-attachments/assets/cf46712d-5b36-45d6-ba88-3004b4169d0d" width="100%" alt="Share report output"/></td></tr>
 </table>
 
-
 Export as Image, PDF or Excel and share via WhatsApp or Email, with absentees highlighted in red.
 
 </td>
 </tr>
 </table>
-
 
 <div align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=0:B91C1C,50:D97706,100:15803D&height=4&section=header"/></div>
 
@@ -353,17 +351,17 @@ flowchart LR
 ```bash
 student-attendance-system/
 │
-├── index.html                
-├── dashboard.html              
-├── subject.html                  
-├── student.html                    
-├── reports.html                      
+├── index.html
+├── dashboard.html
+├── subject.html
+├── student.html
+├── reports.html
 │
 ├── assets/
-│   ├── logo-mark.svg                   
-│   └── bg.jpg                            
+│   ├── logo-mark.svg
+│   └── bg.jpg
 │
-├── screenshots/                            
+├── screenshots/
 │   ├── dashboard.png
 │   ├── timetable.png
 │   ├── take-attendance.png
@@ -371,17 +369,17 @@ student-attendance-system/
 │   └── share-report.png
 │
 ├── css/
-│   └── style.css                               
+│   └── style.css
 │
 └── js/
-    ├── data.js                                    
-    ├── utils.js                                     
-    ├── main.js                                       
-    ├── dashboard.js                                  
-    ├── subject.js                                         
-    ├── student.js                                           
-    ├── reports.js                                             
-    └── share.js                                                 
+    ├── data.js
+    ├── utils.js
+    ├── main.js
+    ├── dashboard.js
+    ├── subject.js
+    ├── student.js
+    ├── reports.js
+    └── share.js
 ```
 
 </details>
@@ -477,7 +475,7 @@ All data is stored **locally in your browser** (`localStorage`) — there is no 
 <a href="mailto:shahrishu1515@gmail.com"><img src="https://img.shields.io/badge/Email-D97706?style=for-the-badge&logo=gmail&logoColor=white"/></a>
 <a href="https://github.com/shahrishabh1513-jsk"><img src="https://img.shields.io/badge/GitHub-1F2937?style=for-the-badge&logo=github&logoColor=white"/></a>
 
-<br/>
+<br/><br/>
 
 ### ⭐ If this project helped you, consider giving it a star!
 
