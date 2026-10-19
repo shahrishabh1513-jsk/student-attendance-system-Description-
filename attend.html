@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mark Attendance</title>
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/modern.css">
+<link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script>document.documentElement.setAttribute('data-theme','light');</script></head><body>
+<div class="blob blob-1"></div><div class="blob blob-2"></div>
+<div class="att-wrap"><div class="glass-card att-card">
+ <div style="font-size:42px">📋</div><h2 style="margin:4px 0">Mark Attendance</h2><h3 id="subj" style="margin:0;color:var(--primary)"></h3><p id="meta" style="color:var(--text-muted);font-size:13px"></p>
+ <div id="form"><input class="att-input" id="enr" placeholder="Enrollment no. e.g. 23SS02CA001" autocapitalize="characters" autocomplete="off"><br><br>
+ <button class="btn btn-primary" id="go" style="width:100%;justify-content:center;padding:14px"><i class="fas fa-paper-plane"></i> Submit Attendance</button></div>
+ <div id="done" style="display:none"><div class="big-check"><i class="fas fa-check"></i></div></div>
+ <div class="att-msg" id="msg"></div>
+ <div id="receipt" style="display:none"><p style="font-size:13px;color:var(--text-muted)">Couldn't reach the teacher live. Show this receipt QR to your teacher to be counted:</p><div class="qr-frame" id="rq"></div></div>
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="js/data.js"></script><script src="js/utils.js"></script><script src="js/live.js"></script><script>
+var $=function(i){return document.getElementById(i)},msg=function(t,c){$('msg').textContent=t;$('msg').className='att-msg '+(c||'')};
+var S=null;try{S=JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(1)))))}catch(e){}
+if(!S||!S.i){$('form').style.display='none';msg('Invalid QR code. Please scan your teacher\'s QR again.','err')}
+else{$('subj').textContent=S.s;$('meta').textContent=S.d+' · '+formatTime12(S.a)+' – '+formatTime12(S.b);
+$('enr').value=safeGetItem('attendanceLastEnr','');
+function success(n){$('form').style.display='none';$('done').style.display='block';msg('Done, '+n+'! You are marked present.','ok')}
+function offline(e){var k='attendanceQR_'+S.i,c=Store.get(k,{});if(!c[e]){c[e]={t:new Date().toISOString(),dev:deviceId()};Store.set(k,c)}
+ $('form').style.display='none';msg('Live connection failed.','err');$('receipt').style.display='block';$('rq').innerHTML='';new QRCode($('rq'),{text:'RCPT|'+S.i+'|'+e,width:180,height:180})}
+$('go').onclick=function(){
+ var e=$('enr').value.trim().toUpperCase(),st=STUDENTS.find(function(x){return x.enrollmentNo===e});
+ if(!st)return msg('Enrollment number not found.','err');
+ if(S.t&&st.batch!==S.t)return msg('This lab is not for your batch.','err');
+ safeSetItem('attendanceLastEnr',e);var b=$('go');b.disabled=true;b.innerHTML='<span class="spinner"></span> Sending…';msg('');
+ var finished=false,p=null,fail=function(t){if(finished)return;finished=true;try{p&&p.destroy()}catch(x){}b.disabled=false;b.innerHTML='<i class="fas fa-paper-plane"></i> Submit Attendance';
+  if(t==='peer-unavailable')msg('Teacher\'s session is not live. Ask your teacher to check the QR page is open.','err');else offline(e)};
+ var timer=setTimeout(function(){fail('timeout')},12000);
+ loadPeerLib().then(function(){p=new Peer();
+  p.on('open',function(){var c=p.connect('att-'+S.i,{reliable:true});
+   c.on('open',function(){c.send({enr:e,dev:deviceId()})});
+   c.on('data',function(r){if(finished)return;finished=true;clearTimeout(timer);try{p.destroy()}catch(x){}
+    if(r.ok)success(r.name);else{b.disabled=false;b.innerHTML='<i class="fas fa-paper-plane"></i> Submit Attendance';msg(r.err,'err')}});
+   c.on('error',function(){clearTimeout(timer);fail('conn')})});
+  p.on('error',function(er){clearTimeout(timer);fail(er.type)})}).catch(function(){clearTimeout(timer);fail('lib')});
+};}
+</script></body></html>

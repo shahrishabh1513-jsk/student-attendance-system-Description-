@@ -1,129 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timetable | Student Attendance System</title>
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/modern.css">
+<link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script>document.documentElement.setAttribute('data-theme','light');</script></head><body>
+<div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
+<header class="app-header no-print"><div class="app-header-brand"><img src="assets/logo-mark.svg" alt="Logo"><div class="app-header-brand-text"><strong>Student Attendance</strong><span>Faculty Portal</span></div></div>
+<div class="app-header-right"><button class="icon-btn" id="theme-toggle"><i class="fas fa-moon"></i></button><div class="app-header-user"><div class="app-avatar" id="user-avatar">T</div><div class="app-header-user-text"><span class="greet">Welcome back</span><strong id="header-username">Teacher</strong></div></div></div></header>
+<nav class="app-nav no-print"><div class="app-nav-inner"><a class="app-nav-link" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span class="nav-label">Dashboard</span></a><a class="app-nav-link active" href="subject.html"><i class="fas fa-calendar-days"></i> <span class="nav-label">Timetable</span></a><a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span class="nav-label">Take Attendance</span></a><a class="app-nav-link" href="qr.html"><i class="fas fa-qrcode"></i> <span class="nav-label">QR Attendance</span></a><a class="app-nav-link" href="reports.html"><i class="fas fa-chart-column"></i> <span class="nav-label">Reports</span></a><div class="app-nav-spacer"></div><button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i> <span class="nav-label">Logout</span></button></div></nav>
+<main class="page">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Subject & Lecture | Attendance System</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script>try { document.documentElement.setAttribute('data-theme', localStorage.getItem('attendanceTheme') || 'light'); } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }</script>
-</head>
-
-<body>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-
-    <header class="app-header no-print">
-        <div class="app-header-brand">
-            <img src="assets/logo-mark.svg" alt="Logo">
-            <div class="app-header-brand-text">
-                <strong>Student Attendance System</strong>
-                <span>Faculty Portal</span>
-            </div>
-        </div>
-        <div class="app-header-right">
-            <button class="icon-btn" id="theme-toggle" title="Toggle theme"><i class="fas fa-moon"></i></button>
-            <div class="app-header-user">
-                <div class="app-avatar" id="user-avatar">T</div>
-                <div class="app-header-user-text">
-                    <span class="greet">Welcome back</span>
-                    <strong id="header-username">Teacher</strong>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <nav class="app-nav no-print">
-        <div class="app-nav-inner">
-            <a class="app-nav-link" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span
-                    class="nav-label">Dashboard</span></a>
-            <a class="app-nav-link active" href="subject.html"><i class="fas fa-calendar-days"></i> <span
-                    class="nav-label">Timetable</span></a>
-            <a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span
-                    class="nav-label">Take Attendance</span></a>
-            <a class="app-nav-link" href="reports.html"><i class="fas fa-chart-column"></i> <span
-                    class="nav-label">Reports</span></a>
-            <div class="app-nav-spacer"></div>
-            <button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i>
-                <span class="nav-label">Logout</span></button>
-        </div>
-    </nav>
-
-    <main class="page">
-        <div id="selection-alert" class="alert alert-warning" style="display:none;">
-            <i class="fas fa-triangle-exclamation"></i>
-            <span>Please select a lecture slot (and batch, if it's a lab) to continue.</span>
-        </div>
-
-        <!-- Timetable -->
-        <section class="glass-card section-card">
-            <div class="section-title"><i class="fas fa-calendar-days"></i> Weekly Timetable</div>
-            <p class="section-sub">Tap the lecture you're about to teach. Lab sessions will ask for a batch
-                automatically.</p>
-            <div class="timetable-legend">
-                <span><i class="legend-dot dot-theory"></i> Theory</span>
-                <span><i class="legend-dot dot-lab"></i> Lab</span>
-                <span><i class="legend-dot dot-today"></i> Today</span>
-                <span><i class="fas fa-circle-check" style="color:var(--success);"></i> Already taken today</span>
-            </div>
-            <div class="timetable-wrap">
-                <table class="timetable" id="timetable"></table>
-            </div>
-        </section>
-
-        <!-- Batch selection (shown only for Lab slots) -->
-        <section class="glass-card section-card" id="batch-section" style="display:none;">
-            <div class="section-title"><i class="fas fa-flask"></i> Select Batch for this Lab</div>
-            <p class="section-sub">This is a lab session — attendance is taken batch-wise.</p>
-            <div class="batch-grid" id="batch-grid"></div>
-        </section>
-
-        <!-- Summary -->
-        <div class="selected-summary glass-card" id="selected-summary">
-            <div>
-                <div class="label">Subject</div>
-                <div class="value" id="sum-subject">—</div>
-            </div>
-            <div>
-                <div class="label">Timing</div>
-                <div class="value" id="sum-time">—</div>
-            </div>
-            <div>
-                <div class="label">Type</div>
-                <div class="value" id="sum-type">—</div>
-            </div>
-            <div>
-                <div class="label">Batch</div>
-                <div class="value" id="sum-batch">All Students</div>
-            </div>
-        </div>
-
-        <div class="action-bar">
-            <div class="action-bar-group">
-                <a class="btn btn-outline ripple" href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to
-                    Dashboard</a>
-            </div>
-            <div class="action-bar-group">
-                <button class="btn btn-primary ripple" id="take-attendance-btn" disabled>
-                    <i class="fas fa-clipboard-check"></i> Take Attendance Now
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <footer class="main-footer">
-        <p>&copy; 2026 Student Attendance Management System | Designed for Educational Institutions | RAS15</p>
-        <p class="footer-signature">&#10022; Designed with purpose &amp; passion &#10022; &copy; 2026 Rishabh Shah</p>
-    </footer>
-
-    <button class="scroll-top-btn no-print" id="scroll-top"><i class="fas fa-arrow-up"></i></button>
-
-    <script src="js/data.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/subject.js"></script>
-</body>
-
-</html>
+<div id="selection-alert" class="alert" style="display:none"><i class="fas fa-triangle-exclamation"></i><span></span></div>
+<section class="glass-card"><div class="section-title"><i class="fas fa-calendar-days"></i> Weekly Timetable</div>
+<p class="section-sub">Tap the lecture you're about to teach. Labs ask for a batch automatically.</p>
+<div class="tt-legend"><span><i class="d" style="background:#6366f1"></i>Theory</span><span><i class="d" style="background:#ff5fa2"></i>Lab</span><span><i class="fas fa-circle-check" style="color:var(--success)"></i> Already taken today</span></div>
+<div class="tt-tabs" id="tt-tabs"></div><div class="tt-grid" id="timetable"></div></section>
+<section class="glass-card" id="batch-section" style="display:none"><div class="section-title"><i class="fas fa-flask"></i> Select Batch</div><p class="section-sub">Lab attendance is taken batch-wise.</p><div class="batch-grid" id="batch-grid"></div></section>
+<div class="selected-summary glass-card" id="selected-summary">
+ <div><div class="label">Subject</div><div class="value" id="sum-subject">—</div></div><div><div class="label">Timing</div><div class="value" id="sum-time">—</div></div>
+ <div><div class="label">Type</div><div class="value" id="sum-type">—</div></div><div><div class="label">Batch</div><div class="value" id="sum-batch">—</div></div></div>
+<div class="action-bar"><div class="action-bar-group"><a class="btn btn-outline ripple" href="dashboard.html"><i class="fas fa-arrow-left"></i> Dashboard</a></div>
+<div class="action-bar-group"><button class="btn btn-outline ripple" id="qr-btn" disabled><i class="fas fa-qrcode"></i> Start QR Attendance</button>
+<button class="btn btn-primary ripple" id="take-attendance-btn" disabled><i class="fas fa-clipboard-check"></i> Take Attendance Now</button></div></div>
+</main>
+<footer class="main-footer"><p>&copy; 2026 Student Attendance Management System | School of Sciences | RAS15</p><p>&#10022; Designed with purpose &amp; passion &#10022; &copy; 2026 Rishabh Shah</p></footer>
+<button class="scroll-top-btn no-print" id="scroll-top"><i class="fas fa-arrow-up"></i></button>
+<script src="js/data.js"></script><script src="js/utils.js"></script><script src="js/subject.js"></script>
+</body></html>

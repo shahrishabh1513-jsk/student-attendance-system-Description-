@@ -123,8 +123,7 @@ function safeSetItem(key, value) {
 }
 
 function initTheme() {
-    const saved = safeGetItem(STORAGE_KEYS.THEME, "light");
-    document.documentElement.setAttribute("data-theme", saved);
+    document.documentElement.setAttribute("data-theme", "light");
 }
 
 function toggleTheme() {

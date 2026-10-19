@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!requireLogin('index.html')) return;
 
     wireAppNav();
+    document.getElementById('dash-total-students').textContent = STUDENTS.length;
 
     const username = localStorage.getItem(STORAGE_KEYS.USERNAME) || 'Teacher';
     const initial = (username.trim().charAt(0) || 'T').toUpperCase();

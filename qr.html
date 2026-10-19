@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Attendance | Student Attendance System</title>
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/modern.css">
+<link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script>document.documentElement.setAttribute('data-theme','light');</script></head><body>
+<div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
+<header class="app-header no-print"><div class="app-header-brand"><img src="assets/logo-mark.svg" alt="Logo"><div class="app-header-brand-text"><strong>Student Attendance</strong><span>Faculty Portal</span></div></div>
+<div class="app-header-right"><button class="icon-btn" id="theme-toggle"><i class="fas fa-moon"></i></button><div class="app-header-user"><div class="app-avatar" id="user-avatar">T</div><div class="app-header-user-text"><span class="greet">Welcome back</span><strong id="header-username">Teacher</strong></div></div></div></header>
+<nav class="app-nav no-print"><div class="app-nav-inner"><a class="app-nav-link" href="dashboard.html"><i class="fas fa-gauge-high"></i> <span class="nav-label">Dashboard</span></a><a class="app-nav-link" href="subject.html"><i class="fas fa-calendar-days"></i> <span class="nav-label">Timetable</span></a><a class="app-nav-link" href="#" id="nav-take-attendance"><i class="fas fa-clipboard-check"></i> <span class="nav-label">Take Attendance</span></a><a class="app-nav-link active" href="qr.html"><i class="fas fa-qrcode"></i> <span class="nav-label">QR Attendance</span></a><a class="app-nav-link" href="reports.html"><i class="fas fa-chart-column"></i> <span class="nav-label">Reports</span></a><div class="app-nav-spacer"></div><button class="app-nav-link nav-logout" id="nav-logout"><i class="fas fa-arrow-right-from-bracket"></i> <span class="nav-label">Logout</span></button></div></nav>
+<main class="page">
+
+<h2 style="margin:0 0 14px">QR Attendance</h2>
+<section class="glass-card" id="setup"><div class="qr-form">
+ <div><label>Lecture</label><select id="lec"></select></div>
+ <div id="batch-wrap" style="display:none"><label>Lab batch</label><select id="bat"><option value="1">Batch 1 — BCA</option><option value="2">Batch 2 — B.Sc. IT</option></select></div>
+ <div><label>QR valid for</label><select id="dur"><option value="5">5 minutes</option><option value="10" selected>10 minutes</option><option value="20">20 minutes</option><option value="60">60 minutes</option></select></div>
+ <div><label>Site link students will open</label><input id="base" type="text"></div></div>
+<div class="alert" id="warn" style="display:none"><i class="fas fa-triangle-exclamation"></i><span>Phones can't open <b>localhost</b>/file links. Host the site online (GitHub Pages / Netlify) or enter your computer's LAN address, e.g. http://192.168.1.5:8000/</span></div>
+<button class="btn btn-primary ripple" id="gen"><i class="fas fa-qrcode"></i> Generate QR</button></section>
+<section class="glass-card" id="live" style="display:none"><div class="qr-grid">
+ <div class="qr-side"><div class="qr-frame" id="qrcode"></div><div class="timer" id="timer">--:--</div><div id="live-chip" class="chip-live">Connecting…</div></div>
+ <div><h3 id="s-title" style="margin:0"></h3><p id="s-meta" style="color:var(--text-muted);margin:4px 0 12px"></p>
+  <h4 style="margin:0">Present: <span id="cnt">0</span> / <span id="tot">0</span></h4><div class="bar"><i id="pbar"></i></div>
+  <div class="roster" id="roster"></div>
+  <div class="action-bar-group" style="margin-top:14px"><button class="btn btn-outline btn-sm ripple" id="ext"><i class="fas fa-clock"></i> +5 min</button>
+  <button class="btn btn-outline btn-sm ripple" id="scan"><i class="fas fa-camera"></i> Scan receipts</button>
+  <button class="btn btn-outline btn-sm ripple" id="manual"><i class="fas fa-keyboard"></i> Add manually</button>
+  <button class="btn btn-success btn-sm ripple" id="fin"><i class="fas fa-save"></i> Finish &amp; Save</button></div>
+  <video id="cam" playsinline style="display:none"></video></div></div>
+ <p style="font-size:11px;word-break:break-all;color:var(--text-muted);margin-top:12px" id="url"></p></section>
+</main>
+<footer class="main-footer"><p>&copy; 2026 Student Attendance Management System | School of Sciences | RAS15</p><p>&#10022; Designed with purpose &amp; passion &#10022; &copy; 2026 Rishabh Shah</p></footer>
+<button class="scroll-top-btn no-print" id="scroll-top"><i class="fas fa-arrow-up"></i></button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script><script src="js/data.js"></script><script src="js/utils.js"></script><script src="js/live.js"></script><script src="js/qr.js"></script>
+</body></html>
