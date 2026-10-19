@@ -355,17 +355,17 @@ flowchart LR
 ```bash
 student-attendance-system/
 │
-├── index.html                # Login page
-├── dashboard.html              # Faculty dashboard (post-login landing)
-├── subject.html                  # Weekly timetable & batch selection
-├── student.html                    # Take attendance page
-├── reports.html                      # Attendance reports & account page
+├── index.html                
+├── dashboard.html              
+├── subject.html                  
+├── student.html                    
+├── reports.html                      
 │
 ├── assets/
-│   ├── logo-mark.svg                    # App logo
-│   └── bg.jpg                             # Login page campus image
+│   ├── logo-mark.svg                   
+│   └── bg.jpg                            
 │
-├── screenshots/                             # README output screenshots (add these)
+├── screenshots/                            
 │   ├── dashboard.png
 │   ├── timetable.png
 │   ├── take-attendance.png
@@ -373,17 +373,17 @@ student-attendance-system/
 │   └── share-report.png
 │
 ├── css/
-│   └── style.css                                # All application styling
+│   └── style.css                               
 │
 └── js/
-    ├── data.js                                    # Student roster & timetable data
-    ├── utils.js                                     # Shared helpers (storage, toasts, nav)
-    ├── main.js                                        # Login page logic
-    ├── dashboard.js                                     # Dashboard logic
-    ├── subject.js                                         # Timetable / batch selection
-    ├── student.js                                           # Attendance-taking logic
-    ├── reports.js                                             # Reports / records logic
-    └── share.js                                                 # Image / PDF / Excel export & sharing
+    ├── data.js                                    
+    ├── utils.js                                     
+    ├── main.js                                       
+    ├── dashboard.js                                  
+    ├── subject.js                                         
+    ├── student.js                                           
+    ├── reports.js                                             
+    └── share.js                                                 
 ```
 
 </details>
@@ -479,7 +479,7 @@ All data is stored **locally in your browser** (`localStorage`) — there is no 
 <a href="mailto:shahrishu1515@gmail.com"><img src="https://img.shields.io/badge/Email-D97706?style=for-the-badge&logo=gmail&logoColor=white"/></a>
 <a href="https://github.com/shahrishabh1513-jsk"><img src="https://img.shields.io/badge/GitHub-1F2937?style=for-the-badge&logo=github&logoColor=white"/></a>
 
-<br/><br/>
+<br/>
 
 ### ⭐ If this project helped you, consider giving it a star!
 
