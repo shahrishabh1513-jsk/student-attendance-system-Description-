@@ -160,7 +160,7 @@ Big Present / Absent buttons, live search, A–Z sort and bulk actions — with 
 
 <table width="100%">
 <tr><td>🔴 🟡 🟢 &nbsp; <sub>Saved sessions & filters</sub></td></tr>
-<tr><td align="center"><img src="./screenshots/reports.png" width="100%" alt="Reports output"/></td></tr>
+<tr><td align="center"><img src="https://github.com/user-attachments/assets/7333549d-6027-4bfe-ac27-d8055463f3c8" width="100%" alt="Reports output"/></td></tr>
 </table>
 
 Every saved session, filterable by date, subject or batch — view, edit, print or export as CSV.
@@ -172,8 +172,9 @@ Every saved session, filterable by date, subject or batch — view, edit, print 
 
 <table width="100%">
 <tr><td>🔴 🟡 🟢 &nbsp; <sub>Image · PDF · Excel</sub></td></tr>
-<tr><td align="center"><img src="./screenshots/share-report.png" width="100%" alt="Share report output"/></td></tr>
+<tr><td align="center"><img src="https://github.com/user-attachments/assets/cf46712d-5b36-45d6-ba88-3004b4169d0d" width="100%" alt="Share report output"/></td></tr>
 </table>
+
 
 Export as Image, PDF or Excel and share via WhatsApp or Email, with absentees highlighted in red.
 
@@ -181,7 +182,6 @@ Export as Image, PDF or Excel and share via WhatsApp or Email, with absentees hi
 </tr>
 </table>
 
-> 📌 **Add your screenshots:** create a `screenshots/` folder in the repo and save five PNGs there — `dashboard.png`, `timetable.png`, `take-attendance.png`, `reports.png` and `share-report.png`. The login box above is captured live and needs no file.
 
 <div align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=0:B91C1C,50:D97706,100:15803D&height=4&section=header"/></div>
 
