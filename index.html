@@ -1,29 +1,61 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login | Student Attendance System</title>
-<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/modern.css">
-<link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script>document.documentElement.setAttribute('data-theme','light');</script></head><body>
-<div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
-<button id="theme-toggle" type="button" hidden><i class="fas fa-moon"></i></button>
-<div class="lg-shell">
- <section class="lg-hero"><div class="lg-orb o1"></div><div class="lg-orb o2"></div><div class="lg-orb o3"></div>
-  <div class="lg-brand"><img src="assets/logo-mark.svg" alt=""> School of Sciences</div>
-  <h1>Attendance<br><span class="lg-type" id="typed"></span></h1>
-  <p>A smart faculty portal: pick your lecture, share a QR code, and watch students mark themselves present — live.</p>
-  <div class="lg-float"><span><i class="fas fa-qrcode"></i> Live QR check-in</span><span><i class="fas fa-chart-column"></i> Instant reports</span><span><i class="fas fa-file-export"></i> PDF · Excel · Image</span></div>
- </section>
- <section class="lg-panel"><form id="login-form" class="glass-card lg-card" autocomplete="off">
-  <h2>Welcome back 👋</h2><p class="lg-sub">Sign in to your faculty account</p>
-  <div class="lg-alert" id="login-alert"><i class="fas fa-circle-exclamation"></i> Invalid username or password.</div>
-  <div class="lg-roles"><label class="lg-role"><input type="radio" name="role" value="staff" checked><i class="fas fa-chalkboard-user"></i> Staff</label><label class="lg-role"><input type="radio" name="role" value="student"><i class="fas fa-user-graduate"></i> Student</label></div>
-  <div class="lg-field"><i class="fas fa-user"></i><input id="username" type="text" placeholder="Username" required></div>
-  <div class="lg-field"><i class="fas fa-lock"></i><input id="password" type="password" placeholder="Password" required></div>
-  <div class="lg-row"><label><input type="checkbox" id="show-password"> Show password</label><a href="#" id="forgot-link">Forgot?</a></div>
-  <button type="submit" class="btn btn-primary login-btn ripple"><i class="fas fa-arrow-right-to-bracket"></i> Sign In</button>
-  <div class="lg-or">or</div>
-  <button type="button" id="social-google" class="btn btn-outline lg-google ripple"><i class="fa-brands fa-google"></i> Continue with Google</button>
- </form></section>
-</div>
-<script>(function(){var w=['made effortless','with live QR','in one tap','on any device'],i=0,j=0,d=1,el=document.getElementById('typed');(function t(){var s=w[i];j+=d;el.textContent=s.slice(0,j);if(d>0&&j===s.length){d=-1;return setTimeout(t,1400)}if(d<0&&j===0){d=1;i=(i+1)%w.length}setTimeout(t,d>0?90:45)})()})();</script>
-<script src="js/utils.js"></script><script src="js/main.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Student Attendance System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/modern.css">
+    <link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>document.documentElement.setAttribute('data-theme', 'light');</script>
+</head>
+
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <button id="theme-toggle" type="button" hidden><i class="fas fa-moon"></i></button>
+    <div class="lg-shell">
+        <section class="lg-hero">
+            <div class="lg-orb o1"></div>
+            <div class="lg-orb o2"></div>
+            <div class="lg-orb o3"></div>
+            <div class="lg-brand"><img src="assets/logo-mark.svg" alt=""> School of Sciences</div>
+            <h1>Attendance<br><span class="lg-type" id="typed"></span></h1>
+            <p>A smart faculty portal: pick your lecture, share a QR code, and watch students mark themselves present —
+                live.</p>
+            <div class="lg-float"><span><i class="fas fa-qrcode"></i> Live QR check-in</span><span><i
+                        class="fas fa-chart-column"></i> Instant reports</span><span><i class="fas fa-file-export"></i>
+                    PDF · Excel · Image</span></div>
+        </section>
+        <section class="lg-panel">
+            <form id="login-form" class="glass-card lg-card" autocomplete="off">
+                <h2>Welcome back 👋</h2>
+                <p class="lg-sub">Sign in to your faculty account</p>
+                <div class="lg-alert" id="login-alert"><i class="fas fa-circle-exclamation"></i> Invalid username or
+                    password.</div>
+                <div class="lg-roles"><label class="lg-role"><input type="radio" name="role" value="staff" checked><i
+                            class="fas fa-chalkboard-user"></i> Staff</label><label class="lg-role"><input type="radio"
+                            name="role" value="student"><i class="fas fa-user-graduate"></i> Student</label></div>
+                <div class="lg-field"><i class="fas fa-user"></i><input id="username" type="text" placeholder="Username"
+                        required></div>
+                <div class="lg-field"><i class="fas fa-lock"></i><input id="password" type="password"
+                        placeholder="Password" required></div>
+                <div class="lg-row"><label><input type="checkbox" id="show-password"> Show password</label><a href="#"
+                        id="forgot-link">Forgot?</a></div>
+                <button type="submit" class="btn btn-primary login-btn ripple"><i
+                        class="fas fa-arrow-right-to-bracket"></i> Sign In</button>
+                <div class="lg-or">or</div>
+                <button type="button" id="social-google" class="btn btn-outline lg-google ripple"><i
+                        class="fa-brands fa-google"></i> Continue with Google</button>
+            </form>
+        </section>
+    </div>
+    <script>(function () { var w = ['made effortless', 'with live QR', 'in one tap', 'on any device'], i = 0, j = 0, d = 1, el = document.getElementById('typed'); (function t() { var s = w[i]; j += d; el.textContent = s.slice(0, j); if (d > 0 && j === s.length) { d = -1; return setTimeout(t, 1400) } if (d < 0 && j === 0) { d = 1; i = (i + 1) % w.length } setTimeout(t, d > 0 ? 90 : 45) })() })();</script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
