@@ -82,7 +82,7 @@
 <tr>
 <td align="center">
 <a href="https://bscit-attendance.netlify.app/" target="_blank">
-<img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fbscit-attendance.netlify.app%2F?w=1400" width="100%" alt="Student Attendance System login page"/>
+<img src="https://github.com/user-attachments/assets/b038992a-01d1-4053-a584-86f69c444a86" width="100%" alt="Student Attendance System login page"/>
 </a>
 </td>
 </tr>
