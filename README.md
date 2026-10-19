@@ -102,7 +102,7 @@
 
 <table width="100%">
 <tr>
-<td width="50%" valign="top">
+<td width="33%" valign="top" align="center">
 
 ### 🔐 Login Screen
 
@@ -111,10 +111,10 @@
 <tr><td align="center"><img src="https://github.com/user-attachments/assets/b038992a-01d1-4053-a584-86f69c444a86" width="100%" alt="Login screen output"/></td></tr>
 </table>
 
-Faculty sign-in with a Staff / Student role selector and a campus illustration panel.
+<sub>Staff / Student role selector</sub>
 
 </td>
-<td width="50%" valign="top">
+<td width="33%" valign="top" align="center">
 
 ### 📊 Dashboard
 
@@ -123,12 +123,10 @@ Faculty sign-in with a Staff / Student role selector and a campus illustration p
 <tr><td align="center"><img src="https://github.com/user-attachments/assets/94c95768-fb27-4b25-a008-fc82aae384dc" width="100%" alt="Dashboard output"/></td></tr>
 </table>
 
-Today's totals — Present, Absent and Last Updated — plus the faculty profile card and recent activity.
+<sub>Today's Present / Absent totals</sub>
 
 </td>
-</tr>
-<tr>
-<td width="50%" valign="top">
+<td width="33%" valign="top" align="center">
 
 ### 📅 Weekly Timetable
 
@@ -137,10 +135,12 @@ Today's totals — Present, Absent and Last Updated — plus the faculty profile
 <tr><td align="center"><img src="https://github.com/user-attachments/assets/cce0ad1b-756d-4592-b201-ffa026994078" width="100%" alt="Weekly timetable output"/></td></tr>
 </table>
 
-Tue–Sat grid with Lab and Theory lectures colour-coded, and an "Already Taken Today" badge.
+<sub>Lab &amp; Theory colour-coded grid</sub>
 
 </td>
-<td width="50%" valign="top">
+</tr>
+<tr>
+<td width="33%" valign="top" align="center">
 
 ### ✅ Take Attendance
 
@@ -149,24 +149,22 @@ Tue–Sat grid with Lab and Theory lectures colour-coded, and an "Already Taken 
 <tr><td align="center"><img src="https://github.com/user-attachments/assets/4bc9f4e4-f595-4304-8ebd-de70bc325bd1" width="100%" alt="Take attendance output"/></td></tr>
 </table>
 
-Big Present / Absent buttons, live search, A–Z sort and bulk actions — with an auto-saved draft.
+<sub>One-tap Present / Absent marking</sub>
 
 </td>
-</tr>
-<tr>
-<td width="50%" valign="top">
+<td width="33%" valign="top" align="center">
 
 ### 📑 Reports
 
 <table width="100%">
-<tr><td>🔴 🟡 🟢 &nbsp; <sub>Saved sessions & filters</sub></td></tr>
+<tr><td>🔴 🟡 🟢 &nbsp; <sub>Saved sessions &amp; filters</sub></td></tr>
 <tr><td align="center"><img src="https://github.com/user-attachments/assets/7333549d-6027-4bfe-ac27-d8055463f3c8" width="100%" alt="Reports output"/></td></tr>
 </table>
 
-Every saved session, filterable by date, subject or batch — view, edit, print or export as CSV.
+<sub>Filter, edit, print &amp; export</sub>
 
 </td>
-<td width="50%" valign="top">
+<td width="33%" valign="top" align="center">
 
 ### 📤 Share Report
 
@@ -175,7 +173,7 @@ Every saved session, filterable by date, subject or batch — view, edit, print 
 <tr><td align="center"><img src="https://github.com/user-attachments/assets/cf46712d-5b36-45d6-ba88-3004b4169d0d" width="100%" alt="Share report output"/></td></tr>
 </table>
 
-Export as Image, PDF or Excel and share via WhatsApp or Email, with absentees highlighted in red.
+<sub>Image · PDF · Excel sharing</sub>
 
 </td>
 </tr>
