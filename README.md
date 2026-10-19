@@ -26,7 +26,7 @@
 <a href="https://github.com/shahrishabh1513-jsk/student-attendance-system-Description-"><img src="https://img.shields.io/badge/REPOSITORY-View_Code-1F2937?style=for-the-badge&logo=github&logoColor=white"/></a>
 <a href="https://github.com/shahrishabh1513-jsk/student-attendance-system-Description-/stargazers"><img src="https://img.shields.io/badge/⭐_STAR-Support_This_Repo-D97706?style=for-the-badge"/></a>
 
-<br/><br/>
+<br/>
 
 <a href="#-login-screen"><img src="https://img.shields.io/badge/🔐_LOGIN-B91C1C?style=flat-square"/></a>
 <a href="#-dashboard"><img src="https://img.shields.io/badge/📊_DASHBOARD-D97706?style=flat-square"/></a>
@@ -34,15 +34,14 @@
 <a href="#-take-attendance"><img src="https://img.shields.io/badge/✅_TAKE_ATTENDANCE-1F2937?style=flat-square"/></a>
 <a href="#-reports"><img src="https://img.shields.io/badge/📑_REPORTS-B91C1C?style=flat-square"/></a>
 <a href="#-share-report"><img src="https://img.shields.io/badge/📤_SHARE-D97706?style=flat-square"/></a>
-
-<br/><br/>
+<br/>
 
 <img src="https://img.shields.io/badge/BACKEND-None_Needed-16A34A?style=for-the-badge&labelColor=1F2937"/>
 <img src="https://img.shields.io/badge/STORAGE-Browser_localStorage-D97706?style=for-the-badge&labelColor=1F2937"/>
 <img src="https://img.shields.io/badge/EXPORT-Image%2C_PDF_%26_Excel-DC2626?style=for-the-badge&labelColor=1F2937"/>
 <img src="https://img.shields.io/badge/BUILT_FOR-Faculty-16A34A?style=for-the-badge&labelColor=1F2937"/>
 
-<br/><br/>
+<br/>
 
 <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white"/>
 <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white"/>
