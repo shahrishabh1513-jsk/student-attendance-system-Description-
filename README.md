@@ -95,8 +95,6 @@
 
 </div>
 
-> 💡 The live preview shows the login screen — the rest of the app sits behind the faculty login. Screens after login are in the output boxes below.
-
 <div align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=0:15803D,50:D97706,100:B91C1C&height=4&section=header"/></div>
 
 ## 📸 App Screens (Output)
@@ -109,7 +107,7 @@
 
 <table width="100%">
 <tr><td>🔴 🟡 🟢 &nbsp; <sub>Faculty sign-in</sub></td></tr>
-<tr><td align="center"><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fbscit-attendance.netlify.app%2F?w=1000" width="100%" alt="Login screen output"/></td></tr>
+<tr><td align="center"><img src="https://github.com/user-attachments/assets/b038992a-01d1-4053-a584-86f69c444a86" width="100%" alt="Login screen output"/></td></tr>
 </table>
 
 Faculty sign-in with a Staff / Student role selector and a campus illustration panel.
@@ -121,7 +119,7 @@ Faculty sign-in with a Staff / Student role selector and a campus illustration p
 
 <table width="100%">
 <tr><td>🔴 🟡 🟢 &nbsp; <sub>Today's overview</sub></td></tr>
-<tr><td align="center"><img src="./screenshots/dashboard.png" width="100%" alt="Dashboard output"/></td></tr>
+<tr><td align="center"><img src="https://github.com/user-attachments/assets/94c95768-fb27-4b25-a008-fc82aae384dc" width="100%" alt="Dashboard output"/></td></tr>
 </table>
 
 Today's totals — Present, Absent and Last Updated — plus the faculty profile card and recent activity.
@@ -135,7 +133,7 @@ Today's totals — Present, Absent and Last Updated — plus the faculty profile
 
 <table width="100%">
 <tr><td>🔴 🟡 🟢 &nbsp; <sub>Periods × days grid</sub></td></tr>
-<tr><td align="center"><img src="./screenshots/timetable.png" width="100%" alt="Weekly timetable output"/></td></tr>
+<tr><td align="center"><img src="https://github.com/user-attachments/assets/cce0ad1b-756d-4592-b201-ffa026994078" width="100%" alt="Weekly timetable output"/></td></tr>
 </table>
 
 Tue–Sat grid with Lab and Theory lectures colour-coded, and an "Already Taken Today" badge.
@@ -147,8 +145,9 @@ Tue–Sat grid with Lab and Theory lectures colour-coded, and an "Already Taken 
 
 <table width="100%">
 <tr><td>🔴 🟡 🟢 &nbsp; <sub>One-tap P / A marking</sub></td></tr>
-<tr><td align="center"><img src="./screenshots/take-attendance.png" width="100%" alt="Take attendance output"/></td></tr>
+<tr><td align="center"><img src="https://github.com/user-attachments/assets/4bc9f4e4-f595-4304-8ebd-de70bc325bd1" width="100%" alt="Take attendance output"/></td></tr>
 </table>
+
 
 Big Present / Absent buttons, live search, A–Z sort and bulk actions — with an auto-saved draft.
 
